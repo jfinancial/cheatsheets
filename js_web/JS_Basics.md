@@ -16,7 +16,7 @@
 
 ## Basics
 
-###Variables & Scope
+### Variables & Scope
 
 -   **Variable Declaration var vs let** 
    - `var` :  function or global scope if outside function 
@@ -33,12 +33,12 @@
     - `Symbol : typeof instance === "symbol"` (ES6)
 - **Falsy** is a term used in JavaScript type comparison and conversion. Falsy values in JavaScript translate to the Boolean false when used in type comparisons. Examples of falsy values are null, undefined, 0, and the Boolean false.
     
--   **Reference Types** are held on the heap and have methods. Examples are: 
+- **Reference Types** are held on the heap and have methods. Examples are: 
     - `Array`, Object Literals, `Functions`, `Date` 
 
--  [Explaining Value vs. Reference in Javascript](https://codeburst.io/explaining-value-vs-reference-in-javascript-647a975e12a0)
+- [Explaining Value vs. Reference in Javascript](https://codeburst.io/explaining-value-vs-reference-in-javascript-647a975e12a0)
 
--   Why is **NaN** not a number? (`NaN` is defined as a numeric type, but it’s not a real number. NaN is result of some mathematical operations that can’t be quantified as a number)
+- Why is `NaN` not a number? (`NaN` is defined as a numeric type, but it’s not a real number. NaN is result of some mathematical operations that can’t be quantified as a number)
 
 -  **Objects literals** are comma-separated list of name-value pairs inside of curly braces; values can be properties and functions. All members of an object literal in JavaScript, both properties and functions, are public. Private members can only be inside a function. You cannot copy an object literal without manually copying all the values.
     <pre>
@@ -60,7 +60,7 @@
 
 <hr>
 
-###IIFEs - Immediately Invoked Function Expressions
+### IIFEs - Immediately Invoked Function Expressions
 
 [An introduction to IFFEs](#http://adripofjavascript.com/blog/drips/an-introduction-to-iffes-immediately-invoked-function-expressions.html)
   <pre>
@@ -74,12 +74,12 @@
 
 <hr>
 
-###Arrays
+### Arrays
 -   Array Operations: push, pop, concat, slice, join, forEach, map, filter
 
 <hr>
 
-###Iterables
+### Iterables
 - An object is iterable if it defines its iteration behavior, such as what values are looped over in a `for...of` construct. 
 - Some built-in types, such as `Array` or `Map`, have a default iteration behavior, while other types (such as `Object`) do not. 
 - In order to be iterable, an object must implement the `@@iterator` method. This simply means that the object (or one of the objects up its prototype chain) must have a property with a `Symbol.iterator` key. 
@@ -111,7 +111,7 @@
 
 <hr>
 
-###Generators
+### Generators
 The `function*` declaration (function keyword followed by asterisk) defines a generator function, which returns a Generator object. Generators compute their yielded values on demand, which allows them to efficiently represent sequences that are expensive to compute (or even infinite sequences). The next() method also accepts a value, which can be used to modify the internal state of the generator. A value passed to next() will be received by yield .(A value passed to the first invocation of `next()` is always ignored.) Here is the fibonacci generator using `next(x)` to restart the sequence:
 <pre>
    function* fibonacci() {
@@ -130,7 +130,7 @@ The `function*` declaration (function keyword followed by asterisk) defines a ge
 
 <hr>
 
-###ES6: Arrow Functions
+### ES6: Arrow Functions
 
 -  Difference between arrow function and normal functions is that they are [**anonymous**](#https://en.wikipedia.org/wiki/Anonymous_function). To write an arrow function, simply omit the function keyword and add =&gt; between the arguments and fn body.
 -  If arrow function is returning a **single line of code,** you can omit statement brackets and return
@@ -156,7 +156,7 @@ The `function*` declaration (function keyword followed by asterisk) defines a ge
 
 <hr>
 
-###ES6: Enhanced Object Literals (Provides Syntactic Sugar Over ES5)
+### ES6: Enhanced Object Literals (Provides Syntactic Sugar Over ES5)
   <pre>
     function getPersonES5( name, age, height ) { 
      return { name: name, age: age, height: height }; 
@@ -181,7 +181,7 @@ The `function*` declaration (function keyword followed by asterisk) defines a ge
 
 <hr>
 
-###ES6: Computed Property Notation
+### ES6: Computed Property Notation
 ES6 provides new, efficient way to create property names from variables.  In ES5,  only one way to create a dynamic property whose name is specified by a variable; this is through bracket notation e.g  obj[ expression ] = 'value' . 
 In ES6, we can use this same type of notation during the object literal's declaration:
 
@@ -193,7 +193,7 @@ In ES6, we can use this same type of notation during the object literal's declar
 
 <hr>
 
-###ES6: Template Literals
+### ES6: Template Literals
 
 Use `${foo}` for expressions. New lines will be included in the output. To escape a template literal, simply use a backslash.
 
@@ -219,7 +219,7 @@ Special property `raw` is available for the first argument of a tagged template.
 
 <hr>
 
-###ES6: Default Parameters
+### ES6: Default Parameters
 
 Default function parameters allow named parameters to be initialized with default values if no value or undefined is passed:
 
@@ -233,7 +233,7 @@ Default function parameters allow named parameters to be initialized with defaul
 
 <hr>
 
-###ES6: Destructuring
+### ES6: Destructuring
 
 - **Destructuring assignment** is syntax in JavaScript that allows you to unpack values from arrays or properties from objects, and save them into variables.
 
@@ -247,7 +247,7 @@ Default function parameters allow named parameters to be initialized with defaul
   </pre>
 
 
-###ES6 Rest and Spread Operator (… or 'elipses') for Deep Copy
+### ES6 Rest and Spread Operator (… or 'elipses') for Deep Copy
 
 -   The operator is used to represent an infinite number of arguments as an array; it is used to allow an iterable object to be expanded into multiple arguments. To identify which is being used, we must look at the item that the argument is being applied to.
 
@@ -311,7 +311,7 @@ Default function parameters allow named parameters to be initialized with defaul
 
 <hr>
 
-###DOM Manipulation
+### DOM Manipulation
 
 - **Single Element** Selector
 
@@ -335,7 +335,7 @@ Default function parameters allow named parameters to be initialized with defaul
 
 <hr>
 
-###ES6: Classes & Modules
+### ES6: Classes & Modules
 
 - **Classes** were introduced in ES6 as means to expand on prototype-based inheritance by adding some OO concepts; it is syntactic sugar to expand on the existing prototype-based inheritance. Classes can have function constructors; subclasses must call super constructor:
   <pre>
@@ -386,11 +386,12 @@ Default function parameters allow named parameters to be initialized with defaul
   
 -  **Note:** ES6 modules may not have full support from all browsers versions. You must use a transpiler (e.g. Babel) to run your code on certain platforms. To use an import in the browser, we must use the script tag and set type to module and the src to the file. (If the browser does not support modules, there's a fallback option with the nomodule attribute.) Finally, be careful of **circular dependencies** which cause lots of errors in transpilation!
 
-###Transpilation with Babel
+### Transpilation with Babel
 
-To install the Babel cuse the following: `npm install --save-dev babel-cli`
-
-After that, the `babel-cli` field will have been added to the devDependencies object in the `package.json` file (although this only installed base Babel with no plugins for transpiling):
+- [Babel](https://en.wikipedia.org/wiki/Babel_(transcompiler)) is the most common transpiler for javascript and is mainly used to convert ECMAScript 2015+ (ES6+) code into a backwards compatible version of JavaScript that can be run by older JavaScript engines. Babel is a popular tool for using the newest features of the JavaScript programming language providing [polyfills](https://en.wikipedia.org/wiki/Polyfill_(programming)0) to provide support for features that are missing entirely from JavaScript environments.
+- To install the Babel cuse the following: 
+  - `npm install --save-dev babel-cli`
+- After that, the `babel-cli` field will have been added to the `devDependencies` object in the `package.json` file (although this only installed base Babel with no plugins for transpiling):
 
 <pre>
     "devDependencies": {
@@ -399,11 +400,9 @@ After that, the `babel-cli` field will have been added to the devDependencies ob
     }
 </pre>
 
-To install the plugin to transpile to ECMAScript 2015, use
-
-`npm install --save-dev babel-preset-es2015`
-
-Once this finishes, our `package.json` `file will contain another dependency:
+- To install the plugin to transpile to ECMAScript 2015, use
+  - `npm install --save-dev babel-preset-es2015`
+- Once this finishes, our `package.json` `file will contain another dependency:
 
   <pre>
     "devDependencies": {
@@ -412,32 +411,28 @@ Once this finishes, our `package.json` `file will contain another dependency:
     }
   </pre>
 
-This installs the ES6 presets. To use these, we must tell Babel to configure itself with these presets. Create a file called `.babelrc` which is Babel's configuration. This is where we tell Babel what presets, plugins etc. Once created, add the following contents to the file:
+- This installs the ES6 presets. To use these, we must tell Babel to configure itself with these presets. Create a file called `.babelrc` which is Babel's configuration. This is where we tell Babel what presets, plugins etc. Once created, add the following contents to the file:
 
   <pre>
     { "presets": ["es2015"] }
   </pre>
 
-Now that Babel has been configured to transpile we need to update our `package.json` file to add a **transpile script** for npm. Add the following lines to your `package.json` file:
+- Now that Babel has been configured to transpile we need to update our `package.json` file to add a **transpile script** for npm. Add the following lines to your `package.json` file:
   <pre>
     "scripts": {
         "transpile": "babel app.js --out-file app.transpiled.js --source-maps"
     }
   </pre>
 
-The scripts object allows us to run these commands from npm.
+- The scripts object allows us to run these commands from npm.
+- We name the npm script transpile and it will run the command chain babel `app.js --out-file app.transpiled.js --source-maps` where `app.js` is our input file
+- The `--out-file` command specifies the output file for compilation. The `app.transpiled.js` is our output file.
+- Lastly, `--source-maps` creates a source map file. This file tells the browser which line of transpiled code corresponds to which lines of the original source. This allows us to debug directly in the original source file, that is, `app.js`.
+- Now we can transpile by typing `npm run` transpile into the terminal window.
 
--   We name the npm script transpile and it will run the command chain babel `app.js --out-file app.transpiled.js --source-maps` where `app.js` is our input file
--   The `--out-file` command specifies the output file for compilation. The `app.transpiled.js` is our output file.
--   Lastly, `--source-maps` creates a source map file. This file tells the browser which line of transpiled code corresponds to which lines of the original source. This allows us to debug directly in the original source file, that is, `app.js`.
--   
-
-Now we can transpile by typing npm run transpile into the terminal window.
-
--   Inheritance, Composition &Prototype** (\_\_proto\_\_ points back to the function)
+-   Inheritance, Composition & Prototype points back to the function)
 -   Closures
 -   Dom Events & Custom Events
 -   Events, Event Handlers, Delegation Filtering & Bubbling
 
-<hr>
 
