@@ -1,0 +1,83 @@
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 1em;
+}
+main {
+    width: 90%;
+    margin: 0 auto
+}
+h1 {
+    margin: 0;
+    padding: 0.5em 0;
+    font-size: 2em;
+    font-weight: 400;
+}
+
+section {
+    box-sizing: border-box;
+    width: 50%;
+    float: left;
+}
+.input-form {
+    padding-right: 1em;
+}
+.output {
+    padding-left: 1em;
+}
+form {
+    margin: 1em 0;
+}
+textarea {
+    display: block;
+    width: 100%;
+    min-height: 5em;
+    margin: 0 0 1em 0;
+    font-size: 1em;
+    font-family: sans-serif;
+}
+button {
+    display: inline-block;
+    margin: 0 0.5em 0 0;
+    padding: 0.25em 2em;
+    font-size: 1em;
+    font-family: sans-serif;
+    line-height: 1.8;
+    cursor: pointer;
+    box-shadow: none;
+    border-radius: 0;
+    border-width: 0;
+    background-color: #0069CC;
+    color: #fff;
+}
+
+button:focus {
+    outline: none
+}
+#saved-text {
+    padding: 0.5em 1em;
+    border: 1px dotted #ccc;
+}
+#saved-text p {
+    margin: 0.5em 0;
+    padding: 0.5em 0;
+    border-bottom: 1px dotted #ccc;
+}
+#saved-text p:first-child {
+    border-top: 1px dotted #ccc;
+}
+
+a.item-delete {
+    text-decoration: none;
+    font-size: 1em;
+    font-weight: 700;
+    float: right;
+    color: #ff0000;
+}

@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Control flow statements</title>
+  <link rel="stylesheet" href="site.css" type="text/css">
+</head>
+<body>
+  
+  
+  <div id="reactHtml"><div data-reactroot=""><h1><a href="./index.html">Quizzes</a> » <span>Control flow statements</span></h1><div><h2>1. Syntax</h2><div><p>Which of these are legal?</p>
+<pre><code class="language-js">// 1
+if (x === 0) {
+  foo(x);
+}
+
+// 2
+if (x === 0) {
+  foo(x);
+} else {
+  bar(x);
+}
+
+// 3
+if (x === 0) {
+  foo(x);
+} else if (x &lt; 0) {
+  bar(x);
+}
+
+// 4
+if (x === 0) foo(x);
+
+// 5
+if (x === 0) foo(x);
+else bar(x);
+
+// 6
+if (x === 0) foo(x);
+else if (x &lt; 0) bar(x);
+</code></pre>
+<!--quizzify ignore--></div><div><label><input type="checkbox" name="question0"/> <span>1</span></label></div><div><label><input type="checkbox" name="question0"/> <span>2</span></label></div><div><label><input type="checkbox" name="question0"/> <span>3</span></label></div><div><label><input type="checkbox" name="question0"/> <span>4</span></label></div><div><label><input type="checkbox" name="question0"/> <span>5</span></label></div><div><label><input type="checkbox" name="question0"/> <span>6</span></label></div><p><button>Answer</button></p></div><div><h2>2. <code>break</code></h2><div><p>Which of the following statements are legal?</p>
+<pre><code class="language-js">{
+  break; // 1
+}
+
+label1: {
+  break label1; // 2
+}
+
+while (true) {
+  break; // 3
+}
+
+label2: while (true) {
+  break label2; // 4
+}
+</code></pre>
+<!--quizzify ignore--></div><div><label><input type="checkbox" name="question1"/> <span>1</span></label></div><div><label><input type="checkbox" name="question1"/> <span>2</span></label></div><div><label><input type="checkbox" name="question1"/> <span>3</span></label></div><div><label><input type="checkbox" name="question1"/> <span>4</span></label></div><p><button>Answer</button></p></div><div><h2>3. <code>switch</code></h2><div><pre><code class="language-js">const x = 0;
+let result = '';
+
+switch (x) {
+  case 0:
+    result += 'zero';
+  case 1:
+    result += 'one';
+  default:
+    result += 'multiple';
+}
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question2"/> <span><code>assert.equal(result, undefined)</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>assert.equal(result, '')</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>assert.equal(result, 'zero')</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>assert.equal(result, 'multiple')</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>assert.equal(result, 'zeroonemultiple')</code></span></label></div><p><button>Answer</button></p></div><div><h2>4. Infinite loops</h2><div><p>Which of the following loops are infinite?</p>
+<pre><code class="language-js">// 1
+while () {}
+// 2
+while (true) {}
+
+// 3
+do {} while ();
+// 4
+do {} while (true);
+
+// 5
+for () {}
+// 6
+for (;;) {}
+</code></pre>
+<!--quizzify ignore--></div><div><label><input type="checkbox" name="question3"/> <span>1</span></label></div><div><label><input type="checkbox" name="question3"/> <span>2</span></label></div><div><label><input type="checkbox" name="question3"/> <span>3</span></label></div><div><label><input type="checkbox" name="question3"/> <span>4</span></label></div><div><label><input type="checkbox" name="question3"/> <span>5</span></label></div><div><label><input type="checkbox" name="question3"/> <span>6</span></label></div><p><button>Answer</button></p></div><div><h2>5. Loops that never execute their bodies</h2><div><p>Which of the following loops never execute their bodies?</p>
+<pre><code class="language-js">// 1
+while (false) {
+  console.log('while');
+}
+
+// 2
+do {
+  console.log('do-while');
+} while (false);
+
+// 3
+for (;false;) {
+  console.log('for');
+}
+</code></pre>
+<!--quizzify ignore--></div><div><label><input type="checkbox" name="question4"/> <span>1</span></label></div><div><label><input type="checkbox" name="question4"/> <span>2</span></label></div><div><label><input type="checkbox" name="question4"/> <span>3</span></label></div><p><button>Answer</button></p></div><div><h2>6. <code>for-of</code></h2><div><pre><code class="language-js">const result = [];
+
+const arr = ['a', 'b', 'c'];
+for (const [index, elem] of arr.entries()) {
+  if (index &gt; 1) break;
+  result.push(elem);
+}
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question5"/> <span><code>assert.deepEqual(result, ['a', 'b', 'c'])</code></span></label></div><div><label><input type="checkbox" name="question5"/> <span><code>assert.deepEqual(result, ['a', 'b'])</code></span></label></div><div><label><input type="checkbox" name="question5"/> <span><code>assert.deepEqual(result, ['a'])</code></span></label></div><div><label><input type="checkbox" name="question5"/> <span><code>assert.deepEqual(result, [])</code></span></label></div><p><button>Answer</button></p></div><hr/><div>Correct answers: <!-- -->0<!-- --> out of <!-- -->0</div></div></div>
+
+  <script defer>
+  var quizData = {"titleMd":"Control flow statements","titleHtml":"Control flow statements","questions":[{"title":"Syntax","prefix":"<p>Which of these are legal?</p>\n<pre><code class=\"language-js\">// 1\nif (x === 0) {\n  foo(x);\n}\n\n// 2\nif (x === 0) {\n  foo(x);\n} else {\n  bar(x);\n}\n\n// 3\nif (x === 0) {\n  foo(x);\n} else if (x &lt; 0) {\n  bar(x);\n}\n\n// 4\nif (x === 0) foo(x);\n\n// 5\nif (x === 0) foo(x);\nelse bar(x);\n\n// 6\nif (x === 0) foo(x);\nelse if (x &lt; 0) bar(x);\n</code></pre>\n<!--quizzify ignore-->","choices":["1","2","3","4","5","6"],"solutions":[1,2,3,4,5,6],"suffix":"<p>All are legal! After <code>if</code> and <code>then</code>, you can always choose between ...</p>\n<pre><code class=\"language-js\">{\n  // block\n}\n</code></pre>\n<p>... and ...</p>\n<pre><code class=\"language-js\">statement;\n</code></pre>\n"},{"title":"<code>break</code>","prefix":"<p>Which of the following statements are legal?</p>\n<pre><code class=\"language-js\">{\n  break; // 1\n}\n\nlabel1: {\n  break label1; // 2\n}\n\nwhile (true) {\n  break; // 3\n}\n\nlabel2: while (true) {\n  break label2; // 4\n}\n</code></pre>\n<!--quizzify ignore-->","choices":["1","2","3","4"],"solutions":[2,3,4],"suffix":"<p><code>break</code> without a label can only be used inside loops.</p>\n"},{"title":"<code>switch</code>","prefix":"<pre><code class=\"language-js\">const x = 0;\nlet result = '';\n\nswitch (x) {\n  case 0:\n    result += 'zero';\n  case 1:\n    result += 'one';\n  default:\n    result += 'multiple';\n}\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.equal(result, undefined)</code>","<code>assert.equal(result, '')</code>","<code>assert.equal(result, 'zero')</code>","<code>assert.equal(result, 'multiple')</code>","<code>assert.equal(result, 'zeroonemultiple')</code>"],"solutions":[5],"suffix":"<p>The <code>case</code> clauses are only used once, as targets that execution jumps to. Afterwards, they have no effect and are ignored. Therefore, after execution jumps to <code>case 0</code>, it just keeps going and visits all the code inside the <code>switch</code> statement.</p>\n<p>You’d fix this code as follows:</p>\n<!--quizzify run_code-->\n<pre><code class=\"language-js\">const x = 0;\nlet result = '';\n\nswitch (x) {\n  case 0:\n    result += 'zero';\n    break;\n  case 1:\n    result += 'one';\n    break;\n  default:\n    result += 'multiple';\n}\nassert.equal(result, 'zero');\n</code></pre>\n"},{"title":"Infinite loops","prefix":"<p>Which of the following loops are infinite?</p>\n<pre><code class=\"language-js\">// 1\nwhile () {}\n// 2\nwhile (true) {}\n\n// 3\ndo {} while ();\n// 4\ndo {} while (true);\n\n// 5\nfor () {}\n// 6\nfor (;;) {}\n</code></pre>\n<!--quizzify ignore-->","choices":["1","2","3","4","5","6"],"solutions":[2,4,6],"suffix":"<p>The other loops are syntactically illegal.</p>\n"},{"title":"Loops that never execute their bodies","prefix":"<p>Which of the following loops never execute their bodies?</p>\n<pre><code class=\"language-js\">// 1\nwhile (false) {\n  console.log('while');\n}\n\n// 2\ndo {\n  console.log('do-while');\n} while (false);\n\n// 3\nfor (;false;) {\n  console.log('for');\n}\n</code></pre>\n<!--quizzify ignore-->","choices":["1","2","3"],"solutions":[1,3],"suffix":""},{"title":"<code>for-of</code>","prefix":"<pre><code class=\"language-js\">const result = [];\n\nconst arr = ['a', 'b', 'c'];\nfor (const [index, elem] of arr.entries()) {\n  if (index &gt; 1) break;\n  result.push(elem);\n}\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.deepEqual(result, ['a', 'b', 'c'])</code>","<code>assert.deepEqual(result, ['a', 'b'])</code>","<code>assert.deepEqual(result, ['a'])</code>","<code>assert.deepEqual(result, [])</code>"],"solutions":[2],"suffix":""}]};
+  </script>
+  <script defer src="quiz_component.bundle.js"></script>
+</body>
+</html>

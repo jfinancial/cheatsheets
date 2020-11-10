@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Callable values</title>
+  <link rel="stylesheet" href="site.css" type="text/css">
+</head>
+<body>
+  
+  
+  <div id="reactHtml"><div data-reactroot=""><h1><a href="./index.html">Quizzes</a> » <span>Callable values</span></h1><div><h2>1. Function calls</h2><div><pre><code class="language-js">function callIt(func) {
+  func();
+}
+</code></pre>
+<p>Which of the following expressions throw exceptions?</p>
+<!--quizzify wrap="assert.throws(() => •••)"--></div><div><label><input type="checkbox" name="question0"/> <span><code>callIt(() =&gt; {})</code></span></label></div><div><label><input type="checkbox" name="question0"/> <span><code>callIt(class {})</code></span></label></div><div><label><input type="checkbox" name="question0"/> <span><code>callIt(function () {})</code></span></label></div><p><button>Answer</button></p></div><div><h2>2. <code>new</code></h2><div><pre><code class="language-js">function newIt(constr) {
+  new constr();
+}
+</code></pre>
+<p>Which of the following expressions throw exceptions?</p>
+<!--quizzify wrap="assert.throws(() => •••)"--></div><div><label><input type="checkbox" name="question1"/> <span><code>newIt(() =&gt; {})</code></span></label></div><div><label><input type="checkbox" name="question1"/> <span><code>newIt(class {})</code></span></label></div><div><label><input type="checkbox" name="question1"/> <span><code>newIt(function () {})</code></span></label></div><p><button>Answer</button></p></div><div><h2>3. Parameter default values</h2><div><pre><code class="language-js">function foo(x=true, y) {
+  return [x, y];
+}
+const result = foo('a', 'b', 'c');
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question2"/> <span><code>assert.deepEqual(result, ['a', 'b', 'c'])</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>assert.deepEqual(result, ['a', 'b'])</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>assert.deepEqual(result, [true, 'b'])</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>TypeError</code></span></label></div><p><button>Answer</button></p></div><div><h2>4. Parameter default values</h2><div><pre><code class="language-js">function foo(x=true, y) {
+  return [x, y];
+}
+const result = foo('a', 'b');
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question3"/> <span><code>assert.deepEqual(result, ['a', 'b'])</code></span></label></div><div><label><input type="checkbox" name="question3"/> <span><code>assert.deepEqual(result, ['a', undefined])</code></span></label></div><div><label><input type="checkbox" name="question3"/> <span><code>assert.deepEqual(result, [true, 'a'])</code></span></label></div><div><label><input type="checkbox" name="question3"/> <span><code>assert.deepEqual(result, [true, undefined])</code></span></label></div><p><button>Answer</button></p></div><div><h2>5. Parameter default values</h2><div><pre><code class="language-js">function foo(x=true, y) {
+  return [x, y];
+}
+const result = foo('a');
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question4"/> <span><code>assert.deepEqual(result, ['a', 'b'])</code></span></label></div><div><label><input type="checkbox" name="question4"/> <span><code>assert.deepEqual(result, ['a', undefined])</code></span></label></div><div><label><input type="checkbox" name="question4"/> <span><code>assert.deepEqual(result, [true, 'a'])</code></span></label></div><div><label><input type="checkbox" name="question4"/> <span><code>assert.deepEqual(result, [true, undefined])</code></span></label></div><p><button>Answer</button></p></div><div><h2>6. Parameter default values</h2><div><pre><code class="language-js">function foo(x=true, y) {
+  return [x, y];
+}
+const result = foo();
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question5"/> <span><code>assert.deepEqual(result, ['a', 'b'])</code></span></label></div><div><label><input type="checkbox" name="question5"/> <span><code>assert.deepEqual(result, ['a', undefined])</code></span></label></div><div><label><input type="checkbox" name="question5"/> <span><code>assert.deepEqual(result, [true, 'a'])</code></span></label></div><div><label><input type="checkbox" name="question5"/> <span><code>assert.deepEqual(result, [true, undefined])</code></span></label></div><p><button>Answer</button></p></div><div><h2>7. Rest parameters</h2><div><pre><code class="language-js">function f(x, ...y) {
+  return [x, y];
+}
+const result = f('a', 'b', 'c');
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question6"/> <span><code>assert.deepEqual(result, [undefined, ['a', 'b', 'c']])</code></span></label></div><div><label><input type="checkbox" name="question6"/> <span><code>assert.deepEqual(result, ['a', ['b', 'c']])</code></span></label></div><div><label><input type="checkbox" name="question6"/> <span><code>assert.deepEqual(result, [['a', 'b', 'c'], undefined])</code></span></label></div><div><label><input type="checkbox" name="question6"/> <span><code>assert.deepEqual(result, [['a', 'b', 'c'], []])</code></span></label></div><div><label><input type="checkbox" name="question6"/> <span><code>assert.deepEqual(result, ['a', []])</code></span></label></div><div><label><input type="checkbox" name="question6"/> <span><code>assert.deepEqual(result, ['a', undefined])</code></span></label></div><p><button>Answer</button></p></div><div><h2>8. Rest parameters</h2><div><pre><code class="language-js">function f(x, ...y) {
+  return [x, y];
+}
+const result = f();
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question7"/> <span><code>assert.deepEqual(result, [undefined, []])</code></span></label></div><div><label><input type="checkbox" name="question7"/> <span><code>assert.deepEqual(result, [undefined, undefined])</code></span></label></div><p><button>Answer</button></p></div><div><h2>9. Arrow function syntax</h2><div><p>Which of the following expressions are syntactically correct?</p>
+<!--quizzify check wrap="eval('•••')"--></div><div><label><input type="checkbox" name="question8"/> <span><code>() =&gt; 3 + 4</code></span></label></div><div><label><input type="checkbox" name="question8"/> <span><code>a =&gt; console.log(a)</code></span></label></div><div><label><input type="checkbox" name="question8"/> <span><code>(err) =&gt; throw err</code></span></label></div><div><label><input type="checkbox" name="question8"/> <span><code>(x, y) =&gt; {}</code></span></label></div><p><button>Answer</button></p></div><hr/><div>Correct answers: <!-- -->0<!-- --> out of <!-- -->0</div></div></div>
+
+  <script defer>
+  var quizData = {"titleMd":"Callable values","titleHtml":"Callable values","questions":[{"title":"Function calls","prefix":"<pre><code class=\"language-js\">function callIt(func) {\n  func();\n}\n</code></pre>\n<p>Which of the following expressions throw exceptions?</p>\n<!--quizzify wrap=\"assert.throws(() => •••)\"-->","choices":["<code>callIt(() =&gt; {})</code>","<code>callIt(class {})</code>","<code>callIt(function () {})</code>"],"solutions":[2],"suffix":"<p>Classes can’t be function-called.</p>\n"},{"title":"<code>new</code>","prefix":"<pre><code class=\"language-js\">function newIt(constr) {\n  new constr();\n}\n</code></pre>\n<p>Which of the following expressions throw exceptions?</p>\n<!--quizzify wrap=\"assert.throws(() => •••)\"-->","choices":["<code>newIt(() =&gt; {})</code>","<code>newIt(class {})</code>","<code>newIt(function () {})</code>"],"solutions":[1],"suffix":"<p>Arrow functions can’t be <code>new</code>-called.</p>\n"},{"title":"Parameter default values","prefix":"<pre><code class=\"language-js\">function foo(x=true, y) {\n  return [x, y];\n}\nconst result = foo('a', 'b', 'c');\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.deepEqual(result, ['a', 'b', 'c'])</code>","<code>assert.deepEqual(result, ['a', 'b'])</code>","<code>assert.deepEqual(result, [true, 'b'])</code>","<code>TypeError</code>"],"solutions":[2],"suffix":""},{"title":"Parameter default values","prefix":"<pre><code class=\"language-js\">function foo(x=true, y) {\n  return [x, y];\n}\nconst result = foo('a', 'b');\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.deepEqual(result, ['a', 'b'])</code>","<code>assert.deepEqual(result, ['a', undefined])</code>","<code>assert.deepEqual(result, [true, 'a'])</code>","<code>assert.deepEqual(result, [true, undefined])</code>"],"solutions":[1],"suffix":""},{"title":"Parameter default values","prefix":"<pre><code class=\"language-js\">function foo(x=true, y) {\n  return [x, y];\n}\nconst result = foo('a');\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.deepEqual(result, ['a', 'b'])</code>","<code>assert.deepEqual(result, ['a', undefined])</code>","<code>assert.deepEqual(result, [true, 'a'])</code>","<code>assert.deepEqual(result, [true, undefined])</code>"],"solutions":[2],"suffix":"<p>The parameter default value is only used if the parameter is missing. You can think of the second parameter as having the default value <code>y=undefined</code>.</p>\n"},{"title":"Parameter default values","prefix":"<pre><code class=\"language-js\">function foo(x=true, y) {\n  return [x, y];\n}\nconst result = foo();\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.deepEqual(result, ['a', 'b'])</code>","<code>assert.deepEqual(result, ['a', undefined])</code>","<code>assert.deepEqual(result, [true, 'a'])</code>","<code>assert.deepEqual(result, [true, undefined])</code>"],"solutions":[4],"suffix":""},{"title":"Rest parameters","prefix":"<pre><code class=\"language-js\">function f(x, ...y) {\n  return [x, y];\n}\nconst result = f('a', 'b', 'c');\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.deepEqual(result, [undefined, ['a', 'b', 'c']])</code>","<code>assert.deepEqual(result, ['a', ['b', 'c']])</code>","<code>assert.deepEqual(result, [['a', 'b', 'c'], undefined])</code>","<code>assert.deepEqual(result, [['a', 'b', 'c'], []])</code>","<code>assert.deepEqual(result, ['a', []])</code>","<code>assert.deepEqual(result, ['a', undefined])</code>"],"solutions":[2],"suffix":""},{"title":"Rest parameters","prefix":"<pre><code class=\"language-js\">function f(x, ...y) {\n  return [x, y];\n}\nconst result = f();\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.deepEqual(result, [undefined, []])</code>","<code>assert.deepEqual(result, [undefined, undefined])</code>"],"solutions":[1],"suffix":"<p>A rest parameter is always an Array.</p>\n<!-- Named parameters are covered in destructuring.md -->"},{"title":"Arrow function syntax","prefix":"<p>Which of the following expressions are syntactically correct?</p>\n<!--quizzify check wrap=\"eval('•••')\"-->","choices":["<code>() =&gt; 3 + 4</code>","<code>a =&gt; console.log(a)</code>","<code>(err) =&gt; throw err</code>","<code>(x, y) =&gt; {}</code>"],"solutions":[1,2,4],"suffix":"<ul>\n<li>(3) is incorrect, because you can’t use the statement <code>throw</code> as an expression body. <code>console.log()</code> in (2) is an expression and allowed. Fix:<pre><code class=\"language-js\">(err) =&gt; {throw err}\n</code></pre>\n</li>\n<li>(4) has an empty block body (which is OK).</li>\n</ul>\n"}]};
+  </script>
+  <script defer src="quiz_component.bundle.js"></script>
+</body>
+</html>

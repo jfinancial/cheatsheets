@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Variables and assignment (basic)</title>
+  <link rel="stylesheet" href="site.css" type="text/css">
+</head>
+<body>
+  
+  
+  <div id="reactHtml"><div data-reactroot=""><h1><a href="./index.html">Quizzes</a> » <span>Variables and assignment (basic)</span></h1><div><h2>1. <code>const</code> (1/3)</h2><div><!--quizzify eval_code-->
+<pre><code class="language-js">const x;
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question0"/> <span><code>assert.equal(x, undefined)</code></span></label></div><div><label><input type="checkbox" name="question0"/> <span><code>SyntaxError</code></span></label></div><p><button>Answer</button></p></div><div><h2>2. <code>const</code> (2/3)</h2><div><pre><code class="language-js">const obj = {a: 1};
+obj.a = 2;
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question1"/> <span><code>assert.equal(obj.a, 1)</code></span></label></div><div><label><input type="checkbox" name="question1"/> <span><code>assert.equal(obj.a, 2)</code></span></label></div><div><label><input type="checkbox" name="question1"/> <span><code>TypeError</code></span></label></div><p><button>Answer</button></p></div><div><h2>3. <code>const</code> (3/3)</h2><div><pre><code class="language-js">const obj = {a: 1};
+obj = {};
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question2"/> <span><code>assert.deepEqual(obj, {})</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>TypeError</code></span></label></div><p><button>Answer</button></p></div><div><h2>4. Nested block</h2><div><pre><code class="language-js">const value = 'a';
+{
+  const value = 'b';
+  console.log(value);
+}
+console.log(value);
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question3"/> <span>Output: <code>'a', 'a'</code></span></label></div><div><label><input type="checkbox" name="question3"/> <span>Output: <code>'b', 'b'</code></span></label></div><div><label><input type="checkbox" name="question3"/> <span>Output: <code>'a', 'b'</code></span></label></div><div><label><input type="checkbox" name="question3"/> <span>Output: <code>'b', 'a'</code></span></label></div><p><button>Answer</button></p></div><hr/><div>Correct answers: <!-- -->0<!-- --> out of <!-- -->0</div></div></div>
+
+  <script defer>
+  var quizData = {"titleMd":"Variables and assignment (basic)","titleHtml":"Variables and assignment (basic)","questions":[{"title":"<code>const</code> (1/3)","prefix":"<!--quizzify eval_code-->\n<pre><code class=\"language-js\">const x;\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.equal(x, undefined)</code>","<code>SyntaxError</code>"],"solutions":[2],"suffix":"<p>JavaScript syntactically enforces that constants are initialized. The full syntax error is:</p>\n<pre><code class=\"language-text\">SyntaxError: Missing initializer in const declaration\n</code></pre>\n"},{"title":"<code>const</code> (2/3)","prefix":"<pre><code class=\"language-js\">const obj = {a: 1};\nobj.a = 2;\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.equal(obj.a, 1)</code>","<code>assert.equal(obj.a, 2)</code>","<code>TypeError</code>"],"solutions":[2],"suffix":"<p>You can’t change what is bound to a constant. But you may be able to change the assigned value itself. In this case you can.</p>\n"},{"title":"<code>const</code> (3/3)","prefix":"<pre><code class=\"language-js\">const obj = {a: 1};\nobj = {};\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.deepEqual(obj, {})</code>","<code>TypeError</code>"],"solutions":[2],"suffix":""},{"title":"Nested block","prefix":"<pre><code class=\"language-js\">const value = 'a';\n{\n  const value = 'b';\n  console.log(value);\n}\nconsole.log(value);\n</code></pre>\n<p>What happens?</p>\n","choices":["Output: <code>'a', 'a'</code>","Output: <code>'b', 'b'</code>","Output: <code>'a', 'b'</code>","Output: <code>'b', 'a'</code>"],"solutions":[4],"suffix":""}]};
+  </script>
+  <script defer src="quiz_component.bundle.js"></script>
+</body>
+</html>

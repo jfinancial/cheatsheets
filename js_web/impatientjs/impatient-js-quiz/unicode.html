@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Unicode</title>
+  <link rel="stylesheet" href="site.css" type="text/css">
+</head>
+<body>
+  
+  
+  <div id="reactHtml"><div data-reactroot=""><h1><a href="./index.html">Quizzes</a> » <span>Unicode</span></h1><div><h2>1. How many bits do Unicode code points (roughly: characters) have?</h2><div></div><div><label><input type="checkbox" name="question0"/> <span>16 bits</span></label></div><div><label><input type="checkbox" name="question0"/> <span>21 bits</span></label></div><div><label><input type="checkbox" name="question0"/> <span>32 bits</span></label></div><p><button>Answer</button></p></div><div><h2>2. Counting code points and code units</h2><div><pre><code class="language-js">const result = 'ab😀'.length;
+</code></pre>
+<p>What is the result?</p>
+</div><div><label><input type="checkbox" name="question1"/> <span><code>assert.equal(result, 3)</code></span></label></div><div><label><input type="checkbox" name="question1"/> <span><code>assert.equal(result, 4)</code></span></label></div><div><label><input type="checkbox" name="question1"/> <span><code>assert.equal(result, 6)</code></span></label></div><p><button>Answer</button></p></div><div><h2>3. Counting code points and code units</h2><div><pre><code class="language-js">const result = [...'ab😀'].length;
+</code></pre>
+<p>What is the result?</p>
+</div><div><label><input type="checkbox" name="question2"/> <span><code>assert.equal(result, 3)</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>assert.equal(result, 4)</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>assert.equal(result, 6)</code></span></label></div><p><button>Answer</button></p></div><hr/><div>Correct answers: <!-- -->0<!-- --> out of <!-- -->0</div></div></div>
+
+  <script defer>
+  var quizData = {"titleMd":"Unicode","titleHtml":"Unicode","questions":[{"title":"How many bits do Unicode code points (roughly: characters) have?","prefix":"","choices":["16 bits","21 bits","32 bits"],"solutions":[2],"suffix":"<p>Originally code points had 16 bits. Now 21 bits (17 planes à 16 bit).</p>\n"},{"title":"Counting code points and code units","prefix":"<pre><code class=\"language-js\">const result = 'ab😀'.length;\n</code></pre>\n<p>What is the result?</p>\n","choices":["<code>assert.equal(result, 3)</code>","<code>assert.equal(result, 4)</code>","<code>assert.equal(result, 6)</code>"],"solutions":[2],"suffix":"<p>Each JavaScript character is a UTF-16 code unit. <code>length</code> counts code units:</p>\n<ul>\n<li><code>a</code> and <code>b</code> are in the Basic Multilingual Plane (BMP) and fit into single UTF-16 code units.</li>\n<li>😀 is in an astral plane. Therefore, you need two code units.</li>\n</ul>\n"},{"title":"Counting code points and code units","prefix":"<pre><code class=\"language-js\">const result = [...'ab😀'].length;\n</code></pre>\n<p>What is the result?</p>\n","choices":["<code>assert.equal(result, 3)</code>","<code>assert.equal(result, 4)</code>","<code>assert.equal(result, 6)</code>"],"solutions":[1],"suffix":"<p>JavaScript iteration splits into code points:</p>\n<pre><code class=\"language-repl\">&gt; [...'ab😀' ]\n[ 'a', 'b', '😀' ]\n</code></pre>\n<p>JavaScript characters are UTF-16 code units:</p>\n<pre><code class=\"language-repl\">&gt; 'ab😀'.split('')\n[ 'a', 'b', '�', '�' ]\n</code></pre>\n"}]};
+  </script>
+  <script defer src="quiz_component.bundle.js"></script>
+</body>
+</html>

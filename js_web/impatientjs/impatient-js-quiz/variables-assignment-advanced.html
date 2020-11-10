@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Variables and assignment (advanced)</title>
+  <link rel="stylesheet" href="site.css" type="text/css">
+</head>
+<body>
+  
+  
+  <div id="reactHtml"><div data-reactroot=""><h1><a href="./index.html">Quizzes</a> » <span>Variables and assignment (advanced)</span></h1><div><h2>1. Static vs. dynamic</h2><div><p>Which one means “at runtime”?</p>
+</div><div><label><input type="checkbox" name="question0"/> <span>Static</span></label></div><div><label><input type="checkbox" name="question0"/> <span>Dynamic</span></label></div><p><button>Answer</button></p></div><div><h2>2. Static vs. dynamic</h2><div><p>Which one means “at compile time, without running the program”?</p>
+</div><div><label><input type="checkbox" name="question1"/> <span>Static</span></label></div><div><label><input type="checkbox" name="question1"/> <span>Dynamic</span></label></div><p><button>Answer</button></p></div><div><h2>3. Block-scoping</h2><div><pre><code class="language-js">let foo = 'a';
+{
+  let foo = 'b';
+  console.log(foo);
+}
+console.log(foo);
+</code></pre>
+</div><div><label><input type="checkbox" name="question2"/> <span>Output: <code>'b', 'a'</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span>Output: <code>'b', 'b'</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>ReferenceError</code></span></label></div><p><button>Answer</button></p></div><div><h2>4. Block-scoping</h2><div><pre><code class="language-js">let foo; // (A)
+{
+  let foo = 123;
+}
+console.log(foo);
+</code></pre>
+</div><div><label><input type="checkbox" name="question3"/> <span>Output: <code>undefined</code></span></label></div><div><label><input type="checkbox" name="question3"/> <span>Output: <code>123</code></span></label></div><div><label><input type="checkbox" name="question3"/> <span><code>ReferenceError</code></span></label></div><p><button>Answer</button></p></div><div><h2>5. Temporal dead zone 1/5</h2><div><pre><code class="language-js">let foo = 'a';
+console.log(foo); // (A)
+{
+  let foo;
+  foo = 'b';
+}
+</code></pre>
+<p>What happens in line A?</p>
+</div><div><label><input type="checkbox" name="question4"/> <span><code>ReferenceError</code></span></label></div><div><label><input type="checkbox" name="question4"/> <span>Output: <code>undefined</code></span></label></div><div><label><input type="checkbox" name="question4"/> <span>Output: <code>'a'</code></span></label></div><div><label><input type="checkbox" name="question4"/> <span>Output: <code>'b'</code></span></label></div><p><button>Answer</button></p></div><div><h2>6. Temporal dead zone 2/5</h2><div><pre><code class="language-js">let foo = 'a';
+{
+  console.log(foo); // (A)
+  let foo;
+  foo = 'b';
+}
+</code></pre>
+<p>What happens in line A?</p>
+</div><div><label><input type="checkbox" name="question5"/> <span><code>ReferenceError</code></span></label></div><div><label><input type="checkbox" name="question5"/> <span>Output: <code>undefined</code></span></label></div><div><label><input type="checkbox" name="question5"/> <span>Output: <code>'a'</code></span></label></div><div><label><input type="checkbox" name="question5"/> <span>Output: <code>'b'</code></span></label></div><p><button>Answer</button></p></div><div><h2>7. Temporal dead zone 3/5</h2><div><pre><code class="language-js">let foo = 'a';
+{
+  let foo;
+  console.log(foo); // (A)
+  foo = 'b';
+}
+</code></pre>
+<p>What happens in line A?</p>
+</div><div><label><input type="checkbox" name="question6"/> <span><code>ReferenceError</code></span></label></div><div><label><input type="checkbox" name="question6"/> <span>Output: <code>undefined</code></span></label></div><div><label><input type="checkbox" name="question6"/> <span>Output: <code>'a'</code></span></label></div><div><label><input type="checkbox" name="question6"/> <span>Output: <code>'b'</code></span></label></div><p><button>Answer</button></p></div><div><h2>8. Temporal dead zone 4/5</h2><div><pre><code class="language-js">let foo = 'a';
+{
+  let foo;
+  foo = 'b';
+  console.log(foo); // (A)
+}
+</code></pre>
+<p>What happens in line A?</p>
+</div><div><label><input type="checkbox" name="question7"/> <span><code>ReferenceError</code></span></label></div><div><label><input type="checkbox" name="question7"/> <span>Output: <code>undefined</code></span></label></div><div><label><input type="checkbox" name="question7"/> <span>Output: <code>'a'</code></span></label></div><div><label><input type="checkbox" name="question7"/> <span>Output: <code>'b'</code></span></label></div><p><button>Answer</button></p></div><div><h2>9. Temporal dead zone 5/5</h2><div><pre><code class="language-js">let foo = 'a';
+{
+  let foo;
+  foo = 'b';
+}
+console.log(foo); // (A)
+</code></pre>
+<p>What happens in line A?</p>
+</div><div><label><input type="checkbox" name="question8"/> <span><code>ReferenceError</code></span></label></div><div><label><input type="checkbox" name="question8"/> <span>Output: <code>undefined</code></span></label></div><div><label><input type="checkbox" name="question8"/> <span>Output: <code>'a'</code></span></label></div><div><label><input type="checkbox" name="question8"/> <span>Output: <code>'b'</code></span></label></div><p><button>Answer</button></p></div><div><h2>10. Closures (1/2)</h2><div><pre><code class="language-js">const foo = 'a';
+function func() {
+  return foo;
+}
+function returnFunc(foo) {
+  return func;
+}
+const result = returnFunc('b')();
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question9"/> <span><code>ReferenceError</code></span></label></div><div><label><input type="checkbox" name="question9"/> <span><code>assert.equal(result, undefined)</code></span></label></div><div><label><input type="checkbox" name="question9"/> <span><code>assert.equal(result, 'a')</code></span></label></div><div><label><input type="checkbox" name="question9"/> <span><code>assert.equal(result, 'b')</code></span></label></div><p><button>Answer</button></p></div><div><h2>11. Closures (2/2)</h2><div><pre><code class="language-js">const foo = 'a';
+function returnFunc(foo) {
+  function func() {
+    return foo;
+  }
+  return func;
+}
+const result = returnFunc('b')();
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question10"/> <span><code>ReferenceError</code></span></label></div><div><label><input type="checkbox" name="question10"/> <span><code>assert.equal(result, undefined)</code></span></label></div><div><label><input type="checkbox" name="question10"/> <span><code>assert.equal(result, 'a')</code></span></label></div><div><label><input type="checkbox" name="question10"/> <span><code>assert.equal(result, 'b')</code></span></label></div><p><button>Answer</button></p></div><hr/><div>Correct answers: <!-- -->0<!-- --> out of <!-- -->0</div></div></div>
+
+  <script defer>
+  var quizData = {"titleMd":"Variables and assignment (advanced)","titleHtml":"Variables and assignment (advanced)","questions":[{"title":"Static vs. dynamic","prefix":"<p>Which one means “at runtime”?</p>\n","choices":["Static","Dynamic"],"solutions":[2],"suffix":""},{"title":"Static vs. dynamic","prefix":"<p>Which one means “at compile time, without running the program”?</p>\n","choices":["Static","Dynamic"],"solutions":[1],"suffix":""},{"title":"Block-scoping","prefix":"<pre><code class=\"language-js\">let foo = 'a';\n{\n  let foo = 'b';\n  console.log(foo);\n}\nconsole.log(foo);\n</code></pre>\n","choices":["Output: <code>'b', 'a'</code>","Output: <code>'b', 'b'</code>","<code>ReferenceError</code>"],"solutions":[1],"suffix":"<p><code>foo</code> is temporarily <em>shadowed</em> inside the block. Once execution returns to the initial scope, <code>foo</code> gets its initial value back.</p>\n"},{"title":"Block-scoping","prefix":"<pre><code class=\"language-js\">let foo; // (A)\n{\n  let foo = 123;\n}\nconsole.log(foo);\n</code></pre>\n","choices":["Output: <code>undefined</code>","Output: <code>123</code>","<code>ReferenceError</code>"],"solutions":[1],"suffix":"<p>Once again, block-scoping in action. <code>foo</code> is declared, but not initialized in line A, which means it has the value <code>undefined</code>.</p>\n"},{"title":"Temporal dead zone 1/5","prefix":"<pre><code class=\"language-js\">let foo = 'a';\nconsole.log(foo); // (A)\n{\n  let foo;\n  foo = 'b';\n}\n</code></pre>\n<p>What happens in line A?</p>\n","choices":["<code>ReferenceError</code>","Output: <code>undefined</code>","Output: <code>'a'</code>","Output: <code>'b'</code>"],"solutions":[3],"suffix":"<p><code>foo</code> is accessed after it was declared and initialized</p>\n"},{"title":"Temporal dead zone 2/5","prefix":"<pre><code class=\"language-js\">let foo = 'a';\n{\n  console.log(foo); // (A)\n  let foo;\n  foo = 'b';\n}\n</code></pre>\n<p>What happens in line A?</p>\n","choices":["<code>ReferenceError</code>","Output: <code>undefined</code>","Output: <code>'a'</code>","Output: <code>'b'</code>"],"solutions":[1],"suffix":"<p><code>foo</code> is accessed before it is declared (within the current scope).</p>\n"},{"title":"Temporal dead zone 3/5","prefix":"<pre><code class=\"language-js\">let foo = 'a';\n{\n  let foo;\n  console.log(foo); // (A)\n  foo = 'b';\n}\n</code></pre>\n<p>What happens in line A?</p>\n","choices":["<code>ReferenceError</code>","Output: <code>undefined</code>","Output: <code>'a'</code>","Output: <code>'b'</code>"],"solutions":[2],"suffix":"<p><code>foo</code> is accessed after it was declared (but not initialized).</p>\n"},{"title":"Temporal dead zone 4/5","prefix":"<pre><code class=\"language-js\">let foo = 'a';\n{\n  let foo;\n  foo = 'b';\n  console.log(foo); // (A)\n}\n</code></pre>\n<p>What happens in line A?</p>\n","choices":["<code>ReferenceError</code>","Output: <code>undefined</code>","Output: <code>'a'</code>","Output: <code>'b'</code>"],"solutions":[4],"suffix":"<p><code>foo</code> is accessed after it was declared and initialized.</p>\n"},{"title":"Temporal dead zone 5/5","prefix":"<pre><code class=\"language-js\">let foo = 'a';\n{\n  let foo;\n  foo = 'b';\n}\nconsole.log(foo); // (A)\n</code></pre>\n<p>What happens in line A?</p>\n","choices":["<code>ReferenceError</code>","Output: <code>undefined</code>","Output: <code>'a'</code>","Output: <code>'b'</code>"],"solutions":[3],"suffix":"<p>No change compared to step 1/5.</p>\n"},{"title":"Closures (1/2)","prefix":"<pre><code class=\"language-js\">const foo = 'a';\nfunction func() {\n  return foo;\n}\nfunction returnFunc(foo) {\n  return func;\n}\nconst result = returnFunc('b')();\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>ReferenceError</code>","<code>assert.equal(result, undefined)</code>","<code>assert.equal(result, 'a')</code>","<code>assert.equal(result, 'b')</code>"],"solutions":[3],"suffix":"<p>What variable a name refers to, can be determined statically. That’s why <code>func()</code> will always return the variable in the surrounding scope. Returning <code>func()</code> from <code>returnFunc()</code> before calling it, does not change that.</p>\n"},{"title":"Closures (2/2)","prefix":"<pre><code class=\"language-js\">const foo = 'a';\nfunction returnFunc(foo) {\n  function func() {\n    return foo;\n  }\n  return func;\n}\nconst result = returnFunc('b')();\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>ReferenceError</code>","<code>assert.equal(result, undefined)</code>","<code>assert.equal(result, 'a')</code>","<code>assert.equal(result, 'b')</code>"],"solutions":[4],"suffix":"<p><code>func</code> is a closure and stays connected with its birth environment. In that environment, <code>foo</code> is <code>'b'</code>.</p>\n"}]};
+  </script>
+  <script defer src="quiz_component.bundle.js"></script>
+</body>
+</html>

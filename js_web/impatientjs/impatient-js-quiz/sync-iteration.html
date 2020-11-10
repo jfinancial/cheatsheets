@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Using synchronous iteration</title>
+  <link rel="stylesheet" href="site.css" type="text/css">
+</head>
+<body>
+  
+  
+  <div id="reactHtml"><div data-reactroot=""><h1><a href="./index.html">Quizzes</a> » <span>Using synchronous iteration</span></h1><div><h2>1. Which values are not iterable?</h2><div></div><div><label><input type="checkbox" name="question0"/> <span>Arrays</span></label></div><div><label><input type="checkbox" name="question0"/> <span>Strings</span></label></div><div><label><input type="checkbox" name="question0"/> <span>Objects created via object literals</span></label></div><p><button>Answer</button></p></div><div><h2>2. Which constructs iterate over their arguments/operands?</h2><div></div><div><label><input type="checkbox" name="question1"/> <span>Spread properties (<code>...</code>) in object literals</span></label></div><div><label><input type="checkbox" name="question1"/> <span>Spread elements (<code>...</code>) in Array literals</span></label></div><div><label><input type="checkbox" name="question1"/> <span>Array-destructuring</span></label></div><div><label><input type="checkbox" name="question1"/> <span><code>Array.from()</code></span></label></div><div><label><input type="checkbox" name="question1"/> <span><code>new Set()</code></span></label></div><p><button>Answer</button></p></div><div><h2>3. <code>for-of</code></h2><div><pre><code class="language-js">const obj = {first: 'Jane', last: 'Doe'};
+for (const [key, value] of obj) {
+  console.log(key, value);
+}
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question2"/> <span>Output: <code>'first', 'Jane', 'last', 'Doe'</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>TypeError</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>SyntaxError</code></span></label></div><p><button>Answer</button></p></div><hr/><div>Correct answers: <!-- -->0<!-- --> out of <!-- -->0</div></div></div>
+
+  <script defer>
+  var quizData = {"titleMd":"Using synchronous iteration","titleHtml":"Using synchronous iteration","questions":[{"title":"Which values are not iterable?","prefix":"","choices":["Arrays","Strings","Objects created via object literals"],"solutions":[3],"suffix":""},{"title":"Which constructs iterate over their arguments/operands?","prefix":"","choices":["Spread properties (<code>...</code>) in object literals","Spread elements (<code>...</code>) in Array literals","Array-destructuring","<code>Array.from()</code>","<code>new Set()</code>"],"solutions":[2,3,4,5],"suffix":"<p>Only one of these constructs does not use the iteration protocol: spreading into object literals.</p>\n<p><code>Array.from()</code> can also handle “Array-like” objects:</p>\n<pre><code class=\"language-repl\">&gt; Array.from({ length:2, 0:'a', 1:'b' })\n[ 'a', 'b' ]\n</code></pre>\n"},{"title":"<code>for-of</code>","prefix":"<pre><code class=\"language-js\">const obj = {first: 'Jane', last: 'Doe'};\nfor (const [key, value] of obj) {\n  console.log(key, value);\n}\n</code></pre>\n<p>What happens?</p>\n","choices":["Output: <code>'first', 'Jane', 'last', 'Doe'</code>","<code>TypeError</code>","<code>SyntaxError</code>"],"solutions":[2],"suffix":"<ul>\n<li><code>obj</code> is a plain object.</li>\n<li>Plain objects are not iterable.</li>\n</ul>\n<p>You can use <code>Object.entries()</code> (or <code>Object.keys()</code>, <code>Object.values()</code>, etc.):</p>\n<pre><code class=\"language-js\">for (const [key, value] of Object.entries(obj)) {\n  console.log(key, value);\n}\n// Output:\n// 'first', 'Jane'\n// 'last', 'Doe'\n</code></pre>\n"}]};
+  </script>
+  <script defer src="quiz_component.bundle.js"></script>
+</body>
+</html>

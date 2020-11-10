@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>The non-values `undefined` and `null`</title>
+  <link rel="stylesheet" href="site.css" type="text/css">
+</head>
+<body>
+  
+  
+  <div id="reactHtml"><div data-reactroot=""><h1><a href="./index.html">Quizzes</a> » <span>The non-values <code>undefined</code> and <code>null</code></span></h1><div><h2>1. Accessing properties</h2><div><pre><code class="language-js">const result = true.unknownProperty;
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question0"/> <span><code>assert.equal(result, undefined)</code></span></label></div><div><label><input type="checkbox" name="question0"/> <span><code>TypeError</code></span></label></div><div><label><input type="checkbox" name="question0"/> <span><code>SyntaxError</code></span></label></div><p><button>Answer</button></p></div><div><h2>2. Accessing properties</h2><div><pre><code class="language-js">const result = null.unknownProperty;
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question1"/> <span><code>assert.equal(result, undefined)</code></span></label></div><div><label><input type="checkbox" name="question1"/> <span><code>TypeError</code></span></label></div><div><label><input type="checkbox" name="question1"/> <span><code>SyntaxError</code></span></label></div><p><button>Answer</button></p></div><div><h2>3. <code>undefined</code> or <code>null</code>?</h2><div><p>Given the following JavaScript code.</p>
+<pre><code class="language-js">let foo;
+function bar() {}
+const baz = (x) =&gt; x;
+</code></pre>
+<p>Which of these expressions evaluates to <code>undefined</code>? The remaining ones evaluate to <code>null</code>.</p>
+</div><div><label><input type="checkbox" name="question2"/> <span><code>assert.equal(foo, undefined)</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>assert.equal(bar(), undefined)</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>assert.equal(baz(), undefined)</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>assert.equal(/^#/.exec('Z'), undefined)</code></span></label></div><p><button>Answer</button></p></div><hr/><div>Correct answers: <!-- -->0<!-- --> out of <!-- -->0</div></div></div>
+
+  <script defer>
+  var quizData = {"titleMd":"The non-values `undefined` and `null`","titleHtml":"The non-values <code>undefined</code> and <code>null</code>","questions":[{"title":"Accessing properties","prefix":"<pre><code class=\"language-js\">const result = true.unknownProperty;\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.equal(result, undefined)</code>","<code>TypeError</code>","<code>SyntaxError</code>"],"solutions":[1],"suffix":"<p>We are reading an unknown property, which produces <code>undefined</code>.</p>\n"},{"title":"Accessing properties","prefix":"<pre><code class=\"language-js\">const result = null.unknownProperty;\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.equal(result, undefined)</code>","<code>TypeError</code>","<code>SyntaxError</code>"],"solutions":[2],"suffix":"<p><code>undefined</code> and <code>null</code> are the only values that don’t let you access properties (dynamically). Notably, this is not a syntax error.</p>\n"},{"title":"<code>undefined</code> or <code>null</code>?","prefix":"<p>Given the following JavaScript code.</p>\n<pre><code class=\"language-js\">let foo;\nfunction bar() {}\nconst baz = (x) =&gt; x;\n</code></pre>\n<p>Which of these expressions evaluates to <code>undefined</code>? The remaining ones evaluate to <code>null</code>.</p>\n","choices":["<code>assert.equal(foo, undefined)</code>","<code>assert.equal(bar(), undefined)</code>","<code>assert.equal(baz(), undefined)</code>","<code>assert.equal(/^#/.exec('Z'), undefined)</code>"],"solutions":[1,2,3],"suffix":"<p>What is happening?</p>\n<ol>\n<li>Uninitialized variable.</li>\n<li>Return value if nothing is returned explicitly.</li>\n<li>Missing parameter.</li>\n<li>Value indicating that there are no results (rare and not necessarily recommended).</li>\n</ol>\n"}]};
+  </script>
+  <script defer src="quiz_component.bundle.js"></script>
+</body>
+</html>

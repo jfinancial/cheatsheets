@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Modules</title>
+  <link rel="stylesheet" href="site.css" type="text/css">
+</head>
+<body>
+  
+  
+  <div id="reactHtml"><div data-reactroot=""><h1><a href="./index.html">Quizzes</a> » <span>Modules</span></h1><div><h2>1. Exporting (1/2)</h2><div><p>Check all correct statements:</p>
+</div><div><label><input type="checkbox" name="question0"/> <span><code>export 123;</code></span></label></div><div><label><input type="checkbox" name="question0"/> <span><code>export const x = 123;</code></span></label></div><p><button>Answer</button></p></div><div><h2>2. Exporting (2/2)</h2><div><p>Check all correct statements:</p>
+<p>Which one is correct?</p>
+</div><div><label><input type="checkbox" name="question1"/> <span><code>export default 123;</code></span></label></div><div><label><input type="checkbox" name="question1"/> <span><code>export default const x = 123;</code></span></label></div><p><button>Answer</button></p></div><div><h2>3. Importing (1/3)</h2><div><p>External file <code>lib1.mjs</code>:</p>
+<!--quizzify write="lib1.mjs"-->
+<pre><code class="language-js">export default 'a';
+export const lib1 = 'b';
+export function toString() {
+  return 'lib1';
+}
+</code></pre>
+<p>Code:</p>
+<pre><code class="language-js">import {lib1} from './lib1.mjs';
+const result = String(lib1);
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question2"/> <span><code>assert.equal(result, 'lib1')</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>assert.equal(result, 'a')</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>assert.equal(result, 'b')</code></span></label></div><p><button>Answer</button></p></div><div><h2>4. Importing (2/3)</h2><div><p>External file <code>lib2.mjs</code>:</p>
+<!--quizzify write="lib2.mjs"-->
+<pre><code class="language-js">export default 'a';
+export const lib2 = 'b';
+export function toString() {
+  return 'lib2';
+}
+</code></pre>
+<p>Code:</p>
+<pre><code class="language-js">import lib2 from './lib2.mjs';
+const result = String(lib2);
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question3"/> <span><code>assert.equal(result, 'lib2')</code></span></label></div><div><label><input type="checkbox" name="question3"/> <span><code>assert.equal(result, 'a')</code></span></label></div><div><label><input type="checkbox" name="question3"/> <span><code>assert.equal(result, 'b')</code></span></label></div><p><button>Answer</button></p></div><div><h2>5. Importing (3/3)</h2><div><p>External file <code>lib3.mjs</code>:</p>
+<!--quizzify write="lib3.mjs"-->
+<pre><code class="language-js">export default 'a';
+export const lib3 = 'b';
+export function toString() {
+  return 'lib3';
+}
+</code></pre>
+<p>Code:</p>
+<pre><code class="language-js">import * as lib3 from './lib3.mjs';
+const result = String(lib3);
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question4"/> <span><code>assert.equal(result, 'lib3')</code></span></label></div><div><label><input type="checkbox" name="question4"/> <span><code>assert.equal(result, 'a')</code></span></label></div><div><label><input type="checkbox" name="question4"/> <span><code>assert.equal(result, 'b')</code></span></label></div><p><button>Answer</button></p></div><hr/><div>Correct answers: <!-- -->0<!-- --> out of <!-- -->0</div></div></div>
+
+  <script defer>
+  var quizData = {"titleMd":"Modules","titleHtml":"Modules","questions":[{"title":"Exporting (1/2)","prefix":"<p>Check all correct statements:</p>\n","choices":["<code>export 123;</code>","<code>export const x = 123;</code>"],"solutions":[2],"suffix":"<p><code>export</code> (vs. <code>export default</code>) is used for named exports and the first statement does not have a name.</p>\n"},{"title":"Exporting (2/2)","prefix":"<p>Check all correct statements:</p>\n<p>Which one is correct?</p>\n","choices":["<code>export default 123;</code>","<code>export default const x = 123;</code>"],"solutions":[1],"suffix":"<p>Alas, you can’t default-export via <code>const</code>, because it may have multiple values (wheres a default export must be a single value). For example:</p>\n<pre><code class=\"language-js\">const a = 'a', b = 'b';\n</code></pre>\n"},{"title":"Importing (1/3)","prefix":"<p>External file <code>lib1.mjs</code>:</p>\n<!--quizzify write=\"lib1.mjs\"-->\n<pre><code class=\"language-js\">export default 'a';\nexport const lib1 = 'b';\nexport function toString() {\n  return 'lib1';\n}\n</code></pre>\n<p>Code:</p>\n<pre><code class=\"language-js\">import {lib1} from './lib1.mjs';\nconst result = String(lib1);\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.equal(result, 'lib1')</code>","<code>assert.equal(result, 'a')</code>","<code>assert.equal(result, 'b')</code>"],"solutions":[3],"suffix":"<p>We import the named export <code>lib1</code> from <code>lib1.mjs</code>.</p>\n"},{"title":"Importing (2/3)","prefix":"<p>External file <code>lib2.mjs</code>:</p>\n<!--quizzify write=\"lib2.mjs\"-->\n<pre><code class=\"language-js\">export default 'a';\nexport const lib2 = 'b';\nexport function toString() {\n  return 'lib2';\n}\n</code></pre>\n<p>Code:</p>\n<pre><code class=\"language-js\">import lib2 from './lib2.mjs';\nconst result = String(lib2);\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.equal(result, 'lib2')</code>","<code>assert.equal(result, 'a')</code>","<code>assert.equal(result, 'b')</code>"],"solutions":[2],"suffix":"<p>We import the default export of <code>lib2.mjs</code>.</p>\n"},{"title":"Importing (3/3)","prefix":"<p>External file <code>lib3.mjs</code>:</p>\n<!--quizzify write=\"lib3.mjs\"-->\n<pre><code class=\"language-js\">export default 'a';\nexport const lib3 = 'b';\nexport function toString() {\n  return 'lib3';\n}\n</code></pre>\n<p>Code:</p>\n<pre><code class=\"language-js\">import * as lib3 from './lib3.mjs';\nconst result = String(lib3);\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.equal(result, 'lib3')</code>","<code>assert.equal(result, 'a')</code>","<code>assert.equal(result, 'b')</code>"],"solutions":[1],"suffix":"<p>We import module <code>lib3.mjs</code> as an object. That object has no prototype and therefore doesn’t inherit <code>.toString()</code> from <code>Object.prototype</code> (as object do that are created via object literals). But the exported function <code>toString()</code> gives it a method with the same name. That’s why <code>String(lib3)</code> works.</p>\n"}]};
+  </script>
+  <script defer src="quiz_component.bundle.js"></script>
+</body>
+</html>

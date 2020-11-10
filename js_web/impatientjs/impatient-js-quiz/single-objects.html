@@ -1,0 +1,143 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Single objects</title>
+  <link rel="stylesheet" href="site.css" type="text/css">
+</head>
+<body>
+  
+  
+  <div id="reactHtml"><div data-reactroot=""><h1><a href="./index.html">Quizzes</a> » <span>Single objects</span></h1><div><h2>1. Object literals</h2><div><pre><code class="language-js">const obj = {
+  true: 'a',
+  ['true']: 'b',
+  [true]: 'c',
+};
+const result = Object.keys(obj).length;
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question0"/> <span><code>assert.equal(result, 1)</code></span></label></div><div><label><input type="checkbox" name="question0"/> <span><code>assert.equal(result, 2)</code></span></label></div><div><label><input type="checkbox" name="question0"/> <span><code>assert.equal(result, 3)</code></span></label></div><div><label><input type="checkbox" name="question0"/> <span><code>SyntaxError</code></span></label></div><p><button>Answer</button></p></div><div><h2>2. Computed property keys (1/6)</h2><div><pre><code class="language-js">const foo = 'bar';
+const obj = {
+  foo: 'a',
+  [foo]: 'b',
+};
+const result = obj.foo;
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question1"/> <span><code>assert.equal(result, 'a')</code></span></label></div><div><label><input type="checkbox" name="question1"/> <span><code>assert.equal(result, 'b')</code></span></label></div><div><label><input type="checkbox" name="question1"/> <span><code>assert.equal(result, 'undefined')</code></span></label></div><div><label><input type="checkbox" name="question1"/> <span><code>ReferenceError</code></span></label></div><p><button>Answer</button></p></div><div><h2>3. Computed property keys (2/6)</h2><div><pre><code class="language-js">const foo = 'bar';
+const obj = {
+  foo: 'a',
+  [foo]: 'b',
+};
+const result = obj.bar;
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question2"/> <span><code>assert.equal(result, 'a')</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>assert.equal(result, 'b')</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>assert.equal(result, 'undefined')</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>ReferenceError</code></span></label></div><p><button>Answer</button></p></div><div><h2>4. Computed property keys (3/6)</h2><div><pre><code class="language-js">const foo = 'bar';
+const obj = {
+  foo: 'a',
+  [foo]: 'b',
+};
+const result = obj[foo];
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question3"/> <span><code>assert.equal(result, 'a')</code></span></label></div><div><label><input type="checkbox" name="question3"/> <span><code>assert.equal(result, 'b')</code></span></label></div><div><label><input type="checkbox" name="question3"/> <span><code>assert.equal(result, 'undefined')</code></span></label></div><div><label><input type="checkbox" name="question3"/> <span><code>ReferenceError</code></span></label></div><p><button>Answer</button></p></div><div><h2>5. Computed property keys (4/6)</h2><div><pre><code class="language-js">const foo = 'bar';
+const obj = {
+  foo: 'a',
+  [foo]: 'b',
+};
+const result = obj[bar];
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question4"/> <span><code>assert.equal(result, 'a')</code></span></label></div><div><label><input type="checkbox" name="question4"/> <span><code>assert.equal(result, 'b')</code></span></label></div><div><label><input type="checkbox" name="question4"/> <span><code>assert.equal(result, 'undefined')</code></span></label></div><div><label><input type="checkbox" name="question4"/> <span><code>ReferenceError</code></span></label></div><p><button>Answer</button></p></div><div><h2>6. Computed property keys (5/6)</h2><div><pre><code class="language-js">const foo = 'bar';
+const obj = {
+  foo: 'a',
+  [foo]: 'b',
+};
+const result = obj['foo'];
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question5"/> <span><code>assert.equal(result, 'a')</code></span></label></div><div><label><input type="checkbox" name="question5"/> <span><code>assert.equal(result, 'b')</code></span></label></div><div><label><input type="checkbox" name="question5"/> <span><code>assert.equal(result, 'undefined')</code></span></label></div><div><label><input type="checkbox" name="question5"/> <span><code>ReferenceError</code></span></label></div><p><button>Answer</button></p></div><div><h2>7. Computed property keys (6/6)</h2><div><pre><code class="language-js">const foo = 'bar';
+const obj = {
+  foo: 'a',
+  [foo]: 'b',
+};
+const result = obj['bar'];
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question6"/> <span><code>assert.equal(result, 'a')</code></span></label></div><div><label><input type="checkbox" name="question6"/> <span><code>assert.equal(result, 'b')</code></span></label></div><div><label><input type="checkbox" name="question6"/> <span><code>assert.equal(result, 'undefined')</code></span></label></div><div><label><input type="checkbox" name="question6"/> <span><code>ReferenceError</code></span></label></div><p><button>Answer</button></p></div><div><h2>8. Iterating over objects (1/4)</h2><div><pre><code class="language-js">const symbol1 = Symbol('symbol1');
+const symbol2 = Symbol('symbol2');
+
+const obj = {
+  name1: 0,
+  [symbol1]: 0,
+};
+Object.defineProperties(obj, {
+  name2: { enumerable: false, value: 0 },
+  [symbol2]: { enumerable: false, value: 0 },
+});
+
+const result = Object.keys(obj);
+</code></pre>
+<p>What is the result?</p>
+</div><div><label><input type="checkbox" name="question7"/> <span><code>assert.deepEqual(result, [ 'name1' ])</code></span></label></div><div><label><input type="checkbox" name="question7"/> <span><code>assert.deepEqual(result, [ 'name1', 'name2' ])</code></span></label></div><div><label><input type="checkbox" name="question7"/> <span><code>assert.deepEqual(result, [ symbol1, symbol2 ])</code></span></label></div><div><label><input type="checkbox" name="question7"/> <span><code>assert.deepEqual(result, [ 'name1', 'name2', symbol1, symbol2 ])</code></span></label></div><p><button>Answer</button></p></div><div><h2>9. Iterating over objects (2/4)</h2><div><pre><code class="language-js">const symbol1 = Symbol('symbol1');
+const symbol2 = Symbol('symbol2');
+
+const obj = {
+  name1: 0,
+  [symbol1]: 0,
+};
+Object.defineProperties(obj, {
+  name2: { enumerable: false, value: 0 },
+  [symbol2]: { enumerable: false, value: 0 },
+});
+
+const result = Reflect.ownKeys(obj);
+</code></pre>
+<p>What is the result?</p>
+</div><div><label><input type="checkbox" name="question8"/> <span><code>assert.deepEqual(result, [ 'name1' ])</code></span></label></div><div><label><input type="checkbox" name="question8"/> <span><code>assert.deepEqual(result, [ 'name1', 'name2' ])</code></span></label></div><div><label><input type="checkbox" name="question8"/> <span><code>assert.deepEqual(result, [ symbol1, symbol2 ])</code></span></label></div><div><label><input type="checkbox" name="question8"/> <span><code>assert.deepEqual(result, [ 'name1', 'name2', symbol1, symbol2 ])</code></span></label></div><p><button>Answer</button></p></div><div><h2>10. Iterating over objects (3/4)</h2><div><pre><code class="language-js">const symbol1 = Symbol('symbol1');
+const symbol2 = Symbol('symbol2');
+
+const obj = {
+  name1: 0,
+  [symbol1]: 0,
+};
+Object.defineProperties(obj, {
+  name2: { enumerable: false, value: 0 },
+  [symbol2]: { enumerable: false, value: 0 },
+});
+
+const result = Object.getOwnPropertyNames(obj);
+</code></pre>
+<p>What is the result?</p>
+</div><div><label><input type="checkbox" name="question9"/> <span><code>assert.deepEqual(result, [ 'name1' ])</code></span></label></div><div><label><input type="checkbox" name="question9"/> <span><code>assert.deepEqual(result, [ 'name1', 'name2' ])</code></span></label></div><div><label><input type="checkbox" name="question9"/> <span><code>assert.deepEqual(result, [ symbol1, symbol2 ])</code></span></label></div><div><label><input type="checkbox" name="question9"/> <span><code>assert.deepEqual(result, [ 'name1', 'name2', symbol1, symbol2 ])</code></span></label></div><p><button>Answer</button></p></div><div><h2>11. Iterating over objects (4/4)</h2><div><pre><code class="language-js">const symbol1 = Symbol('symbol1');
+const symbol2 = Symbol('symbol2');
+
+const obj = {
+  name1: 0,
+  [symbol1]: 0,
+};
+Object.defineProperties(obj, {
+  name2: { enumerable: false, value: 0 },
+  [symbol2]: { enumerable: false, value: 0 },
+});
+
+const result = Object.getOwnPropertySymbols(obj);
+</code></pre>
+<p>What is the result?</p>
+</div><div><label><input type="checkbox" name="question10"/> <span><code>assert.deepEqual(result, [ 'name1' ])</code></span></label></div><div><label><input type="checkbox" name="question10"/> <span><code>assert.deepEqual(result, [ 'name1', 'name2' ])</code></span></label></div><div><label><input type="checkbox" name="question10"/> <span><code>assert.deepEqual(result, [ symbol1, symbol2 ])</code></span></label></div><div><label><input type="checkbox" name="question10"/> <span><code>assert.deepEqual(result, [ 'name1', 'name2', symbol1, symbol2 ])</code></span></label></div><p><button>Answer</button></p></div><div><h2>12. Calling methods</h2><div><pre><code class="language-js">const jane = {
+  name: 'Jane',
+  hello() {
+    return `Hello ${this.name}!`;
+  },
+};
+const func = jane.hello;
+</code></pre>
+<p>Which of these way of calling <code>obj.hello</code> work?</p>
+</div><div><label><input type="checkbox" name="question11"/> <span><code>assert.equal(jane.hello(), 'Hello Jane!')</code></span></label></div><div><label><input type="checkbox" name="question11"/> <span><code>assert.equal(jane.hello.call(jane), 'Hello Jane!')</code></span></label></div><div><label><input type="checkbox" name="question11"/> <span><code>assert.equal(func(), 'Hello Jane!')</code></span></label></div><div><label><input type="checkbox" name="question11"/> <span><code>assert.equal(func.call(jane), 'Hello Jane!')</code></span></label></div><p><button>Answer</button></p></div><hr/><div>Correct answers: <!-- -->0<!-- --> out of <!-- -->0</div></div></div>
+
+  <script defer>
+  var quizData = {"titleMd":"Single objects","titleHtml":"Single objects","questions":[{"title":"Object literals","prefix":"<pre><code class=\"language-js\">const obj = {\n  true: 'a',\n  ['true']: 'b',\n  [true]: 'c',\n};\nconst result = Object.keys(obj).length;\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.equal(result, 1)</code>","<code>assert.equal(result, 2)</code>","<code>assert.equal(result, 3)</code>","<code>SyntaxError</code>"],"solutions":[1],"suffix":"<ul>\n<li>Since ES5, keywords are allowed as unquoted property keys in object literals and after the dot operator.</li>\n<li>Duplicate keys are allowed, too. Later entries override earlier ones.</li>\n<li>Computed property keys are stringified – unless they are symbols.</li>\n</ul>\n"},{"title":"Computed property keys (1/6)","prefix":"<pre><code class=\"language-js\">const foo = 'bar';\nconst obj = {\n  foo: 'a',\n  [foo]: 'b',\n};\nconst result = obj.foo;\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.equal(result, 'a')</code>","<code>assert.equal(result, 'b')</code>","<code>assert.equal(result, 'undefined')</code>","<code>ReferenceError</code>"],"solutions":[1],"suffix":""},{"title":"Computed property keys (2/6)","prefix":"<pre><code class=\"language-js\">const foo = 'bar';\nconst obj = {\n  foo: 'a',\n  [foo]: 'b',\n};\nconst result = obj.bar;\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.equal(result, 'a')</code>","<code>assert.equal(result, 'b')</code>","<code>assert.equal(result, 'undefined')</code>","<code>ReferenceError</code>"],"solutions":[2],"suffix":"<p>Accesses the second entry of the object literal.</p>\n"},{"title":"Computed property keys (3/6)","prefix":"<pre><code class=\"language-js\">const foo = 'bar';\nconst obj = {\n  foo: 'a',\n  [foo]: 'b',\n};\nconst result = obj[foo];\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.equal(result, 'a')</code>","<code>assert.equal(result, 'b')</code>","<code>assert.equal(result, 'undefined')</code>","<code>ReferenceError</code>"],"solutions":[2],"suffix":"<p>Same as <code>obj.bar</code>.</p>\n"},{"title":"Computed property keys (4/6)","prefix":"<pre><code class=\"language-js\">const foo = 'bar';\nconst obj = {\n  foo: 'a',\n  [foo]: 'b',\n};\nconst result = obj[bar];\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.equal(result, 'a')</code>","<code>assert.equal(result, 'b')</code>","<code>assert.equal(result, 'undefined')</code>","<code>ReferenceError</code>"],"solutions":[4],"suffix":"<p>The variable <code>bar</code> does not exist.</p>\n"},{"title":"Computed property keys (5/6)","prefix":"<pre><code class=\"language-js\">const foo = 'bar';\nconst obj = {\n  foo: 'a',\n  [foo]: 'b',\n};\nconst result = obj['foo'];\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.equal(result, 'a')</code>","<code>assert.equal(result, 'b')</code>","<code>assert.equal(result, 'undefined')</code>","<code>ReferenceError</code>"],"solutions":[1],"suffix":"<p>Same as <code>obj.foo</code>.</p>\n"},{"title":"Computed property keys (6/6)","prefix":"<pre><code class=\"language-js\">const foo = 'bar';\nconst obj = {\n  foo: 'a',\n  [foo]: 'b',\n};\nconst result = obj['bar'];\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.equal(result, 'a')</code>","<code>assert.equal(result, 'b')</code>","<code>assert.equal(result, 'undefined')</code>","<code>ReferenceError</code>"],"solutions":[2],"suffix":"<p>Same as <code>obj.bar</code>.</p>\n"},{"title":"Iterating over objects (1/4)","prefix":"<pre><code class=\"language-js\">const symbol1 = Symbol('symbol1');\nconst symbol2 = Symbol('symbol2');\n\nconst obj = {\n  name1: 0,\n  [symbol1]: 0,\n};\nObject.defineProperties(obj, {\n  name2: { enumerable: false, value: 0 },\n  [symbol2]: { enumerable: false, value: 0 },\n});\n\nconst result = Object.keys(obj);\n</code></pre>\n<p>What is the result?</p>\n","choices":["<code>assert.deepEqual(result, [ 'name1' ])</code>","<code>assert.deepEqual(result, [ 'name1', 'name2' ])</code>","<code>assert.deepEqual(result, [ symbol1, symbol2 ])</code>","<code>assert.deepEqual(result, [ 'name1', 'name2', symbol1, symbol2 ])</code>"],"solutions":[1],"suffix":""},{"title":"Iterating over objects (2/4)","prefix":"<pre><code class=\"language-js\">const symbol1 = Symbol('symbol1');\nconst symbol2 = Symbol('symbol2');\n\nconst obj = {\n  name1: 0,\n  [symbol1]: 0,\n};\nObject.defineProperties(obj, {\n  name2: { enumerable: false, value: 0 },\n  [symbol2]: { enumerable: false, value: 0 },\n});\n\nconst result = Reflect.ownKeys(obj);\n</code></pre>\n<p>What is the result?</p>\n","choices":["<code>assert.deepEqual(result, [ 'name1' ])</code>","<code>assert.deepEqual(result, [ 'name1', 'name2' ])</code>","<code>assert.deepEqual(result, [ symbol1, symbol2 ])</code>","<code>assert.deepEqual(result, [ 'name1', 'name2', symbol1, symbol2 ])</code>"],"solutions":[4],"suffix":""},{"title":"Iterating over objects (3/4)","prefix":"<pre><code class=\"language-js\">const symbol1 = Symbol('symbol1');\nconst symbol2 = Symbol('symbol2');\n\nconst obj = {\n  name1: 0,\n  [symbol1]: 0,\n};\nObject.defineProperties(obj, {\n  name2: { enumerable: false, value: 0 },\n  [symbol2]: { enumerable: false, value: 0 },\n});\n\nconst result = Object.getOwnPropertyNames(obj);\n</code></pre>\n<p>What is the result?</p>\n","choices":["<code>assert.deepEqual(result, [ 'name1' ])</code>","<code>assert.deepEqual(result, [ 'name1', 'name2' ])</code>","<code>assert.deepEqual(result, [ symbol1, symbol2 ])</code>","<code>assert.deepEqual(result, [ 'name1', 'name2', symbol1, symbol2 ])</code>"],"solutions":[2],"suffix":""},{"title":"Iterating over objects (4/4)","prefix":"<pre><code class=\"language-js\">const symbol1 = Symbol('symbol1');\nconst symbol2 = Symbol('symbol2');\n\nconst obj = {\n  name1: 0,\n  [symbol1]: 0,\n};\nObject.defineProperties(obj, {\n  name2: { enumerable: false, value: 0 },\n  [symbol2]: { enumerable: false, value: 0 },\n});\n\nconst result = Object.getOwnPropertySymbols(obj);\n</code></pre>\n<p>What is the result?</p>\n","choices":["<code>assert.deepEqual(result, [ 'name1' ])</code>","<code>assert.deepEqual(result, [ 'name1', 'name2' ])</code>","<code>assert.deepEqual(result, [ symbol1, symbol2 ])</code>","<code>assert.deepEqual(result, [ 'name1', 'name2', symbol1, symbol2 ])</code>"],"solutions":[3],"suffix":""},{"title":"Calling methods","prefix":"<pre><code class=\"language-js\">const jane = {\n  name: 'Jane',\n  hello() {\n    return `Hello ${this.name}!`;\n  },\n};\nconst func = jane.hello;\n</code></pre>\n<p>Which of these way of calling <code>obj.hello</code> work?</p>\n","choices":["<code>assert.equal(jane.hello(), 'Hello Jane!')</code>","<code>assert.equal(jane.hello.call(jane), 'Hello Jane!')</code>","<code>assert.equal(func(), 'Hello Jane!')</code>","<code>assert.equal(func.call(jane), 'Hello Jane!')</code>"],"solutions":[1,2,4],"suffix":"<p>(3) doesn’t work, because <code>this</code> is not set up correctly, which is why <code>this.name</code> doesn’t work.</p>\n"}]};
+  </script>
+  <script defer src="quiz_component.bundle.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Operators</title>
+  <link rel="stylesheet" href="site.css" type="text/css">
+</head>
+<body>
+  
+  
+  <div id="reactHtml"><div data-reactroot=""><h1><a href="./index.html">Quizzes</a> » <span>Operators</span></h1><div><h2>1. Multiplication (1/2)</h2><div><pre><code class="language-js">const result = '6' * '6';
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question0"/> <span><code>assert.equal(result, '36')</code></span></label></div><div><label><input type="checkbox" name="question0"/> <span><code>assert.equal(result, 36)</code></span></label></div><div><label><input type="checkbox" name="question0"/> <span><code>TypeError</code></span></label></div><p><button>Answer</button></p></div><div><h2>2. Multiplication (2/2)</h2><div><pre><code class="language-js">const result = [6] * [6];
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question1"/> <span><code>assert.equal(result, [36])</code></span></label></div><div><label><input type="checkbox" name="question1"/> <span><code>assert.equal(result, 36)</code></span></label></div><div><label><input type="checkbox" name="question1"/> <span><code>TypeError</code></span></label></div><p><button>Answer</button></p></div><div><h2>3. Conversion between types</h2><div><p>Which expressions evaluate to the number <code>123</code>?</p>
+</div><div><label><input type="checkbox" name="question2"/> <span><code>assert.equal(122 + true, 123)</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>assert.equal('122' + true, 123)</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>assert.equal('123' * 1, 123)</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>assert.equal(Number(123), 123)</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>assert.equal(Number('123'), 123)</code></span></label></div><p><button>Answer</button></p></div><div><h2>4. Comparing via <code>==</code></h2><div><p>Which of these assertions succeeds?</p>
+</div><div><label><input type="checkbox" name="question3"/> <span><code>assert.ok(5 == true)</code></span></label></div><div><label><input type="checkbox" name="question3"/> <span><code>assert.ok(5 == false)</code></span></label></div><p><button>Answer</button></p></div><hr/><div>Correct answers: <!-- -->0<!-- --> out of <!-- -->0</div></div></div>
+
+  <script defer>
+  var quizData = {"titleMd":"Operators","titleHtml":"Operators","questions":[{"title":"Multiplication (1/2)","prefix":"<pre><code class=\"language-js\">const result = '6' * '6';\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.equal(result, '36')</code>","<code>assert.equal(result, 36)</code>","<code>TypeError</code>"],"solutions":[2],"suffix":"<p>Most JavaScript operators coerce operands to the types they need. The multiplication operator coerces its operands to numbers.</p>\n"},{"title":"Multiplication (2/2)","prefix":"<pre><code class=\"language-js\">const result = [6] * [6];\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.equal(result, [36])</code>","<code>assert.equal(result, 36)</code>","<code>TypeError</code>"],"solutions":[2],"suffix":"<p>Again, coercion at work:</p>\n<pre><code class=\"language-js\">// Step 1: convert [6] to a primitive value:\nString([6]); // '6'\n\n// Step 2: convert the primitive value to number:\nNumber('6'); // 6\n</code></pre>\n"},{"title":"Conversion between types","prefix":"<p>Which expressions evaluate to the number <code>123</code>?</p>\n","choices":["<code>assert.equal(122 + true, 123)</code>","<code>assert.equal('122' + true, 123)</code>","<code>assert.equal('123' * 1, 123)</code>","<code>assert.equal(Number(123), 123)</code>","<code>assert.equal(Number('123'), 123)</code>"],"solutions":[1,3,4,5],"suffix":"<p>Only (2) does not evaluate to <code>123</code>, because the plus operator coerces to string if one of its operands is a string:</p>\n<pre><code class=\"language-repl\">&gt; '122' + true\n'122true'\n</code></pre>\n<p>Otherwise, it coerces to number (<code>Number(true)</code> is <code>1</code>).</p>\n"},{"title":"Comparing via <code>==</code>","prefix":"<p>Which of these assertions succeeds?</p>\n","choices":["<code>assert.ok(5 == true)</code>","<code>assert.ok(5 == false)</code>"],"solutions":[],"suffix":"<p>Neither succeeds. That’s because <code>==</code> has a strange comparison algorithm that executes these comparisons as:</p>\n<pre><code class=\"language-js\">5 === 1\n5 === 0\n</code></pre>\n<p>That’s why I recommend to always use <code>===</code>.</p>\n"}]};
+  </script>
+  <script defer src="quiz_component.bundle.js"></script>
+</body>
+</html>

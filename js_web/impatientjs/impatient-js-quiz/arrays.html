@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Arrays</title>
+  <link rel="stylesheet" href="site.css" type="text/css">
+</head>
+<body>
+  
+  
+  <div id="reactHtml"><div data-reactroot=""><h1><a href="./index.html">Quizzes</a> » <span>Arrays</span></h1><div><h2>1. <code>.length</code></h2><div><pre><code class="language-js">const arr = ['a', 'b', 'c'];
+console.log(arr.length); // 3
+
+arr.length = 2;
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question0"/> <span><code>assert.deepEqual(arr, ['a', 'b', 'c'])</code></span></label></div><div><label><input type="checkbox" name="question0"/> <span><code>assert.deepEqual(arr, ['a', 'b'])</code></span></label></div><div><label><input type="checkbox" name="question0"/> <span><code>assert.deepEqual(arr, ['a'])</code></span></label></div><div><label><input type="checkbox" name="question0"/> <span><code>assert.deepEqual(arr, [])</code></span></label></div><p><button>Answer</button></p></div><div><h2>2. Spread elements in Array literals (1/2)</h2><div><pre><code class="language-js">const arr = ['a', ...['b']];
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question1"/> <span><code>assert.deepEqual(arr, [ 'a', ['b'] ])</code></span></label></div><div><label><input type="checkbox" name="question1"/> <span><code>assert.deepEqual(arr, [ 'a', 'b' ])</code></span></label></div><p><button>Answer</button></p></div><div><h2>3. Spread elements in Array literals (2/2)</h2><div><pre><code class="language-js">const arr = ['a', ...'b'];
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question2"/> <span><code>assert.deepEqual(arr, [ 'a', ['b'] ])</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>assert.deepEqual(arr, [ 'a', 'b' ])</code></span></label></div><p><button>Answer</button></p></div><div><h2>4. <code>.unshift()</code></h2><div><pre><code class="language-js">const arr = ['a', 'b'];
+arr.unshift('x');
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question3"/> <span><code>assert.deepEqual(arr, ['x', 'a', 'b'])</code></span></label></div><div><label><input type="checkbox" name="question3"/> <span><code>assert.deepEqual(arr, ['a', 'b', 'x'])</code></span></label></div><p><button>Answer</button></p></div><div><h2>5. <code>.push()</code></h2><div><pre><code class="language-js">const arr = ['a', 'b'];
+arr.push('x');
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question4"/> <span><code>assert.deepEqual(arr, ['x', 'a', 'b'])</code></span></label></div><div><label><input type="checkbox" name="question4"/> <span><code>assert.deepEqual(arr, ['a', 'b', 'x'])</code></span></label></div><p><button>Answer</button></p></div><div><h2>6. <code>.shift()</code></h2><div><pre><code class="language-js">const arr = ['a', 'b'];
+const result = arr.shift();
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question5"/> <span><code>assert.equal(result, 'a')</code></span></label></div><div><label><input type="checkbox" name="question5"/> <span><code>assert.equal(result, 'b')</code></span></label></div><p><button>Answer</button></p></div><div><h2>7. <code>.pop()</code></h2><div><pre><code class="language-js">const arr = ['a', 'b'];
+const result = arr.pop();
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question6"/> <span><code>assert.equal(result, 'a')</code></span></label></div><div><label><input type="checkbox" name="question6"/> <span><code>assert.equal(result, 'b')</code></span></label></div><p><button>Answer</button></p></div><div><h2>8. <code>.slice()</code></h2><div><pre><code class="language-js">const result = ['a', 'b', 'c', 'd'].slice(1, 3);
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question7"/> <span><code>assert.deepEqual(result, ['b', 'c', 'd'])</code></span></label></div><div><label><input type="checkbox" name="question7"/> <span><code>assert.deepEqual(result, ['b', 'c'])</code></span></label></div><div><label><input type="checkbox" name="question7"/> <span><code>assert.deepEqual(result, ['c', 'd'])</code></span></label></div><div><label><input type="checkbox" name="question7"/> <span><code>assert.deepEqual(result, ['c'])</code></span></label></div><p><button>Answer</button></p></div><div><h2>9. <code>.filter()</code></h2><div><pre><code class="language-js">const result = ['a', 'b', 'c'].filter(x =&gt; true);
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question8"/> <span><code>assert.deepEqual(result, [ 'a', 'b', 'c' ])</code></span></label></div><div><label><input type="checkbox" name="question8"/> <span><code>assert.deepEqual(result, [])</code></span></label></div><p><button>Answer</button></p></div><div><h2>10. <code>.filter()</code></h2><div><pre><code class="language-js">const result = ['a', 'b', 'c'].filter(x =&gt; false);
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question9"/> <span><code>assert.deepEqual(result, [ 'a', 'b', 'c' ])</code></span></label></div><div><label><input type="checkbox" name="question9"/> <span><code>assert.deepEqual(result, [])</code></span></label></div><p><button>Answer</button></p></div><div><h2>11. <code>.map()</code> (1/2)</h2><div><pre><code class="language-js">const result = ['a', 'b', 'c'].map(x =&gt; false);
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question10"/> <span><code>assert.deepEqual(result, ['a', 'b', 'c'])</code></span></label></div><div><label><input type="checkbox" name="question10"/> <span><code>assert.deepEqual(result, [0, 1, 2])</code></span></label></div><div><label><input type="checkbox" name="question10"/> <span><code>assert.deepEqual(result, [false, false, false])</code></span></label></div><div><label><input type="checkbox" name="question10"/> <span><code>assert.deepEqual(result, [true, true, true])</code></span></label></div><div><label><input type="checkbox" name="question10"/> <span><code>assert.deepEqual(result, [])</code></span></label></div><p><button>Answer</button></p></div><div><h2>12. <code>.map()</code> (2/2)</h2><div><pre><code class="language-js">const result = ['a', 'b', 'c'].map((x,i) =&gt; i);
+</code></pre>
+<p>What happens?</p>
+</div><div><label><input type="checkbox" name="question11"/> <span><code>assert.deepEqual(result, ['a', 'b', 'c'])</code></span></label></div><div><label><input type="checkbox" name="question11"/> <span><code>assert.deepEqual(result, [0, 1, 2])</code></span></label></div><div><label><input type="checkbox" name="question11"/> <span><code>assert.deepEqual(result, [false, false, false])</code></span></label></div><div><label><input type="checkbox" name="question11"/> <span><code>assert.deepEqual(result, [true, true, true])</code></span></label></div><div><label><input type="checkbox" name="question11"/> <span><code>assert.deepEqual(result, [])</code></span></label></div><p><button>Answer</button></p></div><hr/><div>Correct answers: <!-- -->0<!-- --> out of <!-- -->0</div></div></div>
+
+  <script defer>
+  var quizData = {"titleMd":"Arrays","titleHtml":"Arrays","questions":[{"title":"<code>.length</code>","prefix":"<pre><code class=\"language-js\">const arr = ['a', 'b', 'c'];\nconsole.log(arr.length); // 3\n\narr.length = 2;\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.deepEqual(arr, ['a', 'b', 'c'])</code>","<code>assert.deepEqual(arr, ['a', 'b'])</code>","<code>assert.deepEqual(arr, ['a'])</code>","<code>assert.deepEqual(arr, [])</code>"],"solutions":[2],"suffix":"<p>Setting <code>arr.length</code> removes all elements at index <code>arr.length</code> and up.</p>\n"},{"title":"Spread elements in Array literals (1/2)","prefix":"<pre><code class=\"language-js\">const arr = ['a', ...['b']];\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.deepEqual(arr, [ 'a', ['b'] ])</code>","<code>assert.deepEqual(arr, [ 'a', 'b' ])</code>"],"solutions":[2],"suffix":""},{"title":"Spread elements in Array literals (2/2)","prefix":"<pre><code class=\"language-js\">const arr = ['a', ...'b'];\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.deepEqual(arr, [ 'a', ['b'] ])</code>","<code>assert.deepEqual(arr, [ 'a', 'b' ])</code>"],"solutions":[2],"suffix":"<p>Spread iterates over the string <code>'b'</code>, as if it were the Array <code>['b']</code> (with one element per Unicode code point).</p>\n"},{"title":"<code>.unshift()</code>","prefix":"<pre><code class=\"language-js\">const arr = ['a', 'b'];\narr.unshift('x');\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.deepEqual(arr, ['x', 'a', 'b'])</code>","<code>assert.deepEqual(arr, ['a', 'b', 'x'])</code>"],"solutions":[1],"suffix":""},{"title":"<code>.push()</code>","prefix":"<pre><code class=\"language-js\">const arr = ['a', 'b'];\narr.push('x');\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.deepEqual(arr, ['x', 'a', 'b'])</code>","<code>assert.deepEqual(arr, ['a', 'b', 'x'])</code>"],"solutions":[2],"suffix":""},{"title":"<code>.shift()</code>","prefix":"<pre><code class=\"language-js\">const arr = ['a', 'b'];\nconst result = arr.shift();\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.equal(result, 'a')</code>","<code>assert.equal(result, 'b')</code>"],"solutions":[1],"suffix":""},{"title":"<code>.pop()</code>","prefix":"<pre><code class=\"language-js\">const arr = ['a', 'b'];\nconst result = arr.pop();\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.equal(result, 'a')</code>","<code>assert.equal(result, 'b')</code>"],"solutions":[2],"suffix":""},{"title":"<code>.slice()</code>","prefix":"<pre><code class=\"language-js\">const result = ['a', 'b', 'c', 'd'].slice(1, 3);\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.deepEqual(result, ['b', 'c', 'd'])</code>","<code>assert.deepEqual(result, ['b', 'c'])</code>","<code>assert.deepEqual(result, ['c', 'd'])</code>","<code>assert.deepEqual(result, ['c'])</code>"],"solutions":[2],"suffix":""},{"title":"<code>.filter()</code>","prefix":"<pre><code class=\"language-js\">const result = ['a', 'b', 'c'].filter(x =&gt; true);\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.deepEqual(result, [ 'a', 'b', 'c' ])</code>","<code>assert.deepEqual(result, [])</code>"],"solutions":[1],"suffix":""},{"title":"<code>.filter()</code>","prefix":"<pre><code class=\"language-js\">const result = ['a', 'b', 'c'].filter(x =&gt; false);\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.deepEqual(result, [ 'a', 'b', 'c' ])</code>","<code>assert.deepEqual(result, [])</code>"],"solutions":[2],"suffix":""},{"title":"<code>.map()</code> (1/2)","prefix":"<pre><code class=\"language-js\">const result = ['a', 'b', 'c'].map(x =&gt; false);\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.deepEqual(result, ['a', 'b', 'c'])</code>","<code>assert.deepEqual(result, [0, 1, 2])</code>","<code>assert.deepEqual(result, [false, false, false])</code>","<code>assert.deepEqual(result, [true, true, true])</code>","<code>assert.deepEqual(result, [])</code>"],"solutions":[3],"suffix":""},{"title":"<code>.map()</code> (2/2)","prefix":"<pre><code class=\"language-js\">const result = ['a', 'b', 'c'].map((x,i) =&gt; i);\n</code></pre>\n<p>What happens?</p>\n","choices":["<code>assert.deepEqual(result, ['a', 'b', 'c'])</code>","<code>assert.deepEqual(result, [0, 1, 2])</code>","<code>assert.deepEqual(result, [false, false, false])</code>","<code>assert.deepEqual(result, [true, true, true])</code>","<code>assert.deepEqual(result, [])</code>"],"solutions":[2],"suffix":""}]};
+  </script>
+  <script defer src="quiz_component.bundle.js"></script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Assertion API</title>
+  <link rel="stylesheet" href="site.css" type="text/css">
+</head>
+<body>
+  
+  
+  <div id="reactHtml"><div data-reactroot=""><h1><a href="./index.html">Quizzes</a> » <span>Assertion API</span></h1><div><h2>1. Order of arguments</h2><div><p>In which order do the arguments appear?</p>
+<!--quizzify ignore--></div><div><label><input type="checkbox" name="question0"/> <span><code>assert.equal(actual, expected)</code></span></label></div><div><label><input type="checkbox" name="question0"/> <span><code>assert.equal(expected, actual)</code></span></label></div><p><button>Answer</button></p></div><div><h2>2. Equality</h2><div><p>Which of these assertions succeeds?</p>
+</div><div><label><input type="checkbox" name="question1"/> <span><code>assert.equal([8], [8])</code></span></label></div><div><label><input type="checkbox" name="question1"/> <span><code>assert.deepEqual([8], [8])</code></span></label></div><p><button>Answer</button></p></div><hr/><div>Correct answers: <!-- -->0<!-- --> out of <!-- -->0</div></div></div>
+
+  <script defer>
+  var quizData = {"titleMd":"Assertion API","titleHtml":"Assertion API","questions":[{"title":"Order of arguments","prefix":"<p>In which order do the arguments appear?</p>\n<!--quizzify ignore-->","choices":["<code>assert.equal(actual, expected)</code>","<code>assert.equal(expected, actual)</code>"],"solutions":[1],"suffix":""},{"title":"Equality","prefix":"<p>Which of these assertions succeeds?</p>\n","choices":["<code>assert.equal([8], [8])</code>","<code>assert.deepEqual([8], [8])</code>"],"solutions":[2],"suffix":"<p>You need a deep comparison for the Array <code>[8]</code>.</p>\n"}]};
+  </script>
+  <script defer src="quiz_component.bundle.js"></script>
+</body>
+</html>

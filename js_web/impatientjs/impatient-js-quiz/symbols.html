@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Symbols</title>
+  <link rel="stylesheet" href="site.css" type="text/css">
+</head>
+<body>
+  
+  
+  <div id="reactHtml"><div data-reactroot=""><h1><a href="./index.html">Quizzes</a> » <span>Symbols</span></h1><div><h2>1. Which of the following expressions create symbols?</h2><div></div><div><label><input type="checkbox" name="question0"/> <span><code>Symbol()</code></span></label></div><div><label><input type="checkbox" name="question0"/> <span><code>Symbol('foo')</code></span></label></div><div><label><input type="checkbox" name="question0"/> <span><code>new Symbol('foo')</code></span></label></div><p><button>Answer</button></p></div><div><h2>2. Which of the following expressions are <code>true</code>?</h2><div></div><div><label><input type="checkbox" name="question1"/> <span><code>assert.ok(Symbol() === Symbol())</code></span></label></div><div><label><input type="checkbox" name="question1"/> <span><code>assert.ok(String(Symbol()) === String(Symbol()))</code></span></label></div><div><label><input type="checkbox" name="question1"/> <span><code>assert.ok(Symbol('abc') === Symbol('abc'))</code></span></label></div><div><label><input type="checkbox" name="question1"/> <span><code>assert.ok(String(Symbol('abc')) === String(Symbol('abc')))</code></span></label></div><p><button>Answer</button></p></div><div><h2>3. Converting symbols</h2><div><pre><code class="language-js">const sym = Symbol();
+</code></pre>
+<p>Which of the following expressions throw exceptions?</p>
+<!--quizzify wrap="assert.throws(() => •••)"--></div><div><label><input type="checkbox" name="question2"/> <span><code>Boolean(sym)</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>Number(sym)</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>String(sym)</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>sym.toString()</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>'' + sym</code></span></label></div><div><label><input type="checkbox" name="question2"/> <span><code>`${sym}`</code></span></label></div><p><button>Answer</button></p></div><hr/><div>Correct answers: <!-- -->0<!-- --> out of <!-- -->0</div></div></div>
+
+  <script defer>
+  var quizData = {"titleMd":"Symbols","titleHtml":"Symbols","questions":[{"title":"Which of the following expressions create symbols?","prefix":"","choices":["<code>Symbol()</code>","<code>Symbol('foo')</code>","<code>new Symbol('foo')</code>"],"solutions":[1,2],"suffix":"<ul>\n<li><code>Symbol()</code> optionally takes a string as a parameter (a description).</li>\n<li>You can’t invoke <code>Symbol</code> via <code>new</code> (you’ll get a <code>TypeError</code>).</li>\n</ul>\n"},{"title":"Which of the following expressions are <code>true</code>?","prefix":"","choices":["<code>assert.ok(Symbol() === Symbol())</code>","<code>assert.ok(String(Symbol()) === String(Symbol()))</code>","<code>assert.ok(Symbol('abc') === Symbol('abc'))</code>","<code>assert.ok(String(Symbol('abc')) === String(Symbol('abc')))</code>"],"solutions":[2,4],"suffix":"<ul>\n<li><code>Symbol()</code> is a factory for symbols, each result is new and different.</li>\n<li>But strings are compared as usual:<pre><code class=\"language-repl\">&gt; String(Symbol('abc'))\n'Symbol(abc)'\n</code></pre>\n</li>\n</ul>\n"},{"title":"Converting symbols","prefix":"<pre><code class=\"language-js\">const sym = Symbol();\n</code></pre>\n<p>Which of the following expressions throw exceptions?</p>\n<!--quizzify wrap=\"assert.throws(() => •••)\"-->","choices":["<code>Boolean(sym)</code>","<code>Number(sym)</code>","<code>String(sym)</code>","<code>sym.toString()</code>","<code>'' + sym</code>","<code>`${sym}`</code>"],"solutions":[2,5,6],"suffix":"<ul>\n<li>Symbols can’t be coerced to strings (answers (5) and (6))</li>\n<li>Symbols can’t be converted to numbers.</li>\n</ul>\n"}]};
+  </script>
+  <script defer src="quiz_component.bundle.js"></script>
+</body>
+</html>
