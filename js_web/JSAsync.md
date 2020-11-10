@@ -60,7 +60,7 @@
 
 <hr>
 
-##Promises
+## Promises
 
 - In JS, a **promise** is an object that wraps an asynchronous operation and notifies the program when the asynchronous operation completes. A promise represents the eventual completion or failure of the wrapped operation and is a proxy for a value not necessarily known. Instead of providing the value immediately (synchronous). it promises to provide a value at some point in the future. Promises allow you to associate success and error handlers with an asynchronous action. These handlers are called at the completion or failure of the wrapped asynchronous process.
 
