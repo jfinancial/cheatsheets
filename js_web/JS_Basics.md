@@ -121,7 +121,6 @@ Special property `raw` is available for the first argument of a tagged template.
 - Note that can provide a function to `sort(fn)` which acts as a comparator to work out how to sort
 - The `find(f)` method takes a predicate function and returns element matching the function 
   - e.g `f = function under50(x){ return x < 50; })`
-<hr>
 
 ### Object Literals
 - Object literals are widely used in JS and can comprise properties and methods (when a function is an object literal it is called a method):
@@ -499,8 +498,7 @@ The `function*` declaration (function keyword followed by asterisk) defines a ge
     console.log( first ); // Expected output: 'Bob' 
     console.log( lastName ); // Expected output: 'Smith'
   </pre>
-
-<hr>
+  
 
 ### ES6: Classes & Modules
 - **Classes** were introduced in ES6 as means to expand on prototype-based inheritance by adding some OO concepts; it is syntactic sugar to expand on the existing prototype-based inheritance. Classes can have function constructors; subclasses must call super constructor:
