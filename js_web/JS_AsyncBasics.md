@@ -200,3 +200,50 @@
         console.log(err);
       });
   </pre>
+#### Arrow Functions (`=>`))
+
+- Arrow functions provide a more concise way of defining functions
+  
+  <pre>
+      const sayHelloES6 = function() {
+        console.log('Hello');
+      }
+      
+      const sayHelloES6 = () => {
+        console.log('Hello');
+      }
+      
+      // One line function does not need braces
+      const sayHelloOnOneLine = () => console.log('Hello');
+      
+      // One line returns
+      const sayHello = () => 'Hello';      
+  </pre>
+  
+- Be careful when using object literals because the literal needs to wrapped in brackets otherwise it gets interpreted as a function body:
+  
+  <pre>
+      const sayHello = () => ({ msg: 'Hello' }); // Return object - note double brackets!
+      
+      // Single param does not need parenthesis
+      const sayHello = name => console.log(`Hello ${name}`);
+      
+      // Multuiple params need parenthesis
+      const sayHello = (firstName, lastName) => console.log(`Hello ${firstName} ${lastName}`);
+      sayHello('John', 'Smith');
+      
+      const users = ['Nathan', 'John', 'William'];
+      const nameLengths = users.map(name => name.length);
+      
+  </pre>
+  
+#### Using the Fetch API (using Arrow functions (ES6))
+- Fetch provides a more modern approach to working with APIs
+- **Gotcha!** Error handling with Fetch API is not like Axios or jQuery. *If there is an http error, it will not fire off .catch automatically. You have to check the response and throw an error yourself.* 
+  <pre>
+    function handleErrors(res) {
+      if (!res.ok) throw new Error(res.error);
+      return res;
+    }  
+  </pre>  
+  
