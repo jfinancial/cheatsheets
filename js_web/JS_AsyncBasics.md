@@ -163,3 +163,40 @@
         if(err) {  console.log(err); } else { console.log(posts); }
       });
     </pre>
+    
+#### Promises
+
+- Promises are an alternative to callbacks and you just create a new `Promise` taking a function with `resolve` and `reject` parameters:
+- In this example `createPost` returns a `Promise` so when we call it we use then to call `getPosts` which replaces the callback
+  <pre>
+      function createPost(post) {
+        return new Promise(function(resolve, reject){ //crete the promise
+          setTimeout(function() {
+            posts.push(post);
+            const error = false;
+            if(!error) {
+              resolve();
+            } else {
+              reject('Error: Something went wrong');
+            }
+          }, 2000);
+        });
+      }
+      
+      function getPosts() {
+        setTimeout(function() {
+          let output = '';
+          posts.forEach(function(post){
+            output += `&lt;li&gt;${post.title}&lt;li&gt;`;
+          });
+          document.body.innerHTML = output;
+        }, 1000);
+      }
+      
+      //here createPost returns a Promise so we use the then/catch sytnax
+      createPost({title: 'Post Three', body: 'This is post three'})
+      .then(getPosts)
+      .catch(function(err) {
+        console.log(err);
+      });
+  </pre>
