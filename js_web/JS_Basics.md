@@ -126,7 +126,7 @@ Special property `raw` is available for the first argument of a tagged template.
 
 ### Object Literals
 - Object literals are widely used in JS and can comprise properties and methods (when a function is an object literal it is called a method):
-     
+- **Gotcha!** Note that object literals looks like JSON but the keys/values are not double-quoted like JSON     
     <pre>
       let person = { 
          name: 'John', 
