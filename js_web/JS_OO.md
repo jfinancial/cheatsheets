@@ -53,4 +53,9 @@
         const re1 = /\w+/;
         const re2 = new RegExp('\\w+');    
       </pre>    
-  
+
+#### Prototype
+- JS is unlike most OO languages which used class based object but follows a [Prototype](https://en.wikipedia.org/wiki/Prototype_pattern) pattern
+- Each object in JS has a prototype and inherits methods and properties from them
+- When dealing with object literals then you're inheriting from an object called `Object.prototype' but if you're creating a Person object then you're inheriting from `Person.prototype`
+- The prototype chains allows you to access super classes / prototypes

@@ -346,6 +346,6 @@ function loadEventListeners() {
 </pre>
 
 #### Simple DOM examples
-- [Task List](./jsdom_examles/tasklist/index.html)
-- [Loan Calculator](./jsdom_examles/loancalculator/index.html)
-- [Number Guesser](./jsdom_examles/numberguesser/index.html)
+- [Task List](jsdom_examples/tasklist/index.html)
+- [Loan Calculator](jsdom_examples/loancalculator/index.html)
+- [Number Guesser](jsdom_examples/numberguesser/index.html)
