@@ -7,8 +7,8 @@
 [Javascript Aysnchronous Cheatsheet](./js_web/JSAsync.md)
 
 
-[Jenkins Groovy Cheatsheet](./jenkins-groovy/cheatsheet-jenkins-groovy-A4.pdf)
+[Jenkins Groovy Cheatsheet](./jenkins/cheatsheet-jenkins-groovy-A4.pdf)
 
-[Groovy Cheatsheet](./cheatsheet_groovy.pdf)
+[Groovy Cheatsheet](./cheatsheet.pdf)
 
 [Linux Commands Cheatsheet](./linux/linux-commands-handbook.pdf)
