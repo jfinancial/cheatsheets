@@ -6,4 +6,4 @@
 
 [Javascript Aysnchronous Cheatsheet](./js_web/JSAsync.md)
 
-[Linux Commands Cheatsheet](./Linux/linux-commands-handbook.pdf)
+[Linux Commands Cheatsheet](./linux/linux-commands-handbook.pdf)
