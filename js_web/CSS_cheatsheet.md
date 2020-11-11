@@ -16,9 +16,10 @@
 - To include external libraries you'll use the CDN (A Content Delivery Network allows for a quick transfer of assets needed to load content such as HTML pages, javascript files, stylesheets, images etc)
 - To include a library link google for the CDN (e.g. font awesome cdn)
 
-### Display types: block and inlne elements
+### Display types: block, inlne elements and none
 - A `block` level element always starts on a new line and takes up the full width of a page, from left to right. A block-level element can take up one line or multiple lines and has a line break before and after the element.
 - By default, `inline` elements do not force a new line to begin in the document flow.
+- By setting an element to display to `none` then it is hidden
 
 ### Selecting by `id`
 - Style the h2 with an `id` attribute called primary-heading
