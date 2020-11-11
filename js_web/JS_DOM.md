@@ -291,7 +291,7 @@
     <pre>    
       document.querySelector('form').addEventListener('submit', function(e) {
           const task = document.getElementById('task').value;
-          let tasks = localStorage.getItem('tasks') === null ? [] :JSON.parse(localStorage.getItem('tasks'));
+          let tasks = localStorage.getItem('tasks') === null ? [] : JSON.parse(localStorage.getItem('tasks'));
           tasks.push(task);      
           localStorage.setItem('tasks', JSON.stringify(tasks));
           e.preventDefault();
@@ -300,3 +300,8 @@
       const tasks = JSON.parse(localStorage.getItem('tasks'));
       tasks.forEach(function(task){ console.log(task); });
     </pre>
+
+#### Simple DOM examples
+- [Task List](./jsdom_examles/tasklist/index.html)
+- [Loan Calculator](./jsdom_examles/loancalculator/index.html)
+- [Number Guesser](./jsdom_examles/numberguesser/index.html)
