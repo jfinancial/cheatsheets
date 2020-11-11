@@ -17,7 +17,6 @@
 
 
 ### Variables & Scope
-
 - JavaScript is a **weakly typed** language. It has a notion of types, but it's relaxed about them, and can treat values somewhat arbitrarily. The stronger the typing system is — the stricter the rules are. (Static typing can be used with **Typescript** and **Flow**)
 - **Variable Declaration var vs let** 
    - `var` :  function or global scope if outside function 
@@ -63,7 +62,6 @@
 
 
 ### Mathematical functions
-
 - JS has mathematical constants: `Math.PI`, `Math.E`
 - Rounding can be done via `Math.round(x)` and `Math.ceil(x)` (rounds up) and `Math.floor(x)`' (rounds down)
 - `Math.sqrt(x)` provides square root, `Maths.abs(x)` (absolute value), `Math.pow(x,x)` (power function = x^y)
@@ -71,7 +69,6 @@
 - `Math.random()` generates random decimal numbers between 0 and 1 (so to get between 1 and 20 use `Math.floor(Math.random() * 20 + 1))` and `substring(x,y)`
 
 ### String functions
-
 - Before ES6, Strings can be appended using `+` and `+=`
 - String escaping is done via backslash
 - The `concat` method can be used to concatenate strings e.g. `firstName.concat(' ',lastName)`;
@@ -84,7 +81,6 @@
   - `includes('foo')` (returns a boolean value if the supplied string occurs)
 
 ### String Template Literals (ES6)
-
 - ES6 introduce template literals or template strings. Here we can use `${foo}` for expressions (so variables, functions or, say an expression using the ternary operator). New lines will be included in the output (so we don't need to escape line breaks.) To escape a template literal, simply use a backslash.
 
   <pre>
@@ -108,7 +104,6 @@
 Special property `raw` is available for the first argument of a tagged template. This returns array that contains the raw, unescaped, versions of each part of the split template literal.
 
 ### Arrays and Array Methods
-
 - Arrays are widely use in javascript and can be of fixed or mixed types
 
   <pre>
@@ -129,7 +124,6 @@ Special property `raw` is available for the first argument of a tagged template.
 <hr>
 
 ### Object Literals
-
 - Object literals are widely used in JS and can comprise properties and methods (when a function is an object literal it is called a method):
      
     <pre>
@@ -191,7 +185,6 @@ Special property `raw` is available for the first argument of a tagged template.
 
 
 ### Dates and Times
-
 - A new Date() will always will create a new date object with current date/time. 
 - There are also `getDay()`,`getFullYear()`,`getMonth()` etc. and `getTime()` to get current timestamp in ms.
 - Likewise there are equivalent setter method for the above
@@ -210,7 +203,6 @@ Special property `raw` is available for the first argument of a tagged template.
 - JS also logic operators: `&&` (and), `||` (or) and `!` (not)
 - JS also has ternary operator (`?`) for conditions e.g. `let voteable = (age < 18) ? "Too young":"Old enough";`
 
- 
 ### Switches
 - JS has C-style `switch` statements for handling multiple cases
 <pre>
@@ -226,9 +218,7 @@ Special property `raw` is available for the first argument of a tagged template.
     }
 </pre>
 
-
 ### Functions Declarations, default parameters
-
 - Functions are declared  using the `function` keyword: 
   <pre>
     function greet(name){ 
@@ -357,7 +347,6 @@ Special property `raw` is available for the first argument of a tagged template.
 - We can use `window.location.href` to redirect, `window.location.reload` to reload and   
 - We can use `window.navigator` which is to do with the browser and has geolocation, browser version, user's OS etc
 
-
 ### Iterables
 - An object is iterable if it defines its iteration behavior, such as what values are looped over in a `for...of` construct. 
 - Some built-in types, such as `Array` or `Map`, have a default iteration behavior, while other types (such as `Object`) do not. 
@@ -406,7 +395,6 @@ The `function*` declaration (function keyword followed by asterisk) defines a ge
 </pre>
 
 ### Arrow Functions (ES6)
-
 -  Difference between arrow function and normal functions is that they are [**anonymous**](#https://en.wikipedia.org/wiki/Anonymous_function). To write an arrow function, simply omit the function keyword and add =&gt; between the arguments and fn body.
 -  If arrow function is returning a **single line of code,** you can omit statement brackets and return
 -  Arrow functions follow normal scoping rules, with the exception of the `this` scope. (In basic JavaScript, each function is assigned a scope, that is, the `this` scope.) Arrow functions are not assigned a `this`scope - they inherit their *parent's* `this` scope and cannot have a new `this` scope bound to them*! 
@@ -430,7 +418,6 @@ The `function*` declaration (function keyword followed by asterisk) defines a ge
 </pre>
 
 ### Computed Property Notation (ES6)
-
 - ES6 provides new, efficient way to create property names from variables.  In ES5,  only one way to create a dynamic property whose name is specified by a variable; this is through bracket notation e.g  `obj[ expression ] = 'value'` 
 - In ES6, we can use this same type of notation during the object literal's declaration:
 
@@ -439,8 +426,6 @@ The `function*` declaration (function keyword followed by asterisk) defines a ge
      const person = { [ varName ] = 'John', lastName: 'Smith' }; 
      console.log( person.firstName ); // Expected output: John
   </pre>
-
-<hr>
 
 ### Destructuring (ES6)
 - **Destructuring assignment** is syntax in JavaScript that allows you to unpack values from arrays or properties from objects, and save them into variables.
@@ -455,7 +440,6 @@ The `function*` declaration (function keyword followed by asterisk) defines a ge
 
 
 ### Rest and Spread Operator (… or 'elipses') for Deep Copy (ES6)
-
 - The operator is used to represent an infinite number of arguments as an array; it is used to allow an iterable object to be expanded into multiple arguments. To identify which is being used, we must look at the item that the argument is being applied to.
 
   - If applied to an **iterable object** (array, object, and so on), then it is the **spread operator**
@@ -518,32 +502,7 @@ The `function*` declaration (function keyword followed by asterisk) defines a ge
 
 <hr>
 
-### DOM Manipulation
-
-- **Single Element** Selector
-
-  <pre>
-    //Get the task element with id of task-title
-    document.getElementById('task-title')
-      
-    //Make selected element disappear
-    document.getElementById('task-title').style.display = none
-       
-    //Set the inner text or html
-    document.getElementById('task-title').style.innerText = Foo
-    document.getElementById('task-title').style.innerHtml = &lt;body..&gt;
-       
-    //Using the query selector to the line item in an unordered list
-    document.querySelector('ui li')
-        
-    //Using the query selector with CSS pseudo classes
-    document.querySelector('li:nth-child(3)').style.color = 'yellow'
-  </pre>
-
-<hr>
-
 ### ES6: Classes & Modules
-
 - **Classes** were introduced in ES6 as means to expand on prototype-based inheritance by adding some OO concepts; it is syntactic sugar to expand on the existing prototype-based inheritance. Classes can have function constructors; subclasses must call super constructor:
   <pre>
     class House{ 
@@ -594,7 +553,6 @@ The `function*` declaration (function keyword followed by asterisk) defines a ge
 -  **Note:** ES6 modules may not have full support from all browsers versions. You must use a transpiler (e.g. Babel) to run your code on certain platforms. To use an import in the browser, we must use the script tag and set type to module and the src to the file. (If the browser does not support modules, there's a fallback option with the nomodule attribute.) Finally, be careful of **circular dependencies** which cause lots of errors in transpilation!
 
 ### Transpilation with Babel
-
 - [Babel](https://en.wikipedia.org/wiki/Babel_(transcompiler)) is the most common transpiler for javascript and is mainly used to convert ECMAScript 2015+ (ES6+) code into a backwards compatible version of JavaScript that can be run by older JavaScript engines. Babel is a popular tool for using the newest features of the JavaScript programming language providing [polyfills](https://en.wikipedia.org/wiki/Polyfill_(programming)0) to provide support for features that are missing entirely from JavaScript environments.
 - To install the Babel cuse the following: 
   - `npm install --save-dev babel-cli`

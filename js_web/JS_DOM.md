@@ -69,7 +69,7 @@
    </pre>
    
 **Traversing the DOM**
-- We can traverse the DOM by geet elements and iterating over child items
+- We can traverse the DOM by getting an element and iterating over child items
     
   <pre>
     const list = document.querySelector('ul.collection');
@@ -168,5 +168,81 @@
     val = link.hasAttribute('title');
     link.removeAttribute('title');
     val = link;
-
   </pre>
+  
+**Events Basics**
+- From an event such as `onClick` we get can get properties of the target
+
+  <pre>
+    document.querySelector('.clear-tasks').addEventListener('click', onClick);
+      
+    function onClick(e){
+     
+      // Event target element, event type and timestamp
+      val = e.target.id;
+      val = e.target.className;
+      val = e.target.classList;
+      val = e.type;
+      val = e.timeStamp;
+
+      // Co-ords event relative to the window
+      val = e.clientY;
+      val = e.offsetX;
+    }
+  </pre>
+  
+**Mouse Events** 
+- Mouse events are `click`,`dblclick`,`mousedown`,`mouseup`,`mouseenter`,`mouseover`,`mouseout` and `mousemove`
+ 
+  <pre>
+      clearBtn.addEventListener('click', handleEvent); // Click     
+      function handleEvent(e) {
+         heading.textContent= `MouseX: ${e.offsetX} MouseY: ${e.offsetY}`;
+         document.body.style.backgroundColor = `rgb(${e.offsetX}, ${e.offsetY}, 40)`;
+      }
+  </pre>
+
+**Keyboard and Input Events**
+- Keyboard events are: `keydown`,`keyup`,`keypress`,`focus`,`blur`,`cut`, `paste`,`input` and `change`
+- Form event has an `onSubmit`
+  <pre>
+      const form = document.querySelector('form');
+      const taskInput = document.getElementById('task');
+      const select = document.querySelector('select');
+ 
+      form.addEventListener('submit', handleEvent);
+      taskInput.addEventListener('keydown', handleEvent); //Keydown
+      
+      function handleEvent(e){
+        console.log(e.target.value);
+        console.log(taskInput.value);
+        e.preventDefault();
+      }
+  </pre>
+  
+**Event Bubbling and Delegation**
+- Use `addEventListener` to add a function to be called on an event
+- *Event bubbling* refers to elements bubbling up through the DOM 
+  <pre>
+    document.querySelector('.card-title').addEventListener('click', function(){
+      console.log('card title');
+    });
+    document.querySelector('.card-content').addEventListener('click', function(){
+      console.log('card content');
+    });  
+    document.querySelector('.card').addEventListener('click', function(){
+      console.log('card');
+    });  
+    document.querySelector('.col').addEventListener('click', function(){
+      console.log('col');
+    });
+  </pre>
+        
+- *Event delegation* refers to elements percolating down the DOM  
+  <pre>
+  function deleteItem(e){
+    if(e.target.parentElement.className === 'delete-item secondary-content'){
+       console.log('delete item');
+    }
+  </pre>
+      
