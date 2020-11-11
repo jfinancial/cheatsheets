@@ -21,7 +21,6 @@
     </pre>
 
 #### Single Element Selector
-
 - In the old way we use `getElementById()`
   <pre>
     //Get the task element with id of task-title
@@ -136,7 +135,6 @@
   </pre>
   
 #### Removing and Replacing Elements
-
 - Use the `removeChild` and `replaceChild` 
 
   <pre>
@@ -172,7 +170,21 @@
     link.removeAttribute('title');
     val = link;
   </pre>
-  
+
+#### Inserting elements before and after and cloning node
+- The `insertBefore` and `insertAfter` inserts a node before/adter a reference node as a child of a specified parent node.
+  <pre>
+    let insertedNode = parentNode.insertBefore(newNode, referenceNode)
+  </pre> 
+- Note: if the given node already exists in the document, `insertBefore()` moves it from its current position to the new position. (That is, it will automatically be removed from its existing parent before appending it to the specified new parent.) This means that a node cannot be in two locations of the document simultaneously.
+- The `cloneNode` function can be used to clone an existing node
+
+#### Using Timeouts 
+- The 'setTimeout' method can be used to perform a function after a given time in ms
+  <pre>
+    setTimeout(clearError, 3000); //clear error after 3 seconds
+  </pre>
+
 #### Events Basics
 - From an event such as `onClick` we get can get properties of the target
 
@@ -193,6 +205,7 @@
       val = e.offsetX;
     }
   </pre>
+  
 #### Overriding Default Behaviour
 - The `preventDefault()` method cancels the event if it is cancelable, meaning that the default action that belongs to the event will not occur.
 - For example, this can be useful when:
