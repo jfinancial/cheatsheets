@@ -1,10 +1,11 @@
-#JAVASCRIPT (INCLUDING ES6)
+#JAVASCRIPT BASICS (INCLUDING ES6)
 
 ### Web and Javascript Tools
   | Name                                                                     | Description                                            |
   | -------------------------------------------------------------------------|--------------------------------------------------------|
   | [Jest](https://jestjs.io/)                                               | Preferred testing framework                            |
-  | [TypeScript](https://www.typescriptlang.org/)                            | Strongly typed js                                      |
+  | [TypeScript](https://www.typescriptlang.org/)                            | Typescript (TS) adds optional static typing            |
+  | [Flow](https://flow.org/)                                                | A static type checker for javascript                   |
   | [Gulp](https://gulpjs.com/)                                              | Task/pipeline runner used for build                    |
   | [Webpack](https://webpack.js.org/)                                       | Module bundler and packaging for browser               |
   | [Babel](https://babeljs.io/)                                             | Compiler / transpiler                                  |
@@ -14,45 +15,174 @@
   | [Materialize](https://materializecss.com/)                               | A modern responsive front-end/CSS framework            | 
 <hr>
 
-## Basics
 
 ### Variables & Scope
 
--   **Variable Declaration var vs let** 
+- JavaScript is a **weakly typed** language. It has a notion of types, but it's relaxed about them, and can treat values somewhat arbitrarily. The stronger the typing system is — the stricter the rules are. (Static typing can be used with **Typescript** and **Flow**)
+- **Variable Declaration var vs let** 
    - `var` :  function or global scope if outside function 
    - `let` : block scope (can be updated but not redeclared) 
    - `const` : immutable constant (but obviously a `Map` declared as a `const` can still be mutated)
    -  [Opinion: Should we never use var?](#https://dev.to/johnwolfe820/should-you-never-truly-use-var-bdi)
    
--   **Primitive Types** is data that is not an object, has no methods and represented directly at the lowest level of the language implementation. (`null` is seemingly primitive but is a special case for every Object: and any structured type is derived from null by the *Prototype Chain*.) All primitives are immutable, i.e., they cannot be altered. It is important not to confuse a primitive itself with a variable assigned a primitive value. The variable may be reassigned a new value, but the existing value cannot be changed in the ways that objects, arrays, and functions can be altered. The six types are    
-    - `undefined : typeof instance === "undefined"`
+- **Primitive Types** is data that is not an object, has no methods and represented directly at the lowest level of the language implementation. All primitives are immutable, i.e., they cannot be altered. It is important not to confuse a primitive itself with a variable assigned a primitive value. The variable may be reassigned a new value, but the existing value cannot be changed in the ways that objects, arrays, and functions can be altered. The six types are:    
+    - `undefined : typeof instance === "undefined"` (all variables are undefined by default)
     - `Boolean : typeof instance === "boolean"`
-    - `Number : typeof instance === "number"`
+    - `Number : typeof instance === "number"` (this includes decimal, floats etc.)
     - `String : typeof instance === "string"`
     - `BigInt : typeof instance === "bigint"`
     - `Symbol : typeof instance === "symbol"` (ES6)
-- **Falsy** is a term used in JavaScript type comparison and conversion. Falsy values in JavaScript translate to the Boolean false when used in type comparisons. Examples of falsy values are null, undefined, 0, and the Boolean false.
-    
+    - `null` is seemingly primitive but is a special case (for every Object: and any structured type is derived from null by the *Prototype Chain*.) 
+        
 - **Reference Types** are held on the heap and have methods. Examples are: 
-    - `Array`, Object Literals, `Functions`, `Date` 
-
+    - `Array`, Object Literals, functions, `Date` 
+- **falsy** is a term used in JavaScript type comparison and conversion. Falsy values in JavaScript translate to the Boolean false when used in type comparisons. Examples of falsy values are null, undefined, 0, and the Boolean false.
 - [Explaining Value vs. Reference in Javascript](https://codeburst.io/explaining-value-vs-reference-in-javascript-647a975e12a0)
-
 - Why is `NaN` not a number? (`NaN` is defined as a numeric type, but it’s not a real number. NaN is result of some mathematical operations that can’t be quantified as a number)
+- **Objects Literals** are comma-separated list of name-value pairs inside of curly braces; values can be properties and functions. All members of an object literal in JavaScript, both properties and functions, are public. Private members can only be inside a function. You cannot copy an object literal without manually copying all the values.   
+- More detail on JavaScript's [data types and data structures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures)     
+- **Function Scope** is created inside functions. When a function is declared, a new scope block is created inside body of that function. A `var` declared inside the new function scope cannot be accessed from parent scope, however, the function scope has access to variables in the parent scope. When a variable is created with function scope, it's declaration automatically gets hoisted to the top of the scope. 
+- **Type Coercion** occurs because JS has weak types. We can explicitly conver these tpyes or sometimes will convert one type to another
 
--  **Objects literals** are comma-separated list of name-value pairs inside of curly braces; values can be properties and functions. All members of an object literal in JavaScript, both properties and functions, are public. Private members can only be inside a function. You cannot copy an object literal without manually copying all the values.
+  <pre>
+     let dateAsString = String(new Date());  //explicit converstion
+     let arryAsString = String([1,2,3,4]);
+     let numbAsString = (5).toString();
+     console.log(typeof dateAsString);  //outputs string
+     val n = Number('5'); //explicit conversion of string to number
+     console.log(n.toFixed(2));  //outputs 5.00
+     
+     const v1 = '5';
+     const v2 = 6;
+     console.log(v1 + v2); //outputs 56 - type coercion occurs as v2 gets coerced into a string      
+  </pre>
+
+- Difference between `==` and `===` (when in doubt always use triple equals). See [Double Equals vs. Triple Equals](#https://codeburst.io/javascript-double-equals-vs-triple-equals-61d4ce5a121a)
+- **Hoisting** means that the interpreter moves the instantiation of an entity to the top of the scope it was declared in, regardless of where in the scope block it is defined. Functions and variables declared using var are hoisted in JavaScript; that is, a function or a variable can be used before it has been declared. When a variable is created with function scope, it's declaration automatically gets hoisted to the top of that scope (i.e. the interpreter moves the instantiation of an entity to the top of the scope it was declared in, regardless of where in the scope block it is defined.) Functions and variables declared using `var` are hoisted in JavaScript so a function or a variable can be used before it has been declared.
+- **Temporal Dead Zone (TDZ)** is the period between when a scope is entered and when a variable is declared. Variables that are added are not hoisted and are subject to the TDZ. If variable is accessed inside the TDZ, then a runtime error will be thrown.
+
+
+### Mathematical functions
+
+- JS has mathematical constants: `Math.PI`, `Math.E`
+- Rounding can be done via `Math.round(x)` and `Math.ceil(x)` (rounds up) and `Math.floor(x)`' (rounds down)
+- `Math.sqrt(x)` provides square root, `Maths.abs(x)` (absolute value), `Math.pow(x,x)` (power function = x^y)
+- `Math.min(x,y,z...)` (take minimum of any series numbers), `Math.max(x,y,z...)` (take maximum of any series numbers)
+- `Math.random()` generates random decimal numbers between 0 and 1 (so to get between 1 and 20 use `Math.floor(Math.random() * 20 + 1))` and `substring(x,y)`
+
+### String functions
+
+- Before ES6, Strings can be appended using `+` and `+=`
+- String escaping is done via backslash
+- The `concat` method can be used to concatenate strings e.g. `firstName.concat(' ',lastName)`;
+- String provides `toUpperCase()` and `toLowerCase()`
+- Strings can also be treated like arrays so we can use `indexOf('x)`, `lasIndexOf('x)` and `charAt(0)`
+- Other useful array-type methods on strings are 
+  - `slice(0,4)` (takes first 4 chars) or `slice(-4)` (takes last 4 chars)
+  - `split(',')` (splits a string by a token)
+  - `replace('foo','bar')` (replaces all occurences of foo with bar)
+  - `includes('foo')` (returns a boolean value if the supplied string occurs)
+
+### String Template Literals (ES6)
+
+- ES6 introduce template literals or template strings. Here we can use `${foo}` for expressions (so variables, functions or, say an expression using the ternary operator). New lines will be included in the output (so we don't need to escape line breaks.) To escape a template literal, simply use a backslash.
+
+  <pre>
+    console.log(`Template literals are ${ example }`);
+    console.log(`${a} + ${b} is equal to ${a + b}`);
+  </pre>   
+
+- You can also *nest* template literals:
+
+  <pre>
+    const p = `Learning ${ `Professional ${ javascriptOrCPlusPlus() }` }`
+  </pre>
+
+-  **Tag functions** allow you to parse template literals with a function; these functions take a string array and then arguments
+
+  <pre>
+    function myTag(strings, personExp, ageExp) { ...}
+    let output = myTag`That ${ person } is a ${ age }`;
+  </pre>
+
+Special property `raw` is available for the first argument of a tagged template. This returns array that contains the raw, unescaped, versions of each part of the split template literal.
+
+### Arrays and Array Methods
+
+- Arrays are widely use in javascript and can be of fixed or mixed types
+
+  <pre>
+    const numbers = [1,2,3,4];
+    const numbers = new Array[1,2,3,4];   //using Array constructor
+    const mixed = [undefined, 1, 'red', new Date(), null, {a:1, b:2}];  //a mixed array
+  </pre>
+
+- `Array.isArray(x)` is a useful method to check if something is an array (good when working with DOM because a node list, for example, is not actually an array)
+- Arrays are not immutable so we can say `numbers[2] = 100` and we can use `indexOf(100)` to find the first element in an array
+- You can add on to the end of an array using `push(x)` and to the front using `unshift(x)`
+- To remove from the end use `pop()` and use `shift()` to remove from the front
+- You can splices values using `splice(x,y)` to slice from position x to position y
+- You can also `sort()`, `reverse()` arrays and concatenate arrays using `concat(otherArray)`
+- Note that can provide a function to `sort(fn)` which acts as a comparator to work out how to sort
+- The `find(f)` method takes a predicate function and returns element matching the function (e.g f = function under50(x){ return x < 50; })
+<hr>
+
+### Object Literals
+
+- Object literals are widely used in JS and can comprise properties and methods (when a function is an object literal it is called a method):
+     
     <pre>
-      let person = { name: "John", lastname: "Doe" };
+      let person = { 
+         name: 'John', 
+         lastname: 'Smith' 
+         age: 50,
+         address: {
+           city: 'London',
+           postcode: 'W1 1BT'
+         },
+         hobbies: ['fishing','cinema'],
+         getBirthYear(): {
+            //we need to use 'this' here to refer to the scope
+            return new Date().getFullYear() - this.age  
+         }
+      };
+      
       console.log(person.name);
+      console.log(person.hobbies[1]); //cinema     
+  
     </pre>
 
--   **Function Scope** is created inside functions. When a function is declared, a new scope block is created inside body of that function. A `var` declared inside the new function scope cannot be accessed from parent scope, however, the function scope has access to variables in the parent scope. When a variable is created with function scope, it's declaration automatically gets hoisted to the top of the scope. 
+- We can also have arrays of object literals 
 
--   **Weak Types & Coercion** Difference between `==` and `===` (when in doubt always use triple equals). See [Double Equals vs. Triple Equals](#https://codeburst.io/javascript-double-equals-vs-triple-equals-61d4ce5a121a)
+  <pre>
+    const people = [
+     {name: 'Mike', age: 30},
+     {name: 'Dave', age: 45}
+    ];
+    
+    for(let i =0; i < people.length; i++){
+      console.log(people[i].name);
+    }
+  </pre>
 
--   **Hoisting** means that the interpreter moves the instantiation of an entity to the top of the scope it was declared in, regardless of where in the scope block it is defined. Functions and variables declared using var are hoisted in JavaScript; that is, a function or a variable can be used before it has been declared. When a variable is created with function scope, it's declaration automatically gets hoisted to the top of that scope (i.e. the interpreter moves the instantiation of an entity to the top of the scope it was declared in, regardless of where in the scope block it is defined.) Functions and variables declared using `var` are hoisted in JavaScript so a function or a variable can be used before it has been declared.
+### Dates and Times
 
--   **Temporal Dead Zone (TDZ)** is the period between when a scope is entered and when a variable is declared. Variables that are added are not hoisted and are subject to the TDZ. If variable is accessed inside the TDZ, then a runtime error will be thrown.
+- A new Date() will always will create a new date object with current date/time. 
+- There are also `getDay()`,`getFullYear()`,`getMonth()` etc. and `getTime()` to get current timestamp in ms.
+- Likewise there are equivalent setter method for the above
+  <pre>
+     val today = new Date(); 
+     val fixed1 = new Date('9-10-1981 10:25:00');
+     val fixed1 = new Date('9/10/1981');
+     val month = fixed1.getMonth(); //this returns 8 as it is zero-based
+  </pre>
+
+### Comparison and Logical Operators
+- Use `=` and `==` for equality / equality but this doesn't test type!
+- Use '===' and `!==` to test for equality and type
+ 
+
+## TODO
 
 -   **Functions: `Bind`, `Apply`, `Call`**
     -   `call()` and `apply()` are very similar—they invoke a function with a specified `this` context, and optional arguments. The only difference between them is that call requires the arguments to be passed in one-by-one, and apply takes the arguments as an array.
@@ -74,8 +204,6 @@
 
 <hr>
 
-### Arrays
--   Array Operations: push, pop, concat, slice, join, forEach, map, filter
 
 <hr>
 
@@ -193,31 +321,7 @@ In ES6, we can use this same type of notation during the object literal's declar
 
 <hr>
 
-### ES6: Template Literals
 
-Use `${foo}` for expressions. New lines will be included in the output. To escape a template literal, simply use a backslash.
-
-  <pre>
-    console.log(`Template literals are ${ example }`);
-    console.log(`${a} + ${b} is equal to ${a + b}`);
-  </pre>   
-
-You can also nest template literals:
-
-  <pre>
-    const p = `Learning ${ `Professional ${ javascriptOrCPlusPlus() }` }`
-  </pre>
-
--  **Tag functions** allow you to parse template literals with a function; these functions take a string array and then arguments
-
-  <pre>
-    function myTag(strings, personExp, ageExp) { ...}
-    let output = myTag`That ${ person } is a ${ age }`;
-  </pre>
-
-Special property `raw` is available for the first argument of a tagged template. This returns array that contains the raw, unescaped, versions of each part of the split template literal.
-
-<hr>
 
 ### ES6: Default Parameters
 
