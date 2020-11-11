@@ -67,6 +67,7 @@
 - `Math.sqrt(x)` provides square root, `Maths.abs(x)` (absolute value), `Math.pow(x,x)` (power function = x^y)
 - `Math.min(x,y,z...)` (take minimum of any series numbers), `Math.max(x,y,z...)` (take maximum of any series numbers)
 - `Math.random()` generates random decimal numbers between 0 and 1 (so to get between 1 and 20 use `Math.floor(Math.random() * 20 + 1))` and `substring(x,y)`
+- `Math.isFinite()` to check number is finite 
 
 ### String functions
 - Before ES6, Strings can be appended using `+` and `+=`
