@@ -179,8 +179,15 @@
 - Note: if the given node already exists in the document, `insertBefore()` moves it from its current position to the new position. (That is, it will automatically be removed from its existing parent before appending it to the specified new parent.) This means that a node cannot be in two locations of the document simultaneously.
 - The `cloneNode` function can be used to clone an existing node
 
+#### Disabling buttons, inputs and other elements
+- The `disabled` property can be used to disable an element such as a button or input 
+  <pre>
+    document.getElementById("myBtn").disabled = true;
+    document.querySelector('input').disabled = true;
+  </pre>
+
 #### Using Timeouts 
-- The 'setTimeout' method can be used to perform a function after a given time in ms
+- The 'setTimeout' method (on the `Window` object) can be used to perform a function after a given time in ms
   <pre>
     setTimeout(clearError, 3000); //clear error after 3 seconds
   </pre>
