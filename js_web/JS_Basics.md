@@ -81,6 +81,7 @@
   - `split(',')` (splits a string by a token)
   - `replace('foo','bar')` (replaces all occurences of foo with bar)
   - `includes('foo')` (returns a boolean value if the supplied string occurs)
+- ES6 introduces `padStart()` and `padEnd()` which add specific characters to existing string. You specify the amount of characters these methods should add through a parameter called targetLength. Note this is not the length in the terms of the number of characters you want to add but is the *whole* length of string you want to change. 
 
 ### String Template Literals (ES6)
 - ES6 introduce template literals or template strings. Here we can use `${foo}` for expressions (so variables, functions or, say an expression using the ternary operator). New lines will be included in the output (so we don't need to escape line breaks.) To escape a template literal, simply use a backslash.
@@ -123,6 +124,7 @@ Special property `raw` is available for the first argument of a tagged template.
 - Note that can provide a function to `sort(fn)` which acts as a comparator to work out how to sort
 - The `find(f)` method takes a predicate function and returns element matching the function 
   - e.g `f = function under50(x){ return x < 50; })`
+- ES6 introduces `includes()` which provides a fast way to find if an array contains specific item, or value (so no iteration is necessary.) You can also specify at which index should includes() start to look for that value or item. In that case, includes() method will not start from the beginning of the array, which is the default. Instead, it will start from the index you specified and ignore all values or items that exist in the array before this index.
 
 ### Object Literals
 - Object literals are widely used in JS and can comprise properties and methods (when a function is an object literal it is called a method):
@@ -325,7 +327,7 @@ Special property `raw` is available for the first argument of a tagged template.
     });
  </pre>
  
-- JS also has `for-in` function which is ideal for key value pairs
+- JS also has `for-in` function which is ideal for key value pairs and object literals:
 <pre>
     const brand = {id: 1, brand: 'Ford'};
     for(x in brand){
@@ -336,7 +338,17 @@ Special property `raw` is available for the first argument of a tagged template.
     //id: 1 
     //brand: Ford
  </pre>
-
+ 
+- JS also has `for-of` which iterates over values that are inside the object (whereas for-in iterates over the enumerable properties of an object). This cannot be used with object literals.
+  <pre>
+      const forOfExample = ['bazz', true, 21]
+      
+      for (let prop of forOfExample) {
+        // Output all values stored inside the array
+        console.log(prop)
+      }
+  </pre>
+  
 ### The Window Object
 - Window is the global object/environment in client-side javascript
 - The `window.document` give us the Document Object Model (DOM)

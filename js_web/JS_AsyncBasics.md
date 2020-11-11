@@ -281,3 +281,20 @@
         });
       }
    </pre>
+
+#### Async and Await (ES7)
+- Using` async` means the result of a function *automatically gets wrapped in a* `Promise`:
+- The` await` keyword means execution waits for the promise to be resolved 
+  <pre>
+      async function getUsers() {
+        // await response of the fetch call
+        const response = await fetch('https://jsonplaceholder.typicode.com/users');
+        // Only proceed once its resolved
+        const data = await response.json(); 
+        // only proceed once second promise is resolved
+        return data;
+      }
+  
+       getUsers().then(users => console.log(users));
+  </pre>
+- More about using [async/wait](https://blog.alexdevero.com/es6-es7-es8-modern-javascript-pt7/)
