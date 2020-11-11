@@ -110,8 +110,8 @@
    </pre>
 
     
-#### Creating Elements
-- We use `createElement` and `createTextNode` to create new elements
+#### Creating Elements and Adding Element
+- We use `createElement` and `createTextNode` to create new elements and `appendChild` to add elements
 
   <pre>
      // Creating a new item and setting classname
@@ -307,6 +307,23 @@
       const tasks = JSON.parse(localStorage.getItem('tasks'));
       tasks.forEach(function(task){ console.log(task); });
     </pre>
+    
+### Adding All Event Listeners    
+- A common pattern is to add event listeners inside a single function
+<pre>
+// Load all event listeners
+loadEventListeners();
+
+// Load all event listeners
+function loadEventListeners() {
+  document.addEventListener('DOMContentLoaded', getTasks); // DOM Load event
+  form.addEventListener('submit', addTask); // Add task event
+  taskList.addEventListener('click', removeTask);// Remove task event
+  clearBtn.addEventListener('click', clearTasks); // Clear task event
+  filter.addEventListener('keyup', filterTasks); // Filter tasks event
+}
+
+</pre>
 
 #### Simple DOM examples
 - [Task List](./jsdom_examles/tasklist/index.html)
