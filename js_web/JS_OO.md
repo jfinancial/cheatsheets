@@ -248,8 +248,6 @@
             &lt;td>${book.isbn}</td>
             &lt;td>&lt;a href="#" class="delete">X<a>&lt;/td>
           `;
-                                     
-             
         list.appendChild(row);
       }
       
@@ -277,4 +275,5 @@
         document.getElementById('author').value = '';
         document.getElementById('isbn').value = '';
       }
+
   </pre>
