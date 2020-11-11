@@ -149,8 +149,7 @@ Special property `raw` is available for the first argument of a tagged template.
       };
       
       console.log(person.name);
-      console.log(person.hobbies[1]); //cinema     
-  
+      console.log(person.hobbies[1]); //cinema
     </pre>
 
 - We can also have arrays of object literals 
@@ -166,18 +165,19 @@ Special property `raw` is available for the first argument of a tagged template.
     }
   </pre>
 
-### ES6: Enhanced Object Literals (Provides Syntactic Sugar Over ES5)
+- ES6 provides addition syntactic sugar to allow us to more collate properties into an object literal: 
+
   <pre>
     function getPersonES5( name, age, height ) { 
      return { name: name, age: age, height: height }; 
     }
   
     function getPersonES6( name, age, height ) { 
-      return { name, age, height};
+      return { name, age, height};  //we no longer need the names
     }
   </pre>
 
-..and including function declarations
+- And also including function declarations...
 
   <pre>   
     function getPersonES5( name, age, height ) { 
@@ -185,7 +185,7 @@ Special property `raw` is available for the first argument of a tagged template.
     }
   
     function getPersionES6( name, age, height ) { 
-       return { name, height, getAge(){ return age; } }; 
+       return { name, height, getAge() { return age; } }; 
     }
   </pre>
 
@@ -211,7 +211,7 @@ Special property `raw` is available for the first argument of a tagged template.
 - JS also has ternary operator (`?`) for conditions e.g. `let voteable = (age < 18) ? "Too young":"Old enough";`
  
 ### Switches
-
+- JS has C-style `switch` statements for handling multiple cases
 <pre>
     switch(new Date().getDay()){
       case 0: 
@@ -237,8 +237,8 @@ Special property `raw` is available for the first argument of a tagged template.
     })(foo);
   </pre>
 - **Functions: `Bind`, `Apply`, `Call`**
-    -   `call()` and `apply()` are very similar—they invoke a function with a specified `this` context, and optional arguments. The only difference between them is that call requires the arguments to be passed in one-by-one, and apply takes the arguments as an array.
-    -   `bind()` allows you to set the `this` value now while allowing you to execute the function in the future, because it returns a new function object.
+    - `call()` and `apply()` are very similar—they invoke a function with a specified `this` context, and optional arguments. The only difference between them is that call requires the arguments to be passed in one-by-one, and apply takes the arguments as an array.
+    - `bind()` allows you to set the `this` value now while allowing you to execute the function in the future, because it returns a new function object.
 
 
 ## TODO
@@ -247,10 +247,6 @@ Special property `raw` is available for the first argument of a tagged template.
 -   Closures
 -   Dom Events & Custom Events
 -   Events, Event Handlers, Delegation Filtering & Bubbling
-<hr>
-
-
-
 
 ### Iterables
 - An object is iterable if it defines its iteration behavior, such as what values are looped over in a `for...of` construct. 
@@ -281,8 +277,6 @@ Special property `raw` is available for the first argument of a tagged template.
    };
     //Output is 1, 2, true
 </pre>
-
-<hr>
 
 ### Generators
 The `function*` declaration (function keyword followed by asterisk) defines a generator function, which returns a Generator object. Generators compute their yielded values on demand, which allows them to efficiently represent sequences that are expensive to compute (or even infinite sequences). The next() method also accepts a value, which can be used to modify the internal state of the generator. A value passed to next() will be received by yield .(A value passed to the first invocation of `next()` is always ignored.) Here is the fibonacci generator using `next(x)` to restart the sequence:
