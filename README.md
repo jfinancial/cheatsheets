@@ -4,6 +4,8 @@
 
 [Javascript DOM Cheatsheet](./js_web/JS_DOM.md)
 
+[Javascript OO Cheatsheet](./js_web/JS_OO.md)
+
 [Javascript Aysnchronous Cheatsheet](./js_web/JSAsync.md)
 
 [CSS Cheatsheet](//web/css-cheatsheet.pdf)
