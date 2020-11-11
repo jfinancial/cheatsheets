@@ -240,6 +240,7 @@
 #### Using the Fetch API (using Arrow functions (ES6))
 - Fetch provides a more modern approach to working with APIs
 - **Gotcha!** Error handling with Fetch API is not like Axios or jQuery. *If there is an http error, it will not fire off .catch automatically. You have to check the response and throw an error yourself.* 
+  
   <pre>
     function handleErrors(res) {
       if (!res.ok) throw new Error(res.error);
@@ -247,3 +248,36 @@
     }  
   </pre>  
   
+ - Example of using Fetch for Http GET 
+ 
+   <pre>
+      // Make an HTTP GET Request 
+      get(url) {
+        return new Promise((resolve, reject) => {
+          fetch(url)
+          .then(res => res.json())
+          .then(data => resolve(data))
+          .catch(err => reject(err));
+        });
+      }
+  </pre>
+  
+ - Example of using Fetch for Http POST
+
+  <pre>
+      // Make an HTTP POST Request
+      post(url, data) {
+        return new Promise((resolve, reject) => {
+          fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-type': 'application/json'
+            },
+            body: JSON.stringify(data)
+          })
+          .then(res => res.json())
+          .then(data => resolve(data))
+          .catch(err => reject(err));
+        });
+      }
+   </pre>

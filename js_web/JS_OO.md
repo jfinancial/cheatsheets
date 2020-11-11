@@ -204,6 +204,9 @@
       console.log(mary);
       console.log(Person.addNumbers(1,2));
   </pre>
+
+- Note: A class with no args constructor called be instantiated without brackets. (It’s not specific to classes, it is a “feature” of the language: *if a function is called using the new operator, and the function has no arguments, the parentheses can be omitted*.) 
+  
   
 #### ES6 Subclasses
 - ES6 allows us to create subclasses using the `extends` after the classname and `super` keyword in the constructor to call the superclass's constructor:
