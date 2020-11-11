@@ -123,8 +123,25 @@
       }
   </pre>  
   
-### XmlHttpRequest with easyHttp
-- We can write our own library to simplift making XMLHttpRequests such as [easthttp.js](./jsasync_examples/easyhttp.js)
+### XmlHttpRequest with Callbacks (easyHttp)
+- We can write our own library to simplify making XMLHttpRequests using callbacks [`easthttp.js`](./jsasync_examples/easyhttp.js). Here's the implementation for Http `POST`
+ 
+ <pre>    
+     easyHTTP.prototype.post = function(url, data, callback) {
+       this.http.open('POST', url, true); // Make an async HTTP POST Request
+       this.http.setRequestHeader('Content-type', 'application/json');
+       //we do this because function doesn't have a this (fixed in arrow functions which proivide a lexical this)
+       let self = this;  
+       this.http.onload = function() {
+         //we pass in the response text to the callback so it only populates once the response returns
+         callback(null, self.http.responseText);  
+       }
+       this.http.send(JSON.stringify(data));
+     }
+ </pre>
+ 
+ - The `easyhttp.js` library also implements other HTTP methods
+ 
   <pre>
       const http = new easyHTTP;
  
