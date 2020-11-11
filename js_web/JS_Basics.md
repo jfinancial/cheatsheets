@@ -124,7 +124,8 @@ Special property `raw` is available for the first argument of a tagged template.
 - You can splices values using `splice(x,y)` to slice from position x to position y
 - You can also `sort()`, `reverse()` arrays and concatenate arrays using `concat(otherArray)`
 - Note that can provide a function to `sort(fn)` which acts as a comparator to work out how to sort
-- The `find(f)` method takes a predicate function and returns element matching the function (e.g f = function under50(x){ return x < 50; })
+- The `find(f)` method takes a predicate function and returns element matching the function 
+  - e.g `f = function under50(x){ return x < 50; })`
 <hr>
 
 ### Object Literals
@@ -165,6 +166,31 @@ Special property `raw` is available for the first argument of a tagged template.
     }
   </pre>
 
+### ES6: Enhanced Object Literals (Provides Syntactic Sugar Over ES5)
+  <pre>
+    function getPersonES5( name, age, height ) { 
+     return { name: name, age: age, height: height }; 
+    }
+  
+    function getPersonES6( name, age, height ) { 
+      return { name, age, height};
+    }
+  </pre>
+
+..and including function declarations
+
+  <pre>   
+    function getPersonES5( name, age, height ) { 
+       return { name: name, height: height, getAge: function(){ return age; } }; 
+    }
+  
+    function getPersionES6( name, age, height ) { 
+       return { name, height, getAge(){ return age; } }; 
+    }
+  </pre>
+
+<hr>
+
 ### Dates and Times
 
 - A new Date() will always will create a new date object with current date/time. 
@@ -180,19 +206,28 @@ Special property `raw` is available for the first argument of a tagged template.
 ### Comparison and Logical Operators
 - Use `=` and `==` for equality / equality but this doesn't test type!
 - Use '===' and `!==` to test for equality and type
+- JS has standard `if (foo) { ... } else if (bar){ ... } else {... }` semantics - curly brackets are optional but are advisable
+- JS also logic operators: `&&` (and), `||` (or) and `!` (not)
+- JS also has ternary operator (`?`) for conditions e.g. `let voteable = (age < 18) ? "Too young":"Old enough";`
  
+### Switches
 
-## TODO
+<pre>
+    switch(new Date().getDay()){
+      case 0: 
+          day = 'Sunday';
+          break;
+      case 6:
+          day = 'Saturday';
+          break;
+      case default;
+          day = 'A weekday';
+    }
+</pre>
 
--   **Functions: `Bind`, `Apply`, `Call`**
-    -   `call()` and `apply()` are very similar—they invoke a function with a specified `this` context, and optional arguments. The only difference between them is that call requires the arguments to be passed in one-by-one, and apply takes the arguments as an array.
-    -   `bind()` allows you to set the `this` value now while allowing you to execute the function in the future, because it returns a new function object.
-
-<hr>
-
-### IIFEs - Immediately Invoked Function Expressions
-
-[An introduction to IFFEs](#http://adripofjavascript.com/blog/drips/an-introduction-to-iffes-immediately-invoked-function-expressions.html)
+### Functions Declarations, default parameters
+- Functions are declared `function greet(name){ console.log(`hello ${name}`}` but you aren't obliged to pass parameters and in this case they will be undefined
+- JS also has [IFFEs](#http://adripofjavascript.com/blog/drips/an-introduction-to-iffes-immediately-invoked-function-expressions.html) which are **immediately invoked function expressions**
   <pre>
     var foo = "foo";
     
@@ -201,11 +236,21 @@ Special property `raw` is available for the first argument of a tagged template.
         console.log(innerFoo);
     })(foo);
   </pre>
+- **Functions: `Bind`, `Apply`, `Call`**
+    -   `call()` and `apply()` are very similar—they invoke a function with a specified `this` context, and optional arguments. The only difference between them is that call requires the arguments to be passed in one-by-one, and apply takes the arguments as an array.
+    -   `bind()` allows you to set the `this` value now while allowing you to execute the function in the future, because it returns a new function object.
 
+
+## TODO
+
+-   Inheritance, Composition & Prototype points back to the function)
+-   Closures
+-   Dom Events & Custom Events
+-   Events, Event Handlers, Delegation Filtering & Bubbling
 <hr>
 
 
-<hr>
+
 
 ### Iterables
 - An object is iterable if it defines its iteration behavior, such as what values are looped over in a `for...of` construct. 
@@ -284,30 +329,7 @@ The `function*` declaration (function keyword followed by asterisk) defines a ge
 
 <hr>
 
-### ES6: Enhanced Object Literals (Provides Syntactic Sugar Over ES5)
-  <pre>
-    function getPersonES5( name, age, height ) { 
-     return { name: name, age: age, height: height }; 
-    }
-  
-    function getPersonES6( name, age, height ) { 
-      return { name, age, height};
-    }
-  </pre>
 
-..and including function declarations
-
-  <pre>   
-    function getPersonES5( name, age, height ) { 
-       return { name: name, height: height, getAge: function(){ return age; } }; 
-    }
-  
-    function getPersionES6( name, age, height ) { 
-       return { name, height, getAge(){ return age; } }; 
-    }
-  </pre>
-
-<hr>
 
 ### ES6: Computed Property Notation
 ES6 provides new, efficient way to create property names from variables.  In ES5,  only one way to create a dynamic property whose name is specified by a variable; this is through bracket notation e.g  obj[ expression ] = 'value' . 
@@ -534,9 +556,6 @@ Default function parameters allow named parameters to be initialized with defaul
 - Lastly, `--source-maps` creates a source map file. This file tells the browser which line of transpiled code corresponds to which lines of the original source. This allows us to debug directly in the original source file, that is, `app.js`.
 - Now we can transpile by typing `npm run` transpile into the terminal window.
 
--   Inheritance, Composition & Prototype points back to the function)
--   Closures
--   Dom Events & Custom Events
--   Events, Event Handlers, Delegation Filtering & Bubbling
+
 
 
