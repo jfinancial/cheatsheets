@@ -1,4 +1,4 @@
-#JAVASCRIPT BASICS (INCLUDING ES6)
+# JAVASCRIPT BASICS (INCLUDING ES6)
 
 ### Web and Javascript Tools
   | Name                                                                     | Description                                            |
