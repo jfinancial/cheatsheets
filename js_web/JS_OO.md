@@ -169,7 +169,7 @@
   </pre>
   
 #### ES6 Classes
-- ES6 introduced classes with a `constructor` method and also add `static` methods. Under the hood it still uses prototype inheritance so ES6 just provides syntactic sugar
+- ES6 introduced classes with a `constructor` method and also add `static` methods (which can be used without instantiating object.) Under the hood it still uses prototype inheritance so ES6 just provides syntactic sugar
 
   <pre>
       class Person {
