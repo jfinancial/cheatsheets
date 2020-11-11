@@ -1,9 +1,9 @@
 ## DOM Manipulation
 
-**HTML example**
+#### HTML example
 - The supplementary example html used here can be found [here](./domEvents.html)
 
-**Document Object**
+#### Document Object
 - The document object has some some important properties
     <pre>
       document.head     //get the header
@@ -12,7 +12,7 @@
       document.url      //get the url
     </pre>  
 
-**Converting HTML collections to arrays**
+#### Converting HTML collections to arrays
   - To convert HTML collections use `Array.from()` 
   
     <pre>
@@ -20,7 +20,7 @@
        let scrArr = Array.from(scripts);
     </pre>
 
-**Single Element Selector**
+#### Single Element Selector
 
 - In the old way we use `getElementById()`
   <pre>
@@ -47,7 +47,7 @@
     document.querySelector('li:nth-child(3)').style.color = 'yellow';
   </pre>
 
-**Multiple Element Selector**
+#### Multiple Element Selector
 - In the old way we use `getElementsById()` or `getElementsByTagName`
 
   <pre>
@@ -71,7 +71,7 @@
       }
    </pre>
    
-**Traversing the DOM**
+#### Traversing the DOM
 - We can traverse the DOM by getting an element and iterating over child items
     
   <pre>
@@ -110,7 +110,7 @@
    </pre>
 
     
-**Creating Elements**
+#### Creating Elements
 - We use `createElement` and `createTextNode` to create new elements
 
   <pre>
@@ -135,7 +135,7 @@
      document.querySelector('ul.collection').appendChild(li);
   </pre>
   
-**Removing and Replacing Elements**
+#### Removing and Replacing Elements
 
 - Use the `removeChild` and `replaceChild` 
 
@@ -173,7 +173,7 @@
     val = link;
   </pre>
   
-**Events Basics**
+#### Events Basics
 - From an event such as `onClick` we get can get properties of the target
 
   <pre>
@@ -194,7 +194,7 @@
     }
   </pre>
   
-**Mouse Events** 
+#### Mouse Events 
 - Mouse events are `click`,`dblclick`,`mousedown`,`mouseup`,`mouseenter`,`mouseover`,`mouseout` and `mousemove`
  
   <pre>
@@ -205,7 +205,7 @@
       }
   </pre>
 
-**Keyboard and Input Events**
+#### Keyboard and Input Events
 - Keyboard events are: `keydown`,`keyup`,`keypress`,`focus`,`blur`,`cut`, `paste`,`input` and `change`
 - Form event has an `onSubmit`
   <pre>
@@ -223,9 +223,9 @@
       }
   </pre>
   
-**Event Bubbling and Delegation**
+#### Event Bubbling and Delegation
 - Use `addEventListener` to add a function to be called on an event
-- *Event bubbling* refers to elements bubbling up through the DOM 
+- *Event bubbling* refers to elements bubbling up through parent elements in the DOM. Here when we click on card-title then it bubbles up and fires the event in the parent elements:
   <pre>
     document.querySelector('.card-title').addEventListener('click', function(){
       console.log('card title');
@@ -241,11 +241,62 @@
     });
   </pre>
         
-- *Event delegation* refers to elements percolating down the DOM  
+- *Event delegation* refers to elements trickling down the DOM 
   <pre>
-  function deleteItem(e){
-    if(e.target.parentElement.className === 'delete-item secondary-content'){
-       console.log('delete item');
-    }
+     //this only puts it on them item so when deleted the function is removed
+     const delItem = document.querySelector('.delete-item');
+     delItem.addEventListener('click', deleteItem);
   </pre>
+- Instead (using event delegation) we put a listener on the parent and using a condition to target the class we want: 
+  <pre>
+      //if we put it on the body we can delegate to child elements
+      document.body.addEventListener('click', deleteItem);
       
+      function deleteItem(e){
+        // This solution is naive because the string might have multiple classes
+        // but using == means it has to match the entire string
+        // if(e.target.parentElement.className === 'delete-item secondary-content'){
+        //   console.log('delete item');
+        // }
+      
+        // Here we just check the target class is in the class list
+        if(e.target.parentElement.classList.contains('delete-item')){
+          console.log('delete item');
+          e.target.parentElement.parentElement.remove();
+        }
+      }
+      function deleteItem(e){
+        if(e.target.parentElement.className === 'delete-item secondary-content'){
+           console.log('delete item');
+         }
+      }
+  </pre>
+  
+#### Local and Session Storage API    
+- The local storage API is part of the browser allows values to stored as key/values
+    <pre>
+      localStorage.setItem('name', 'John');
+      localStorage.setItem('age', '30');
+      const name = localStorage.getItem('name');
+      const age = localStorage.getItem('age');
+      localStorage.removeItem('name');
+      localStorage.clear();
+    </pre>
+
+- The session storage is cleared after the browse
+    <pre>
+        sessionStorage.setItem('name', 'Beth');
+    </pre>
+- We can store arrays/object literals using `JSON.stringify()` and `JSON.parse()` 
+    <pre>    
+      document.querySelector('form').addEventListener('submit', function(e) {
+          const task = document.getElementById('task').value;
+          let tasks = localStorage.getItem('tasks') === null ? [] :JSON.parse(localStorage.getItem('tasks'));
+          tasks.push(task);      
+          localStorage.setItem('tasks', JSON.stringify(tasks));
+          e.preventDefault();
+      });
+        
+      const tasks = JSON.parse(localStorage.getItem('tasks'));
+      tasks.forEach(function(task){ console.log(task); });
+    </pre>
