@@ -1,10 +1,12 @@
 # Cheatsheets
 
-[Javascript Basics cheatsheet](./js_web/JS_Basics.md)
+[Javascript Basics Cheatsheet](./js_web/JS_Basics.md)
 
-[Javascript DOM cheatsheet](./js_web/JS_DOM.md)
+[Javascript DOM Cheatsheet](./js_web/JS_DOM.md)
 
 [Javascript Aysnchronous Cheatsheet](./js_web/JSAsync.md)
+
+[CSS Cheatsheet](//web/css-cheatsheet.pdf)
 
 [Learning TypeScript](./typescript/learning-typescript.pdf)
 
