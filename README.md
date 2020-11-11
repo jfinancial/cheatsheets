@@ -1,4 +1,4 @@
-# cheatsheets
+# Cheatsheets
 
 [Javascript Basics cheatsheet](./js_web/JS_Basics.md)
 
