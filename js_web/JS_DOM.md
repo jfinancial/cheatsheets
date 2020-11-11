@@ -1,7 +1,7 @@
 ## DOM Manipulation
 
 #### HTML example
-- The supplementary example html used here can be found [here](html/domEvents.html)
+- The supplementary example html used here can be found [here](jsdom_examples/html/domEvents.html)
 
 #### Document Object
 - The document object has some some important properties

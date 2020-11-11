@@ -169,7 +169,8 @@
   </pre>
   
 #### ES6 Classes
-- ES6 introduced classes with a `constructor` method and also add `static` methods (which can be used without instantiating object.) Under the hood it still uses prototype inheritance so ES6 just provides syntactic sugar
+- ES6 introduced classes with a `constructor` method and also add `static` methods which can be used without instantiating object. (You can't call a static method on an object or you'll get an error.) 
+- Under the hood ES6 classes still uses prototype inheritance so ES6 just provides syntactic sugar
 
   <pre>
       class Person {
@@ -203,3 +204,31 @@
       console.log(mary);
       console.log(Person.addNumbers(1,2));
   </pre>
+  
+#### ES6 Subclasses
+- ES6 allows us to create subclasses using the `extends` after the classname and `super` keyword in the constructor to call the superclass's constructor:
+
+  <pre>
+      class Person {
+        constructor(firstName, lastName) {
+          this.firstName = firstName;
+          this.lastName = lastName;
+        }
+      
+        greeting() {
+          return `Hello there ${this.firstName} ${this.lastName}`;
+        }
+      }
+      
+      class Customer extends Person {
+        constructor(firstName, lastName, phone, membership) {
+          super(firstName, lastName); 
+          this.phone = phone;
+          this.membership = membership;
+        }
+      }
+      
+      const john = new Customer('John', 'Doe', '555-555-5555', 'Standard');
+      console.log(john.greeting());
+      
+  </pre>  
