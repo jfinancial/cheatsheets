@@ -231,4 +231,50 @@
       const john = new Customer('John', 'Doe', '555-555-5555', 'Standard');
       console.log(john.greeting());
       
-  </pre>  
+  </pre>
+  
+#### Creating a UI object (Pattern)
+- A useful pattern is to create a UI object to add relevant methods to the prototype
+
+  <pre>
+      function UI() {}                                          // UI Constructor
+      
+      // Add Book To List
+      UI.prototype.addBookToList = function(book){
+        const list = document.getElementById('book-list');
+        const row = document.createElement('tr');
+        row.innerHTML = `< td>${book.title}</td>
+            &lt;td>${book.author}</td>
+            &lt;td>${book.isbn}</td>
+            &lt;td>&lt;a href="#" class="delete">X<a>&lt;/td>
+          `;
+                                     
+             
+        list.appendChild(row);
+      }
+      
+      // Show Alert
+      UI.prototype.showAlert = function(message, className) {
+        const div = document.createElement('div');              // Create div
+        div.className = `alert ${className}`;                   // Add classes
+        div.appendChild(document.createTextNode(message));      // Add text
+        const container = document.querySelector('.container'); // Get parent
+        const form = document.querySelector('#book-form');      // Get form
+        container.insertBefore(div, form);                      // Insert alert
+        setTimeout(function(){                                  // Timeout after 3 sec
+          document.querySelector('.alert').remove();
+        }, 3000);
+      }
+      
+      UI.prototype.deleteBook = function(target){               // Delete Book
+        if(target.className === 'delete') {
+          target.parentElement.parentElement.remove();
+        }
+      }
+      
+      UI.prototype.clearFields = function() {                   // Clear Fields
+        document.getElementById('title').value = '';
+        document.getElementById('author').value = '';
+        document.getElementById('isbn').value = '';
+      }
+  </pre>
