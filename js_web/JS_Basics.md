@@ -189,7 +189,6 @@ Special property `raw` is available for the first argument of a tagged template.
     }
   </pre>
 
-<hr>
 
 ### Dates and Times
 
@@ -203,12 +202,14 @@ Special property `raw` is available for the first argument of a tagged template.
      val month = fixed1.getMonth(); //this returns 8 as it is zero-based
   </pre>
 
+
 ### Comparison and Logical Operators
 - Use `=` and `==` for equality / equality but this doesn't test type!
 - Use '===' and `!==` to test for equality and type
 - JS has standard `if (foo) { ... } else if (bar){ ... } else {... }` semantics - curly brackets are optional but are advisable
 - JS also logic operators: `&&` (and), `||` (or) and `!` (not)
 - JS also has ternary operator (`?`) for conditions e.g. `let voteable = (age < 18) ? "Too young":"Old enough";`
+
  
 ### Switches
 - JS has C-style `switch` statements for handling multiple cases
@@ -225,8 +226,53 @@ Special property `raw` is available for the first argument of a tagged template.
     }
 </pre>
 
+
 ### Functions Declarations, default parameters
-- Functions are declared `function greet(name){ console.log(`hello ${name}`}` but you aren't obliged to pass parameters and in this case they will be undefined
+
+- Functions are declared  using the `function` keyword: 
+  <pre>
+    function greet(name){ 
+       console.log(`hello ${name}`);
+    }
+  </pre> 
+- You aren't obliged to pass parameters to any function and in this case they will be undefined:
+- **Default function parameters** (ES6) allow named parameters to be initialized with default values if no value or undefined is passed:
+
+  <pre>
+    function multiply(a, b = 1) {
+      return a * b;
+    }
+    console.log(multiply(5, 2));// expected output: 10
+    console.log(multiply(5));  // expected output: 5
+  </pre>
+  
+- **Function expressions** are usually defined anonymously (but can take a name). Expressions have benefits for hoisting and closures. 
+  <pre>
+    const square = function(x) {
+      return x * x;
+    }
+  </pre>
+
+- Functions can also be put inside objects (then known as methods):
+  <pre>
+    const todo = {
+      add:  function() {
+        console.log(`Add a todo`);
+      },
+      edit: function(id) {
+        console.log(`Editing a todo with id ${id}`);
+      }
+    }
+    
+    //we can also add methods outside the the object
+    todo.delete = function(id) {
+        console.log(`Deleting a todo with id ${id}`);
+    }
+    
+    todo.add();
+    todo.edit(22);
+  </pre>
+
 - JS also has [IFFEs](#http://adripofjavascript.com/blog/drips/an-introduction-to-iffes-immediately-invoked-function-expressions.html) which are **immediately invoked function expressions**
   <pre>
     var foo = "foo";
@@ -236,17 +282,81 @@ Special property `raw` is available for the first argument of a tagged template.
         console.log(innerFoo);
     })(foo);
   </pre>
+        
 - **Functions: `Bind`, `Apply`, `Call`**
     - `call()` and `apply()` are very similar—they invoke a function with a specified `this` context, and optional arguments. The only difference between them is that call requires the arguments to be passed in one-by-one, and apply takes the arguments as an array.
     - `bind()` allows you to set the `this` value now while allowing you to execute the function in the future, because it returns a new function object.
 
+### Loops
+- JS has standard `for` (when known number of iterations), `while`(when unknown number of iterations) and `do`(when always do at least once) constructs
 
-## TODO
+  <pre>
+    for ( let i =0; i < 10; i++ ){   //standard for loop
+      if (i == 2){
+        console.log(`${i} is my favourite number`);
+        continue;
+      }
+      if (i == 5){
+         break;
+      }
+      console.log(i);   
+    }  
+    
+    while(i < 10){                //basic while-loop
+      console.log(i);
+      i++;
+    }
+    
+    do {                          //basic do-while loop
+      console.log(i);
+      i++;
+    }
+    while(i < 10);
+  </pre>
 
--   Inheritance, Composition & Prototype points back to the function)
--   Closures
--   Dom Events & Custom Events
--   Events, Event Handlers, Delegation Filtering & Bubbling
+- JS also has `forEach` which takes in an anonymous function and is simpler/cleaner for iteration:
+ <pre>
+    const cars = ['Ford','Toyota','Lexus'];
+    
+    //we can also use forEach with the index and the entire array 
+    //   e.g. cars.forEach(function(car, i,cars ){...}
+     
+    cars.forEach(function(car){
+       console.log(car);
+    });
+ </pre>
+ 
+- JS also has `map` function
+<pre>
+    const brands = [{id: 1, brand: 'Ford'},{id: 2, brand: 'Toyota'},{id: 3, brand: 'Lexus'}];
+    brands.forEach(function(brand){
+       return brand.id;
+    });
+ </pre>
+ 
+- JS also has `for-in` function which is ideal for key value pairs
+<pre>
+    const brand = {id: 1, brand: 'Ford'};
+    for(x in brand){
+       console.log(`${x} : ${brand[x]}`);  
+    };
+    
+    //outputs
+    //id: 1 
+    //brand: Ford
+ </pre>
+
+### The Window Object
+- Window is the global object/environment in client-side javascript
+- The `window.document` give us the Document Object Model (DOM)
+- We an use `window.alert('hello world)` (or we can just use `alert`) and we can use `prompt` to take an input and `confirm` for confirmations (but better use to Bootstrap for this)
+- We can get the `innerHeight` and `outerHeight` and `innerWidth` and `innerHeight` of the window 
+- We can get scrollpoints using `scrollY` and `scrollX` (used for animations with scrolling)
+- We can also get `window.location` (or `window.location.hostname` or `window.location.port`) to get current location and `window.history` to get browser history (and `window.history.go(-2)` to go back 2 in history)
+- We can use `window.location.search` to get query parameters
+- We can use `window.location.href` to redirect, `window.location.reload` to reload and   
+- We can use `window.navigator` which is to do with the browser and has geolocation, browser version, user's OS etc
+
 
 ### Iterables
 - An object is iterable if it defines its iteration behavior, such as what values are looped over in a `for...of` construct. 
@@ -295,9 +405,7 @@ The `function*` declaration (function keyword followed by asterisk) defines a ge
   }
 </pre>
 
-<hr>
-
-### ES6: Arrow Functions
+### Arrow Functions (ES6)
 
 -  Difference between arrow function and normal functions is that they are [**anonymous**](#https://en.wikipedia.org/wiki/Anonymous_function). To write an arrow function, simply omit the function keyword and add =&gt; between the arguments and fn body.
 -  If arrow function is returning a **single line of code,** you can omit statement brackets and return
@@ -321,13 +429,10 @@ The `function*` declaration (function keyword followed by asterisk) defines a ge
     ( num1, num2 ) => ( { prop1: num1, prop2: num2 } )
 </pre>
 
-<hr>
+### Computed Property Notation (ES6)
 
-
-
-### ES6: Computed Property Notation
-ES6 provides new, efficient way to create property names from variables.  In ES5,  only one way to create a dynamic property whose name is specified by a variable; this is through bracket notation e.g  obj[ expression ] = 'value' . 
-In ES6, we can use this same type of notation during the object literal's declaration:
+- ES6 provides new, efficient way to create property names from variables.  In ES5,  only one way to create a dynamic property whose name is specified by a variable; this is through bracket notation e.g  `obj[ expression ] = 'value'` 
+- In ES6, we can use this same type of notation during the object literal's declaration:
 
   <pre>
      const varName = 'firstName'; 
@@ -337,26 +442,8 @@ In ES6, we can use this same type of notation during the object literal's declar
 
 <hr>
 
-
-
-### ES6: Default Parameters
-
-Default function parameters allow named parameters to be initialized with default values if no value or undefined is passed:
-
-  <pre>
-    function multiply(a, b = 1) {
-      return a * b;
-    }
-    console.log(multiply(5, 2));// expected output: 10
-    console.log(multiply(5));  // expected output: 5
-  </pre>
-
-<hr>
-
-### ES6: Destructuring
-
+### Destructuring (ES6)
 - **Destructuring assignment** is syntax in JavaScript that allows you to unpack values from arrays or properties from objects, and save them into variables.
-
 - **Array Destructuring** allows us to extract multiple array elements and save them into variables. We create an array containing the variable to assign data into, and set it equal to the data array being destructured and values in the array are unpacked and assigned to the variables in the left-hand side array from left to right, one variable per array value. If there's more array items than vars, then remaining items will be discarded and not be destructured. Conversely, if there are more variables than the total number of array elements in the data array, some of the variables will be set to undefined. So *don't unintentionally assume that a variable will contain a value!*
 
   <pre>
@@ -367,12 +454,12 @@ Default function parameters allow named parameters to be initialized with defaul
   </pre>
 
 
-### ES6 Rest and Spread Operator (… or 'elipses') for Deep Copy
+### Rest and Spread Operator (… or 'elipses') for Deep Copy (ES6)
 
--   The operator is used to represent an infinite number of arguments as an array; it is used to allow an iterable object to be expanded into multiple arguments. To identify which is being used, we must look at the item that the argument is being applied to.
+- The operator is used to represent an infinite number of arguments as an array; it is used to allow an iterable object to be expanded into multiple arguments. To identify which is being used, we must look at the item that the argument is being applied to.
 
-    -   If applied to an **iterable object** (array, object, and so on), then it is the **spread operator**
-    -   If applied to **function arguments**, then it is the **rest operator**.
+  - If applied to an **iterable object** (array, object, and so on), then it is the **spread operator**
+  - If applied to **function arguments**, then it is the **rest operator**.
 
 * **Rest Operator**
   - Like the arguments object of a fn (which is array-like object that contains each argument passed into the fn), the rest operator contains a list of fn arguments but has three distinct differences from the arguments object.
