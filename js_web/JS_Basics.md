@@ -391,7 +391,7 @@ Special property `raw` is available for the first argument of a tagged template.
   - `source` property returns a String containing the source text of the regexp object, and it doesn't contain the two forward slashes on both sides and any flags.
   - `compile()` recompiles the expression
   
-- **Metasymbols**
+- **Regex: Metasymbols**
  
   - `^` must *start* with e.g. `/^h/i`  = must start with h
   - `$` must *end* with e.g. `/world$/i` = must end with
@@ -400,7 +400,7 @@ Special property `raw` is available for the first argument of a tagged template.
   - `?` match an *optional* character e.g. /`^gr?a?ey/i` (which would match either spelling of gray or gry)
   - `\` escape characters
 
-- **Character sets**
+- **Regex: Character sets**
 
 - `[]` matches *anything* contained in characters in the bracketed set e.g. `/gr[ae]y/i` (which would match either spelling of gray or gry)
 - `[^]` matches *anything except* characters in the bracketed set e.g. `/[^G]ray/i` (which would match with Xray but not Gray)      
@@ -408,11 +408,24 @@ Special property `raw` is available for the first argument of a tagged template.
 - `[A-z]` matches *any letter* (ignoring case) set e.g. `/[^A-Z]ray/i`(which would match with Xray, Gray and Fray)
 - `[0-9]` matches any digit
 
-- **Quantifiers and Grouping**
+- **Regex: Quantifiers and Grouping**
 
   - `{x}` matches a specified number of occurences e.g. `l{2}` specifies 2 l's so `/H?l{2}o/i` matches hello but not halo
   - `{x,y}` matches a  specified range of number of occurences
   - `()` matches a group of characters e.g. `/([0-9]x{3})/` matches 2x1x5x or 2x2x2x and 1x2x3x4x but not 1x2x whereas `/^([0-9]x{3})/` matches exactly 3 times
+
+- **Regex: Shorthand Character Classes**
+
+  - `/\w/` any alphanumeric character (letter,number or underscore)
+  - `/\w+/` all of the word characters (letter,number or underscore)
+  - `/\W+/` all of the non-word characters (anything but letter,number or underscore)
+  - `/\d/` any digit
+  - `/\D/` any non-digit
+  - `/\s/` any whitespace (tab, cr and space)
+  - `/\S/` any non-whitespace (any but tab, cr and space)
+  - `/\b/` word boundary e.g. `/Hell\b/i` finds the word hell not hello  
+  - `/\x(?=y)/` conditional assertion (match only x if followed by) 
+  - `/\x(?!y)/` conditional assertion (match only x if *not* followed by)
   
   
   <pre>
