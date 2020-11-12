@@ -82,6 +82,7 @@
   - `replace('foo','bar')` (replaces all occurences of foo with bar)
   - `includes('foo')` (returns a boolean value if the supplied string occurs)
 - ES6 introduces `padStart()` and `padEnd()` which add specific characters to existing string. You specify the amount of characters these methods should add through a parameter called targetLength. Note this is not the length in the terms of the number of characters you want to add but is the *whole* length of string you want to change. 
+- The `eval()` method evaluates javascript within a string
 
 ### String Template Literals (ES6)
 - ES6 introduce template literals or template strings. Here we can use `${foo}` for expressions (so variables, functions or, say an expression using the ternary operator). New lines will be included in the output (so we don't need to escape line breaks.) To escape a template literal, simply use a backslash.
@@ -359,6 +360,25 @@ Special property `raw` is available for the first argument of a tagged template.
 - We can use `window.location.search` to get query parameters
 - We can use `window.location.href` to redirect, `window.location.reload` to reload and   
 - We can use `window.navigator` which is to do with the browser and has geolocation, browser version, user's OS etc
+
+### Try-datch-finally
+- The `try` `catch` semantics allows us to catch errors and handle them gracefully. Be aware that anything in the `finally` block will always run
+  
+  <pre>
+    const user = {email: 'jdoe@gmail.com'};
+    
+    try {
+      if(!user.name) {
+        throw new SyntaxError('User has no name');
+      }
+    } catch(e) {
+      console.log(`User Error: ${e.message}`);
+    } finally {
+      console.log('Finally runs reguardless of result...');
+    }
+    
+    console.log('Execution continues...');
+  </pre>
 
 ### Iterables
 - An object is iterable if it defines its iteration behavior, such as what values are looped over in a `for...of` construct. 
