@@ -361,7 +361,7 @@ Special property `raw` is available for the first argument of a tagged template.
 - We can use `window.location.href` to redirect, `window.location.reload` to reload and   
 - We can use `window.navigator` which is to do with the browser and has geolocation, browser version, user's OS etc
 
-### Try-datch-finally
+### Try-catch-finally
 - The `try` `catch` semantics allows us to catch errors and handle them gracefully. Be aware that anything in the `finally` block will always run
   
   <pre>
@@ -378,6 +378,58 @@ Special property `raw` is available for the first argument of a tagged template.
     }
     
     console.log('Execution continues...');
+  </pre>
+
+### Regex
+- JS has standard [regular expressions](https://en.wikipedia.org/wiki/Regular_expression) and can be tested at [Regex101](https://regex101.com/)
+
+  - `exec()` executes a search for a match and returns a result array or null
+  - `match()` / `matchAll()` works the other way around to exec in so far as it is called on the string being tested abd the regex is passed in to the function 
+  - `test()` tests the expression for a match returning a boolean
+  - `search()` returns the index of the first match or -1 if not found
+  - `replace()` will return new srtring replacing all occurences of the match (pass in the regex and the replacment)   
+  - `source` property returns a String containing the source text of the regexp object, and it doesn't contain the two forward slashes on both sides and any flags.
+  - `compile()` recompiles the expression
+  
+- Metasymbols
+ 
+  - `^` must *start* with e.g. `/^h/i`  = must start with h
+  - `$` must *end* with e.g. `/world$/i` = must end with
+  - `.` match any *one* character e.g. `/^h.llo/i`
+  - `*` match any *any* character 0 or more times  e.g. `/^h*llo/i` (which would match with 'heexllo')  
+  - `?` match an *optional* character e.g. /`^gr?a?ey/i` (which would match either spelling of gray or gry)
+  - `\` escape characters
+
+- Character sets
+- `[]` matches *anything* contained in characters in the bracketed set e.g. `/gr[ae]y/i` (which would match either spelling of gray or gry)
+- `[^]` matches *anything except* characters in the bracketed set e.g. `/[^G]ray/i` (which would match with Xray but not Gray)      
+- `[A-Z]` matches *anything in the range* defined by the bracketed (including case) set e.g. `/[^A-Z]ray/i`(which would match with Xray, Gray and Fray)
+- `[A-z]` matches *any letter* (ignoring case) set e.g. `/[^A-Z]ray/i`(which would match with Xray, Gray and Fray)
+- `[0-9]` matches any digit
+
+- Quantifiers and Grouping
+  - `{x}` matches a specified number of occurences e.g. `l{2}` specifies 2 l's so `/H?l{2}o/i` matches hello but not halo
+  - `{x,y}` matches a  specified range of number of occurences
+  - `()` matches a group of characters e.g. `/([0-9]x{3})/' matches 2x1x5x or 2x2x2x and 1x2x3x4x but not 1x2x
+  
+  <pre>
+      let re1 = /hello/;
+      let re2 = /hello/i; // i =  case insensitive
+      let re3 = /hello/g; // Global search
+        
+      // exec() - Return result in an array or null
+      const result1 = re.exec('hello world');
+      
+      // test() - Returns true or false
+      const result2 = re.test('Hello');
+     
+      // match() - Return result array or null
+      const str = 'Hello There';
+      const result = str.match(re);
+      
+      // search() - Returns index of the first match if not found returns -1
+      const str = 'Brad Hello There';
+      const result = str.search(re);  
   </pre>
 
 ### Iterables
