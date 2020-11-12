@@ -390,6 +390,27 @@ Special property `raw` is available for the first argument of a tagged template.
   - `replace()` will return new srtring replacing all occurences of the match (pass in the regex and the replacment)   
   - `source` property returns a String containing the source text of the regexp object, and it doesn't contain the two forward slashes on both sides and any flags.
   - `compile()` recompiles the expression
+
+  <pre>
+      let re1 = /hello/;
+      let re2 = /hello/i; // i =  case insensitive
+      let re3 = /hello/g; // Global search
+        
+      // exec() - Return result in an array or null
+      const result1 = re.exec('hello world');
+      
+      // test() - Returns true or false
+      const result2 = re.test('Hello');
+     
+      // match() - Return result array or null
+      const str = 'Hello There';
+      const result = str.match(re);
+      
+      // search() - Returns index of the first match if not found returns -1
+      const str = 'Brad Hello There';
+      const result = str.search(re);  
+  </pre>
+  
   
 - **Regex: Metasymbols**
  
@@ -427,25 +448,19 @@ Special property `raw` is available for the first argument of a tagged template.
   - `/\x(?=y)/` conditional assertion (match only x if followed by) 
   - `/\x(?!y)/` conditional assertion (match only x if *not* followed by)
   
-  
+- Example regex function for validating email: 
+ 
   <pre>
-      let re1 = /hello/;
-      let re2 = /hello/i; // i =  case insensitive
-      let re3 = /hello/g; // Global search
-        
-      // exec() - Return result in an array or null
-      const result1 = re.exec('hello world');
-      
-      // test() - Returns true or false
-      const result2 = re.test('Hello');
-     
-      // match() - Return result array or null
-      const str = 'Hello There';
-      const result = str.match(re);
-      
-      // search() - Returns index of the first match if not found returns -1
-      const str = 'Brad Hello There';
-      const result = str.search(re);  
+    function validateEmail() {
+      const email = document.getElementById('email');
+      const re = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
+    
+      if(!re.test(email.value)){
+        email.classList.add('is-invalid');
+      } else {
+        email.classList.remove('is-invalid');
+      }
+    }
   </pre>
 
 ### Iterables
