@@ -78,7 +78,7 @@
 
 #### [Observer Pattern](https://en.wikipedia.org/wiki/Observer_pattern)
 
-Here is the accompanying [HTML](./jspattern/index.html)
+Here is the accompanying [HTML](js_pattern/index.html)
 
   <pre>
     class EventObserver {

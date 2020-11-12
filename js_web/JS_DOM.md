@@ -1,7 +1,7 @@
 ## DOM Manipulation
 
 #### HTML example
-- The supplementary example html used here can be found [here](jsdom_examples/html/domEvents.html)
+- The supplementary example html used here can be found [here](js_dom_examples/html/domEvents.html)
 
 #### Document Object
 - The document object has some some important properties
@@ -346,6 +346,6 @@ function loadEventListeners() {
 </pre>
 
 #### Simple DOM examples
-- [Task List](jsdom_examples/tasklist/index.html)
-- [Loan Calculator](jsdom_examples/loancalculator/index.html)
-- [Number Guesser](jsdom_examples/numberguesser/index.html)
+- [Task List](js_dom_examples/tasklist/index.html)
+- [Loan Calculator](js_dom_examples/loancalculator/index.html)
+- [Number Guesser](js_dom_examples/numberguesser/index.html)
