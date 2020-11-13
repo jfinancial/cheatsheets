@@ -275,6 +275,7 @@
      delItem.addEventListener('click', deleteItem);
   </pre>
 - Instead (using event delegation) we put a listener on the parent and using a condition to target the class we want: 
+  - Hint: use classListContains() to see what type of element is the source of the event 
   <pre>
       //if we put it on the body we can delegate to child elements
       document.body.addEventListener('click', deleteItem);
