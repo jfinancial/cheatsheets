@@ -91,17 +91,17 @@
     
     const instanceA = Singleton.getInstance();
     const instanceB = Singleton.getInstance();
-    
-    console.log(instanceA === instanceB);
+    console.log(instanceA === instanceB);  //true
   </pre>
   
 #### [Factory Pattern](https://en.wikipedia.org/wiki/Factory_method_pattern)
+
+- Factory is used to create objects which may be different but have a lot of commonality
 
   <pre>
      function MemberFactory() {
        this.createMember = function(name, type) {
          let member;
-     
          if(type === 'simple') {
            member = new SimpleMembership(name);
          } else if (type === 'standard') {
@@ -109,13 +109,10 @@
          } else if (type === 'super') {
            member = new SuperMembership(name);
          }
-     
          member.type = type;
-     
          member.define =  function() {
            console.log(`${this.name} (${this.type}): ${this.cost}`);
          }
-     
          return member;
        }
      }
@@ -145,8 +142,8 @@
   </pre>
 
 #### [Observer Pattern](https://en.wikipedia.org/wiki/Observer_pattern)
-
-Here is the accompanying [HTML](js_pattern/index.html)
+- Observer pattern provides a subscription model allowing objects to subscribe to events. Events are then [published to subscribers](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern) 
+- Here is the accompanying [HTML](js_pattern/index.html)
 
   <pre>
     class EventObserver {
@@ -160,7 +157,9 @@ Here is the accompanying [HTML](js_pattern/index.html)
       }
     
       unsubscribe(fn) {
-         // Filter out from the list whatever matches the callback function. If there is no match, the callback gets to stay on the list. The filter returns a new list and reassigns the list of observers.
+         // Filter out from the list whatever matches the callback function. 
+         // If there is no match, the callback gets to stay on the list. 
+         // The filter returns a new list and reassigns the list of observers.
          this.observers = this.observers.filter(function(item){
           if(item !== fn) {
             return item;
@@ -175,8 +174,7 @@ Here is the accompanying [HTML](js_pattern/index.html)
         });
       }
     }
-    
-    
+  
     const click = new EventObserver();
     
     // Event Listeners

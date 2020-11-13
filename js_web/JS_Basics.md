@@ -223,7 +223,7 @@ Special property `raw` is available for the first argument of a tagged template.
 </pre>
 
 ### Functions Declarations, default parameters
-- Functions are declared  using the `function` keyword: 
+- Functions are declared  using the `function` keyword and the name of the function can be returned getting [`.name` property](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/name): 
   <pre>
     function greet(name){ 
        console.log(`hello ${name}`);
