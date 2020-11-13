@@ -288,7 +288,11 @@ Here is the accompanying [HTML](js_pattern/index.html)
     });
   </pre>
   
-#### Module Pattern (Standard)
+#### Module Pattern (Standard)  
+
+- The module pattern allows for improved [encapsulation](https://en.wikipedia.org/wiki/Encapsulation_(computer_programming)) and using an [IFFE](https://flaviocopes.com/javascript-iife/) function to only expose what is public via a function `return` and so hides private state for the user of the module:
+- Sometimes private variable are marked with a preceding underscore
+
   <pre>    
     (function() {
       // Declare private vars and functions 
@@ -320,7 +324,9 @@ Here is the accompanying [HTML](js_pattern/index.html)
   </pre>
   
 #### Revealing Module Pattern
-       
+
+- The difference to the standard module is that you map an *object literal* to methods you want to reveal:       
+
   <pre>
     const ItemCtrl = (function() {
       let data = [];
