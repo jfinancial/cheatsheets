@@ -282,6 +282,17 @@ Special property `raw` is available for the first argument of a tagged template.
     - `call()` and `apply()` are very similar—they invoke a function with a specified `this` context, and optional arguments. The only difference between them is that call requires the arguments to be passed in one-by-one, and apply takes the arguments as an array.
     - `bind()` allows you to set the `this` value now while allowing you to execute the function in the future, because it returns a new function object.
 
+- Comparing  function objects, function calls, call/apply and bind:
+
+     | *Type*                       |*Time of Execution*| *Time of* `this` *binding* |
+     |------------------------------|-------------------|----------------------------|
+     | function object (f)          |      future       |   future                   |
+     | function call   (f)          |       now         |     now                    |
+     | `f.call()` and `f.apply()`   |       now         |     now                    |
+     |      `f.bind()`              |      future       |     now                    |
+    
+
+
 ### Loops
 - JS has standard `for` (when known number of iterations), `while`(when unknown number of iterations) and `do`(when always do at least once) constructs
 
