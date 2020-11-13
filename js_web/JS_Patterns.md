@@ -269,7 +269,7 @@
 
 #### [State Pattern](https://en.wikipedia.org/wiki/State_pattern)
 - The state pattern is a behavioural pattern that changes behaviour/content based on state
-
+- There is a detailed [example](./js_pattern/trackcalories) using the state and module pattern to expose functionality based on view/edit state 
   <pre>
     const PageState = function() {
       let currentState = new homeState(this);
