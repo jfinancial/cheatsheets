@@ -912,11 +912,12 @@ The `function*` declaration (function keyword followed by asterisk) defines a ge
     }
   </pre>
 
-- The scripts object allows us to run these commands from npm.
+- The `scripts` object allows us to run these commands from npm.
 - We name the npm script transpile and it will run the command chain babel `app.js --out-file app.transpiled.js --source-maps` where `app.js` is our input file
 - The `--out-file` command specifies the output file for compilation. The `app.transpiled.js` is our output file.
 - Lastly, `--source-maps` creates a source map file. This file tells the browser which line of transpiled code corresponds to which lines of the original source. This allows us to debug directly in the original source file, that is, `app.js`.
 - Now we can transpile by typing `npm run` transpile into the terminal window.
+- Use `npm run build` to bundle all the assets 
 
 ### Using JSON Sever for Mocking APIs
 - The [JSON Server](https://www.npmjs.com/package/json-server) module allows us to create a mock/fake JSON api
