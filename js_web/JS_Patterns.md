@@ -209,6 +209,8 @@
   </pre>  
 
 #### [Mediator Pattern](https://en.wikipedia.org/wiki/Mediator_pattern)
+- The mediator pattern promotes loose coupling of objects by removing the need for classes to communicate with each other directly. Instead, mediator objects are used to encapsulate and centralise interactions between caller and the callee.
+- Here an example of a mediator pattern is a chatroom where the `Chatroom` mediates between users and decides whether messages get broadcast or sent individually
 
   <pre>
     const User = function(name) {
@@ -266,6 +268,8 @@
 
 
 #### [State Pattern](https://en.wikipedia.org/wiki/State_pattern)
+- The state pattern is a behavioural pattern that changes behaviour/content based on state
+
   <pre>
     const PageState = function() {
       let currentState = new homeState(this);
@@ -335,21 +339,18 @@
     // Home
     home.addEventListener('click', (e) =&gt; {
       page.change(new homeState);
-    
       e.preventDefault();
     });
     
     // About
     about.addEventListener('click', (e) =&gt; {
       page.change(new aboutState);
-    
       e.preventDefault();
     });
     
     // Contact
     contact.addEventListener('click', (e) =&gt; {
       page.change(new contactState);
-    
       e.preventDefault();
     });
   </pre>
