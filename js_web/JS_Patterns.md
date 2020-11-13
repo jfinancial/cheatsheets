@@ -1,7 +1,75 @@
 # JAVASCRIPT PATTERNS
 
+#### Module Pattern (Standard)  
+
+- The module pattern allows for improved [encapsulation](https://en.wikipedia.org/wiki/Encapsulation_(computer_programming)) and using an [IFFE](https://flaviocopes.com/javascript-iife/) function to only expose what is public via a function `return` and so hides private state for the user of the module:
+- Sometimes private variable are marked with a preceding underscore
+
+  <pre>    
+    (function() {
+      // Declare private vars and functions 
+      return {
+        // Declare public var and functions
+      }
+    })();
+    
+    const UICtrl = (function() {
+      let text = 'Hello World';
+    
+      const changeText = function() {
+        const element = document.querySelector('h1');
+        element.textContent = text;
+      }
+    
+      return {
+        callChangeText: function() {
+          changeText();
+          // console.log(text);
+        }
+      }
+    })();
+    
+    UICtrl.callChangeText();
+    // UICtrl.changeText();
+    
+    console.log(UICtrl.text);
+  </pre>
+  
+#### Revealing Module Pattern
+
+- The difference to the standard module is that you map an *object literal* to methods you want to reveal:       
+
+  <pre>
+    const ItemCtrl = (function() {
+      let data = [];
+    
+      function add(item) {
+        data.push(item);
+        console.log('Item Added....');
+      }
+    
+      function get(id) {
+        return data.find(item => {
+          return item.id === id;
+        });
+      }
+    
+      return {
+        add: add,
+        // get: get
+      }
+    })();
+    
+    ItemCtrl.add({id: 1, name: 'John'});
+    ItemCtrl.add({id: 2, name: 'Mark'});
+    console.log(ItemCtrl.get(2));  
+  </pre>
+  
 
 #### [Singleton Pattern](https://en.wikipedia.org/wiki/Singleton_pattern)
+
+- Singleton uses an IFFE (rather like the Module Pattern) but it ensures only one object of a type is instantiated. An example might be representing a user who is logged in.
+
   <pre>
     const Singleton = (function() {
       let instance;
@@ -286,70 +354,5 @@ Here is the accompanying [HTML](js_pattern/index.html)
     
       e.preventDefault();
     });
-  </pre>
-  
-#### Module Pattern (Standard)  
-
-- The module pattern allows for improved [encapsulation](https://en.wikipedia.org/wiki/Encapsulation_(computer_programming)) and using an [IFFE](https://flaviocopes.com/javascript-iife/) function to only expose what is public via a function `return` and so hides private state for the user of the module:
-- Sometimes private variable are marked with a preceding underscore
-
-  <pre>    
-    (function() {
-      // Declare private vars and functions 
-      return {
-        // Declare public var and functions
-      }
-    })();
-    
-    const UICtrl = (function() {
-      let text = 'Hello World';
-    
-      const changeText = function() {
-        const element = document.querySelector('h1');
-        element.textContent = text;
-      }
-    
-      return {
-        callChangeText: function() {
-          changeText();
-          // console.log(text);
-        }
-      }
-    })();
-    
-    UICtrl.callChangeText();
-    // UICtrl.changeText();
-    
-    console.log(UICtrl.text);
-  </pre>
-  
-#### Revealing Module Pattern
-
-- The difference to the standard module is that you map an *object literal* to methods you want to reveal:       
-
-  <pre>
-    const ItemCtrl = (function() {
-      let data = [];
-    
-      function add(item) {
-        data.push(item);
-        console.log('Item Added....');
-      }
-    
-      function get(id) {
-        return data.find(item => {
-          return item.id === id;
-        });
-      }
-    
-      return {
-        add: add,
-        // get: get
-      }
-    })();
-    
-    ItemCtrl.add({id: 1, name: 'John'});
-    ItemCtrl.add({id: 2, name: 'Mark'});
-    console.log(ItemCtrl.get(2));  
   </pre>
   
