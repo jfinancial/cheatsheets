@@ -911,6 +911,10 @@ The `function*` declaration (function keyword followed by asterisk) defines a ge
 - Lastly, `--source-maps` creates a source map file. This file tells the browser which line of transpiled code corresponds to which lines of the original source. This allows us to debug directly in the original source file, that is, `app.js`.
 - Now we can transpile by typing `npm run` transpile into the terminal window.
 
+### Using JSON Sever for Mocking APIs
+- The [JSON Server](https://www.npmjs.com/package/json-server) module allows us to create a mock/fake JSON api
+- You can add this to npm 'scripts' config in `package.json`
+  - e.g. json `json-sever --watch api/mydb.json` will run the json server serving up the file api/mydb.json when we run `npm run json:server`
 
 
 

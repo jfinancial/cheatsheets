@@ -14,8 +14,8 @@
 <hr>
 
 ### CDN
-- To include external libraries you'll use the CDN (A Content Delivery Network allows for a quick transfer of assets needed to load content such as HTML pages, javascript files, stylesheets, images etc)
-- To include a library link google for the CDN (e.g. font awesome cdn)
+- To include external libraries you'll use the CDN - a Content Delivery Network allows for a quick transfer of assets needed to load content such as HTML pages, javascript files, stylesheets, images etc
+- To include a library link do a Google search for the CDN (e.g. "font awesome cdn")
 
 ### Display types: block, inlne elements and none
 - A `block` level element always starts on a new line and takes up the full width of a page, from left to right. A block-level element can take up one line or multiple lines and has a line break before and after the element.

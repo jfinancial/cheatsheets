@@ -57,3 +57,5 @@ easyHTTP.prototype.delete = function(url, callback) {
 
   this.http.send();
 }
+
+export const http = new EasyHttp
