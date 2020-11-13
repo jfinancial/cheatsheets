@@ -225,9 +225,10 @@ Special property `raw` is available for the first argument of a tagged template.
 ### Functions Declarations and Default Parameters
 - Functions are declared  using the `function` keyword and the name of the function can be returned getting [`.name` property](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/name): 
   <pre>
-    function greet(name){ 
+    let f = function greet(name){ 
        console.log(`hello ${name}`);
     }
+    console.log(f.name);
   </pre> 
 - You aren't obliged to pass parameters to any function and in this case they will be undefined:
 - **Default function parameters** (ES6) allow named parameters to be initialized with default values if no value or undefined is passed:
