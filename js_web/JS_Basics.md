@@ -1,5 +1,7 @@
 # JAVASCRIPT BASICS (INCLUDING ES6)
 
+These notes cover modern Javascript up to and including ES2015 aka ES6. More detail on [ECMA Script](https://en.wikipedia.org/wiki/ECMAScript) 
+
 ### Web and Javascript Tools
   | Name                                                                     | Description                                            |
   | -------------------------------------------------------------------------|--------------------------------------------------------|
@@ -804,7 +806,7 @@ The `function*` declaration (function keyword followed by asterisk) defines a ge
   </pre>
   
 
-### ES6: Classes & Modules
+### ES6: Classes
 - **Classes** were introduced in ES6 as means to expand on prototype-based inheritance by adding some OO concepts; it is syntactic sugar to expand on the existing prototype-based inheritance. Classes can have function constructors; subclasses must call super constructor:
   <pre>
     class House{ 
@@ -823,11 +825,10 @@ The `function*` declaration (function keyword followed by asterisk) defines a ge
     }
   </pre>
 
-- **Modules** were introduced in ES6 via import and export keywords allowing the contained code to be quickly and easily shared without any code duplication. Use export keyword to expose variables and functions contained in a file. Everything inside an ES6 module is private by default so only way to make anything public is to use the export keyword. Modules can export properties in two ways, via named exports or default exports.
 
--   **Named exports** allow for multiple exports per module. Multiple exports may be useful if you are building a math module that exports many functions and constants.
--   **Default exports** allow for just a single export per model. A single export may be useful if you are building a module that contains a single class.
-
+### Modules ES6
+- We use modules to break up javascript into more manageable chucks. We usually use webpack to then bundle up all these modules into a single js file
+- To make any module accessible outside that module we must use `export`
   <pre>
     export const PI = 3.1415;                           //export constant
     export function convertDegToRad( degrees ) {        //export function 
@@ -835,6 +836,17 @@ The `function*` declaration (function keyword followed by asterisk) defines a ge
     } 
     export { PI, DEGREES_IN_CIRCLE, convertDegToRad }; 	//export via object
   </pre>
+  
+- Note that a module can be anything: an object, a function, an object containing functions and even just a string.
+- **Pre-ES6** we use `require` to import module (including NPM)
+  <pre>
+    require('./mymodule') // bring in a local module which has been export 
+    require('express') //bring in an NPM module (so no ./) 
+  </pre>
+
+- Imports were introduced in ES6 via import and export keywords allowing the contained code to be quickly and easily shared without any code duplication. Use export keyword to expose variables and functions contained in a file. Everything inside an ES6 module is private by default so only way to make anything public is to use the export keyword. Modules can export properties in two ways, via named exports or default exports.
+-   **Named exports** allow for multiple exports per module. Multiple exports may be useful if you are building a math module that exports many functions and constants.
+-   **Default exports** allow for just a single export per model. A single export may be useful if you are building a module that contains a single class.
 
  - Use the `default` keyword, to **export** the contents of module as a default export. When we default export a module, we can also omit the identifier name of the class, function, or variable we are exporting. Here we export a class and the other exports a function. When we export a default class, the export is not named. When we are importing default export modules, the name of the object we are importing is derived via the module's name.
   <pre>
@@ -851,11 +863,13 @@ The `function*` declaration (function keyword followed by asterisk) defines a ge
     import { PI as pi } from 'math-module.js
     import * as MathModule from 'math-module.js'
   </pre>
-  
+
+- The major difference between `require` and `import` is that `require` will automatically scan `node_modules` to find modules, but `import` which comes from ES6 won't
 -  **Note:** ES6 modules may not have full support from all browsers versions. You must use a transpiler (e.g. Babel) to run your code on certain platforms. To use an import in the browser, we must use the script tag and set type to module and the src to the file. (If the browser does not support modules, there's a fallback option with the nomodule attribute.) Finally, be careful of **circular dependencies** which cause lots of errors in transpilation!
 
 ### Transpilation with Babel
 - [Babel](https://en.wikipedia.org/wiki/Babel_(transcompiler)) is the most common transpiler for javascript and is mainly used to convert ECMAScript 2015+ (ES6+) code into a backwards compatible version of JavaScript that can be run by older JavaScript engines. Babel is a popular tool for using the newest features of the JavaScript programming language providing [polyfills](https://en.wikipedia.org/wiki/Polyfill_(programming)0) to provide support for features that are missing entirely from JavaScript environments.
+- For a quick start look at [Babel/Webpack Starter](https://github.com/bradtraversy/babel_webpack_starter)  
 - To install the Babel cuse the following: 
   - `npm install --save-dev babel-cli`
 - After that, the `babel-cli` field will have been added to the `devDependencies` object in the `package.json` file (although this only installed base Babel with no plugins for transpiling):
