@@ -349,6 +349,91 @@ Special property `raw` is available for the first argument of a tagged template.
         console.log(prop)
       }
   </pre>
+
+### Maps
+- Maps provided a way of storing key-value pairs and can use *any* type  (and mixed types) for keys and values
+- Map has methods `set(x,y)` and `get()`, `values()` and `keyss()` and alsso `size()` for determining the entry count
+  
+  <pre>
+    const map1 = new Map();
+    const key1 = 'some string',key2 = {}, key3 = function() {};
+  
+    // Set map values by key
+    map1.set(key1, 'Value of key1');
+    map1.set(key2, 'Value of key2');
+    map1.set(key3, 'Value of key3');
+  
+    // Get values by key
+    console.log(map1.get(key1), map1.get(key2), map1.get(key3));
+  </pre>
+  
+- We can iterator over maps using `for-of` and `forEach` or just iterate of `keys()` or `values()` 
+
+  <pre>
+      for(let [key, value] of map1) {           // for...of to get keys and values
+         console.log(`${key} = ${value}`);
+      }
+      
+      for(let key of map1.keys()) {             // Iterate keys only
+         console.log(key);
+      }
+      
+      for(let value of map1.values()) {         // Iterate values only
+        console.log(value);
+      }
+      
+      map1.forEach(function(value, key){        // Loop with forEach
+         console.log(`${key} = ${value}`);
+      });
+  </pre>
+  
+- We can also easily *convert a map to an array* using `Array.from()`
+
+   <pre>
+     const keyValArr = Array.from(map1);        // Create an array of the key value pairs
+     console.log(keyValArr);
+     
+     const valArr = Array.from(map1.values());  // Create an array of the values
+     console.log(valArr);
+     
+     const keyArr = Array.from(map1.keys());    // Create an array of the keys
+     console.log(keyArr);
+   </pre>
+  
+### Sets
+- a JS `Set` store unique value of any type and has `entries()`, `has(x)`, `delete(x)` and `size()` methods: 
+  
+  <pre>
+     set1.add(100);
+     set1.add('A string');
+     set1.add({name: 'John'});
+     set1.add(true);
+   
+     const set2 = new Set([1, true, 'string']);  //construct from an array
+     console.log(set2);
+     console.log(set1.has(100));
+  </pre>
+       
+- We can also convert an array to set:
+     
+  <pre>
+     const setArr = Array.from(set1);           // Convert array to set
+  </pre>  
+  
+- We can iterate over sets using `for-of` and `forEach`.
+
+  <pre>       
+     for(let item of set1) {
+        console.log(item);
+     }
+    
+     set1.forEach((value) => {
+        console.log(value);
+     });
+     
+     
+  </pre>
+  
   
 ### The Window Object
 - Window is the global object/environment in client-side javascript
@@ -463,10 +548,48 @@ Special property `raw` is available for the first argument of a tagged template.
     }
   </pre>
 
+### Symbol (ES6)
+
+- A `Symbol` is a JS pritmitive type introduced in ES6. The main feature of a `Symbol` is *uniqueness* so no two symbols can ever be same
+- The main purpose of symbols is unique object keys and they are *not inumerable* in `for..in`
+- Symbols are also are ignored by JSON.stringify
+- Symbols can be used for [metaprogramming](https://www.keithcirkel.co.uk/metaprogramming-in-es6-symbols/) 
+
+  <pre>
+    const KEY1 = Symbol();
+    const KEY2 = Symbol('sym2');
+    
+    const myObj = {};
+    
+    myObj[KEY1] = 'Prop1';
+    myObj[KEY2] = 'Prop2';
+    myObj.key3 = 'Prop3';
+    myObj.key4 = 'Prop4';
+    
+    // Symbols are ignored by JSON.stringify
+    console.log(JSON.stringify({key: 'prop'}));
+    console.log(JSON.stringify({[Symbol('sym1')]: 'prop'}));
+  </pre>
+
+
 ### Iterables
 - An object is iterable if it defines its iteration behavior, such as what values are looped over in a `for...of` construct. 
 - Some built-in types, such as `Array` or `Map`, have a default iteration behavior, while other types (such as `Object`) do not. 
 - In order to be iterable, an object must implement the `@@iterator` method. This simply means that the object (or one of the objects up its prototype chain) must have a property with a `Symbol.iterator` key. 
+
+  <pre>
+    function* createIds() {    //Simple iterator example
+      let index = 1;
+    
+      while(true) {
+        yield index++;
+      }
+    }
+    
+    const gen = createIds();
+    console.log(gen.next().value)
+  </pre>
+  
 - It may be possible to iterate over an iterable more than once, or only once. (It is up to the programmer to know which is the case.) Iterables which can iterate only once (such as a `Generator`) customarily return this from their `@@iterator` method, whereas iterables which can be iterated many times must return a new iterator on each invocation of `@`@iterator`.
 
 <pre>
@@ -493,8 +616,10 @@ Special property `raw` is available for the first argument of a tagged template.
     //Output is 1, 2, true
 </pre>
 
+- For example of an iterator used for iterating through user profiles then see [ProfilesScroller](./js_basics/profilescroller)
+
 ### Generators
-The `function*` declaration (function keyword followed by asterisk) defines a generator function, which returns a Generator object. Generators compute their yielded values on demand, which allows them to efficiently represent sequences that are expensive to compute (or even infinite sequences). The next() method also accepts a value, which can be used to modify the internal state of the generator. A value passed to next() will be received by yield .(A value passed to the first invocation of `next()` is always ignored.) Here is the fibonacci generator using `next(x)` to restart the sequence:
+The `function*` declaration (function keyword followed by asterisk) defines a generator function, which returns a `Generator` object. Generators compute their yielded values on demand, which allows them to efficiently represent sequences that are expensive to compute (or even infinite sequences). The `next()` method also accepts a value, which can be used to modify the internal state of the generator. A value passed to `next()` will be received by `yield` .(A value passed to the first invocation of `next()` is always ignored.) Here is the fibonacci generator using `next(x)` to restart the sequence:
 <pre>
    function* fibonacci() {
      let current = 0;
@@ -554,6 +679,56 @@ The `function*` declaration (function keyword followed by asterisk) defines a ge
     console.log( name2 ); // Expected output: 'Michael'
   </pre>
 
+- Example of **destructuring assignment**:
+
+  <pre>
+    // Destructuring Assignment
+    let a, b;
+    [a, b] = [100, 200];
+    // Rest pattern
+    [a, b, c, ...rest] = [100, 200, 300, 400, 500];
+    
+    ({ a, b } = { a: 100, b: 200, c: 300, d: 400, e: 500 });
+    ({ a, b, ...rest} = { a: 100, b: 200, c: 300, d: 400, e: 500 });
+  </pre> 
+
+- Example of **array destructuring**:
+
+  <pre>   
+    // Array Destructuring
+    const people = ['John', 'Beth', 'Mike'];
+    const [person1, person2, person3] = people;
+    console.log(person1, person2, person3);
+    
+    // Parse array returned from function
+    function getPeople() {
+       return ['John', 'Beth', 'Mike'];
+    }
+    
+    let person4, person5, person6;
+    [person4, person5, person6] = getPeople();
+  </pre> 
+     
+- Example of **object destructuring** (most common use of destructuring):
+
+  <pre>
+    const person = {
+      name: 'John Doe',
+      age: 32,
+      city: 'Miami',
+      gender: 'Male'
+    }
+    
+    // Old ES5
+    // const name = person.name,
+    //       age = person.age,
+    //       city = person.city;
+    
+    // New ES6 Destructuring
+    const { name, age, city } = person;
+    console.log(name, age, city);
+
+  </pre>
 
 ### Rest and Spread Operator (… or 'elipses') for Deep Copy (ES6)
 - The operator is used to represent an infinite number of arguments as an array; it is used to allow an iterable object to be expanded into multiple arguments. To identify which is being used, we must look at the item that the argument is being applied to.
