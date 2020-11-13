@@ -838,13 +838,13 @@ The `function*` declaration (function keyword followed by asterisk) defines a ge
   </pre>
   
 - Note that a module can be anything: an object, a function, an object containing functions and even just a string.
-- **Pre-ES6** we use `require` to import module (including NPM)
+- **Pre-ES6** we use `require` to import module (including NPM) 
   <pre>
     require('./mymodule') // bring in a local module which has been export 
     require('express') //bring in an NPM module (so no ./) 
   </pre>
 
-- Imports were introduced in ES6 via import and export keywords allowing the contained code to be quickly and easily shared without any code duplication. Use export keyword to expose variables and functions contained in a file. Everything inside an ES6 module is private by default so only way to make anything public is to use the export keyword. Modules can export properties in two ways, via named exports or default exports.
+- Modules were officially introduced in ES6 via [import]([import](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import)) and [export](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export) keywords allowing the contained code to be quickly and easily shared without any code duplication. Use export keyword to expose variables and functions contained in a file. Everything inside an ES6 module is private by default so only way to make anything public is to use the export keyword. Modules can export properties in two ways, via named exports or *default exports*.
 -   **Named exports** allow for multiple exports per module. Multiple exports may be useful if you are building a math module that exports many functions and constants.
 -   **Default exports** allow for just a single export per model. A single export may be useful if you are building a module that contains a single class.
 
@@ -860,8 +860,15 @@ The `function*` declaration (function keyword followed by asterisk) defines a ge
 - The `import` keyword allows you to import a module, allowing you to pull any items from that module into the current code file. When we import a module, we start the expression with the import keyword, identify what parts of the module we are going to import then follow that with the `from` keyword, and finally we finish with the path to the module file.
 
   <pre>
-    import { PI as pi } from 'math-module.js
-    import * as MathModule from 'math-module.js'
+    import { http } from './http';
+    import { ui } from './ui';
+    
+    //now we can use our imported http object
+    function getPosts() {
+      http.get('http://localhost:3000/posts')
+        .then(data => ui.showPosts(data))
+        .catch(err => console.log(err));
+    }
   </pre>
 
 - The major difference between `require` and `import` is that `require` will automatically scan `node_modules` to find modules, but `import` which comes from ES6 won't
@@ -915,6 +922,6 @@ The `function*` declaration (function keyword followed by asterisk) defines a ge
 - The [JSON Server](https://www.npmjs.com/package/json-server) module allows us to create a mock/fake JSON api
 - You can add this to npm 'scripts' config in `package.json`
   - e.g. json `json-sever --watch api/mydb.json` will run the json server serving up the file api/mydb.json when we run `npm run json:server`
-
+- If you `POST` to the json server it will also add it to the json!
 
 
