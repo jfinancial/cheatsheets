@@ -8,8 +8,9 @@
   | [Bootstrap](https://getbootstrap.com/)              | CSS framework for responsive web                                                          |
   | [Materialize](https://materializecss.com/)          | A modern responsive front-end/CSS framework                                               |
   | [Foundation](https://get.foundation/)               | Most popular rival to Bootsrap                                                            |
-  | [Skeleton](http://getskeleton.com/)                 | Super lightweight CSS boilterplate 
-
+  | [Skeleton](http://getskeleton.com/)                 | Super lightweight CSS boilterplate                                                        |
+  | [Bootswatch](https://bootswatch.com)                | Free themes for Bootsrap                                                                  |
+  
 <hr>
 
 ### CDN
