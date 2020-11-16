@@ -5,6 +5,8 @@ These notes cover modern Javascript up to and including ES2015 aka ES6. More det
 ### Web and Javascript Tools
   | Name                                                                     | Description                                            |
   | -------------------------------------------------------------------------|--------------------------------------------------------|
+  | [npm](https://www.npmjs.com/)                                            | NodeJS Package Manager                                 |
+  | [Yarn](https://yarnpkg.com/)                                             | Package manager                                        |
   | [Jest](https://jestjs.io/)                                               | Preferred testing framework                            |
   | [TypeScript](https://www.typescriptlang.org/)                            | Typescript (TS) adds optional static typing            |
   | [Flow](https://flow.org/)                                                | A static type checker for javascript                   |
@@ -42,7 +44,7 @@ These notes cover modern Javascript up to and including ES2015 aka ES6. More det
 - Why is `NaN` not a number? (`NaN` is defined as a numeric type, but it’s not a real number. NaN is result of some mathematical operations that can’t be quantified as a number)
   - The `isNaN()` function determines whether a value is NaN or not. Note: coercion inside the isNaN function has interesting rules; you may alternatively want to use `Number.isNaN()`
 - **Objects Literals** are comma-separated list of name-value pairs inside of curly braces; values can be properties and functions. All members of an object literal in JavaScript, both properties and functions, are public. Private members can only be inside a function. You cannot copy an object literal without manually copying all the values.   
-- More detail on JavaScript's [data types and data structures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures)     
+- More detail on JavaScript's [data types and data structures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures) and on JS' [memory lifecycle](https://blog.alexdevero.com/memory-life-cycle-heap-stack-javascript)    
 - **Function Scope** is created inside functions. When a function is declared, a new scope block is created inside body of that function. A `var` declared inside the new function scope cannot be accessed from parent scope, however, the function scope has access to variables in the parent scope. When a variable is created with function scope, it's declaration automatically gets hoisted to the top of the scope. 
 - **Type Coercion** occurs because JS has weak types. We can explicitly conver these tpyes or sometimes will convert one type to another
 
@@ -165,8 +167,20 @@ Special property `raw` is available for the first argument of a tagged template.
     }
   </pre>
 
-- ES6 provides addition syntactic sugar to allow us to more collate properties into an object literal: 
+- ES6 provides **Object Literal Enhancements** (i.e. some syntactic sugar to allow us to easily collate properties into an object literal): 
+  
+  <pre>
+      const pizza = {
+         name: 'Pepperoni',
+         price: 12
+      }
+      const toppings = ['red chilli','pepperoni'];
+      const orderES5 = {pizza: pizza, toppings: toppings};  
+      const orderES6 = { pizza, toppings};  
+  </pre>
 
+- Here's an example grouping parameters of a function into an object literal comparing the old ES6 and new ES6 way: 
+ 
   <pre>
     function getPersonES5( name, age, height ) { 
      return { name: name, age: age, height: height }; 
@@ -185,7 +199,7 @@ Special property `raw` is available for the first argument of a tagged template.
     }
   
     function getPersionES6( name, age, height ) { 
-       return { name, height, getAge() { return age; } }; 
+       return { name, height, getAge() { return age; } };   
     }
   </pre>
 
@@ -773,6 +787,7 @@ The `function*` declaration (function keyword followed by asterisk) defines a ge
   </pre>
 
 * **Spread Operator** 
+  - The spread operator is typically used to **merge two arrays** without having to use `concat()`. Instead it takes a copy (so **not** passed by reference) and **immutability** is preserved
   - Allows an iterable object such (e.g. an array or string to be expanded into multiple arguments (for function calls), array elements (for array literals), or key-value pairs (for object expressions) so we can expand an array into arguments for creating another array, object, or calling function:
 
   <pre>
@@ -873,7 +888,15 @@ The `function*` declaration (function keyword followed by asterisk) defines a ge
 
 - The major difference between `require` and `import` is that `require` will automatically scan `node_modules` to find modules, but `import` which comes from ES6 won't
 -  **Note:** ES6 modules may not have full support from all browsers versions. You must use a transpiler (e.g. Babel) to run your code on certain platforms. To use an import in the browser, we must use the script tag and set type to module and the src to the file. (If the browser does not support modules, there's a fallback option with the nomodule attribute.) Finally, be careful of **circular dependencies** which cause lots of errors in transpilation!
-
+- For more detail on [using import and export](https://blog.alexdevero.com/import-and-export-statements-javascript)
+### Package Managers: NPM vs Yarn
+- There are a huge number of javascript libraries which have been packaged for easy download and use via a package manager. (NPM being the first and probably still the most popular package mamager with Yarn arriving later and arguably offering [improvements](https://waverleysoftware.com/blog/yarn-vs-npm/))
+- Benefits of Yarn: 
+  - Yarn caches all installed packages. Yarn is installing the packages simultaneously, and that is why Yarn is faster than NPM. They both download packages from npm repository. 
+  - Yarn generates yarn.lock to lock down the versions of package’s dependencies by default. On the contrary, npm for this purpose offers shrinkwrap CLI command.
+  - Yarn won’t work on node.js version 5.10.1
+  - Summary: Yarn offers stability, providing lock down versions of installed packages. The speed of modules installing is higher.
+  
 ### Transpilation with Babel
 - [Babel](https://en.wikipedia.org/wiki/Babel_(transcompiler)) is the most common transpiler for javascript and is mainly used to convert ECMAScript 2015+ (ES6+) code into a backwards compatible version of JavaScript that can be run by older JavaScript engines. Babel is a popular tool for using the newest features of the JavaScript programming language providing [polyfills](https://en.wikipedia.org/wiki/Polyfill_(programming)0) to provide support for features that are missing entirely from JavaScript environments.
 - For a quick start look at [Babel/Webpack Starter](https://github.com/bradtraversy/babel_webpack_starter)  

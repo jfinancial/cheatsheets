@@ -297,4 +297,5 @@
   
        getUsers().then(users => console.log(users));
   </pre>
-- More about using [async/wait](https://blog.alexdevero.com/es6-es7-es8-modern-javascript-pt7/)
+- More about using [async/wait](https://blog.alexdevero.com/es6-es7-es8-modern-javascript-pt7)
+- [Three ways to write aysnchronous code](https://blog.alexdevero.com/asynchronous-javascript-code)
