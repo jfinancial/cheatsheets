@@ -5,6 +5,7 @@ These notes cover modern Javascript up to and including ES2015 aka ES6. More det
 ### Web and Javascript Tools
   | Name                                                                     | Description                                            |
   | -------------------------------------------------------------------------|--------------------------------------------------------|
+  | [lodash](https://lodash.com/)                                            | Modern JS utility library for utilites/performance     |
   | [npm](https://www.npmjs.com/)                                            | NodeJS Package Manager                                 |
   | [Yarn](https://yarnpkg.com/)                                             | Package manager                                        |
   | [Jest](https://jestjs.io/)                                               | Preferred testing framework                            |
@@ -473,6 +474,25 @@ Special property `raw` is available for the first argument of a tagged template.
 - We can use `window.location.search` to get query parameters
 - We can use `window.location.href` to redirect, `window.location.reload` to reload and   
 - We can use `window.navigator` which is to do with the browser and has geolocation, browser version, user's OS etc
+
+### Event Listeners
+- A very common thing to do with DOM objects is to add event listener using [`addEventListener`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener) method which sets up a function that will be called whenever the specified event is delivered to the target. Common targets are `Element`, `Document`, and `Window`, but the target may be any object that supports events (such as `XMLHttpRequest`). The method takes 2 parameters (type and listener function) and optional parameters:
+  - `type`: A case-sensitive string representing the event type to listen for.
+  - `listener`: The object that receives a notification (an object that implements the Event interface) when an event of the specified type occurs. This must be an object implementing the EventListener interface, or a JavaScript function. See The event listener callback for details on the callback itself.
+  - `options` (Optional) : An options object specifies characteristics about the event listener. The available options are:
+    - `capture`: boolean indicating that events of this type will be dispatched to the registered listener before being dispatched to any EventTarget beneath it in the DOM tree.
+    - `once`: boolean indicating that the listener should be invoked at most once after being added. If true, the listener would be automatically removed when invoked.
+    - `passive`: boolean that, if true, indicates that the function specified by listener will never call preventDefault(). If a passive listener does call preventDefault(), the user agent will do nothing other than generate a console warning. See Improving scrolling performance with passive listeners to learn more.
+    - `mozSystemGroup`: boolean indicating that the listener should be added to the system group. Available only in code running in XBL or in the chrome of the Firefox browser.
+    - `useCapture` (Optional) - boolean indicating whether events of this type will be dispatched to the registered listener before being dispatched to any EventTarget beneath it in the DOM tree. Events that are bubbling upward through the tree will not trigger a listener designated to use capture. Event bubbling and capturing are two ways of propagating events that occur in an element that is nested within another element, when both elements have registered a handle for that event. The event propagation mode determines the order in which elements receive the event. See DOM Level 3 Events and JavaScript Event order for a detailed explanation. If not specified, useCapture defaults to false.
+  
+  <pre>
+    function handleClick(e){
+      conole.log(this);  //this refers to elem
+    }
+    const elem = document.querySelector('.click');
+    elem.addEventListener('click', handleClick, false);
+  </pre>                           
 
 ### Try-catch-finally
 - The `try` `catch` semantics allows us to catch errors and handle them gracefully. Be aware that anything in the `finally` block will always run
