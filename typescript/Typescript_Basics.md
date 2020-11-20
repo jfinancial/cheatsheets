@@ -5,9 +5,10 @@
 - The [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/) provides official documentation
 
 ### TypeScript Tools
-  | Name                                                                                  | Description                                            |
-  | --------------------------------------------------------------------------------------|--------------------------------------------------------|
-  | [ts-seed-project](https://github.com/UltimateAngular/typescript-basics-seed)          |   A GitHub seed project for using TS/Webpack |
+  | Name                                                                                  | Description                                                |
+  | --------------------------------------------------------------------------------------|------------------------------------------------------------|
+  | [Definitely Typed](http://definitelytyped.org/)                                       | A  repository for high quality TypeScript type definitions |
+  | [ts-seed-project](https://github.com/UltimateAngular/typescript-basics-seed)          | A GitHub seed project for using TS/Webpack                 |
   | [webpack-dev-server](https://webpack.js.org/configuration/dev-server/)                |                             |
   | [awesome-typescript-loader](https://www.npmjs.com/package/awesome-typescript-loader)  |      |
 <hr>
@@ -204,7 +205,7 @@
       Right = "RIGHT"
     }
   </pre>
-
+- Note that if we put the keyword `const` before `enum` then it inlines the enum values are just normal variables on compilation
    
 #### Type Assertion
 - A type assertion is when we want to tell the TypeScript compiler what a particular type will be. A typical usage might be when we parse a JSON string into an object. There are two ways to do this but using keyword `as` is preferred approach
@@ -752,3 +753,49 @@
       return stringOrArray.splice().reverse();  
     }
   </pre>
+  
+#### Definitely Typed & Type Definitions
+- [Definitely Typed](http://definitelytyped.org/) is a repository which provides type definitions for most JS packages. We call them **declaration files** beause we're declaring certain sorts of types. We usually keep type definitions in a directory called `@Types`
+  - Installing @types - use `npm install @types/lodash –save` or `yarn add @types/lodash`
+  - @types and Modules - use `import * as lodash from ‘lodash’;` (Any `@types` files will be added to the global scope, so you can use them in *.ts files but the recommended way is to treat new `@types` installations as module includes.)
+  - “types” Compiler Option - use `{ “compilerOptions”: { “types” : [ “lodash”, “express” ] } }` (We can be more explicit when it comes to providing type files by using the `types` property which restrict the types that TypeScript will lookup when type-checking, i.e. only types listed here and that are installed will be available. This may be a preferable opt-in to avoid global variables leaking.)
+- Use the `declare` to declare module which contains our type definitions (e.g. function definitions) in a file called `index.d.ts`
+
+  <pre>
+    declare module 'myutils' {
+       export function chunk(collection: any, size? : number): any[][];
+    }
+  </pre>
+  
+- We can augment imported by adding `typeRoots` to the compiler options (we would add `src/@types` and `node_modules/@types`) and this allows us to extend existing, imported types. (This is called an `ambient module`.)
+
+  <pre>
+    import * as lodash from 'lodash';
+    
+    declare module 'lodash' {
+      //here we augment an existing package and our interface gets merged (aka "declaration merging")
+      interface LoDashStatic {   
+        log(item: string) : void;
+      }
+    }
+  </pre>
+  
+- To generate our own type declarations, set the `declaration` property in the compiler options to `true` then when we compile we'll output a `.d.ts` file. We can also set the property `declarationDir` to set where to ouptput the declaration files (usually we'll set this to `"./@types"`)
+
+#### Configuring `ts-config`
+- We can have a `ts.config` and then using the `extends` keyword we can have a `base-ts.config` which inherited from 
+- The `include` and `exclude` are a level up from the `compilerOption`. Usually we set `[src/**/*.ts]` are our include option and `[src/**/*.spec.ts]` to exclude spec test files
+- In `compilerOptions`, we can use `noImplicitAny` (true/false) to prevent implicit any being inferred from Typescript. 
+- In `compilerOptions`, we can set our output directory. We can also use `outFile` (to `dist/bundle.js`) but more common to use the out directory approach
+- In `compilerOptions`, we have `noEmitOnError` (true/false) so a dist file is not created if there are TypeScript directory
+- Source maps can be used to help debug TypeScript. We set the `sourceRoot` ( a directory like `/mappings/`) and `sourceMap` (true/false). We can use `inlineSources` and then in browser we are able to see source code and we can also `inlineSourceMap` (but don't do this in production as it gets very bloated)
+- For transpiling, we set the `target` in the `compilerOptions`, and we can set `es5`, `es2016`, `es2017` and `esNext`
+- There are experimental features, so **Angular** uses decorators and hence we need `experimentalDecorators` and `emitDecoratorMetadata` to be set to true
+- The `lib` property of `compilerOptions` allows to have refined control over JavaScript APIs (e.g. `dom` or `es6`)
+- The `scrict` sets the following properties: `noImplicitAny`,`noImplicitThis`,`alwaysStrict` (adds 'use strict' for every file emitted),`strictNullChecks`, `strictFunctionTypes` and `strictPropertyIntialization`
+- The `traceResolution` (true/false) in `compilerOptions` tells us where modules are coming from while `diagnostics` (true/false) gives us some useful performance stats. The `listFiles` tells us all files being used and `listEmittedFiles` tells us which files are being emitted by TypeScript
+- The `pretty` option give us nice errors
+- The `noUnusedlocals` `noUnusedParameters` allows TSC to highly variables or parameters which are not used. We can also set `noImplicitReturns` to force return with arrow functions etc
+
+#### Performance Bundling and `tslib`
+- We can bundle up certain utilites so if we add `noEmitHelpers` and have `importHelpers` and everything is imported from a tslib file and not duplicated
