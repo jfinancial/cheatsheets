@@ -1,6 +1,6 @@
 ## Basic Asynchronous Javascript
 
-### Asynchronous Javascript Libaries
+### Asynchronous Javascript Libraries
   | Name                                                                     | Description                                            |
   | -------------------------------------------------------------------------|--------------------------------------------------------|
   | [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)  | Fetch API for interacting with REST endpoints          |
