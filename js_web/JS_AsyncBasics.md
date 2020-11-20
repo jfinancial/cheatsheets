@@ -124,7 +124,7 @@
   </pre>  
   
 ### XmlHttpRequest with Callbacks (easyHttp)
-- We can write our own library to simplify making XMLHttpRequests using callbacks [`easthttp.js`](js_async_examples/easyhttp.js). Here's the implementation for Http `POST`
+- We can write our own library to simplify making XMLHttpRequests using callbacks [`easthttp.js`](js_async_examples/easyhttp1.js). Here's the implementation for Http `POST`
  
  <pre>    
      easyHTTP.prototype.post = function(url, data, callback) {

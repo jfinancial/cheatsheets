@@ -89,6 +89,37 @@ These notes cover modern Javascript up to and including ES2015 aka ES6. More det
 - ES6 introduces `padStart()` and `padEnd()` which add specific characters to existing string. You specify the amount of characters these methods should add through a parameter called targetLength. Note this is not the length in the terms of the number of characters you want to add but is the *whole* length of string you want to change. 
 - The `eval()` method evaluates javascript within a string
 
+### Adding And Removing From Arrays Without Mutation
+- There are two ways to add to an array without mutating the original array: `concat` and using the spread operator `...`
+  
+  <pre>
+     //ES5 style using prototype
+     ShoppingList.prototype.addItem = function(item) {    
+       this.groceries = this.groceries.concat([item]);
+     }
+     
+     //ES6 class method
+     addItem(item){  
+       this.groceries = [...this.groceries, item];
+     }
+  </pre>
+  
+- Here is the equivalent for remove  
+     
+  <pre>   
+     //ES5 style using prototype
+     ShoppingList.prototype.removeItem = function(item){      
+       this.groceries = this.groceries.filter(function(grocery){
+           return item !== grocery;
+         });
+     }
+     
+     //ES6 style with arrow function
+     remove(item) {    
+       this.groceries = this.groceries.filter( (grocery) => item != grocery); 
+     }
+  </pre> 
+
 ### String Template Literals (ES6)
 - ES6 introduce template literals or template strings. Here we can use `${foo}` for expressions (so variables, functions or, say an expression using the ternary operator). New lines will be included in the output (so we don't need to escape line breaks.) To escape a template literal, simply use a backslash.
 
