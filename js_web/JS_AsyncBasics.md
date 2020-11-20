@@ -1,4 +1,4 @@
-## Basic Asynchronous Javascrip
+## Basic Asynchronous Javascript
 
 ### Asynchronous Javascript Libaries
   | Name                                                                     | Description                                            |
