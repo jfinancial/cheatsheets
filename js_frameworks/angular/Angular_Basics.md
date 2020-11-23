@@ -79,14 +79,14 @@
       &lt;img [src]="logo"&gt;                     //we bind the expression 'logo' which might be 'img/logo.svc'   
    </pre>
       
-- We can perform **event binding** using normal brackets `()`
+- We can perform **event binding** using normal brackets `()` and...
 
    <pre>
      &lt;button (click)="handleClick()" &gt;
      &lt;input type="text" [value]="{{name}}" (input)="handleInput($event)" (blur)="handleBlur($event)"&gt;
    </pre>
    
-- We add the event handler function to our component:
+- ...then add the event handler function to our component:
 
   <pre>
     export class AppComponent {
@@ -109,7 +109,8 @@
      
 - To perform **two-way data-binding** we have to use Angular's Forms Module so `import { FormsModule } from '@angular/forms'` and add it to our imports array
 - We use combination of normal and square brackets `[()]` to tell Angular we are using two-way data-binding
-   <pre&gt;
+
+   <pre>
      &lt;button (click)=@handleClick()" &gt;
      &lt;input type="text" [ngModel]="{{name}}" (ngModelChange)="handleChange($event)"&gt;
      
@@ -168,7 +169,7 @@
    </pre>
 
 #### Pipes
-_ [Pipes](https://angular.io/guide/pipes) are functions for data transformation and can be applied (and chained) using `|` syntax similar to piping unix commands.
+- [Pipes](https://angular.io/guide/pipes) are functions for data transformation and can be applied (and chained) using `|` syntax similar to piping unix commands.
 - Examples of pipe are json (which turns a JS object into JSON), date (performs date formatting) and uppercase
   <pre>
     &lt;p&gt;{{ passenger | json }}&lt;/p&gt;
@@ -185,10 +186,10 @@ _ [Pipes](https://angular.io/guide/pipes) are functions for data transformation 
   </pre>
 
 #### Component Architecture and Presentational Components
-- One important distinction with respect to components is container components and presentational components. These are sometimes often referred to as stateful and stateless components (or smart/dumb components). Smart/Container components may receive data from a service and then feed dumb/presentational components.
+- One important distinction with respect to components is **container components** and **presentational components**. (These are also referred to as stateful/stateless components or smart/dumb components). Smart/Container components may *receive data from a service* and then feed dumb/presentational components.
 - Data is flowed by events (and **event emitters**). Container components talk to the back end and the child presentational components are re-rendered.
-- To enforce separation of concerns we can divide up our application into **feature modules**. Here we create a feature module ([passenger-dashboard](https://github.com/UltimateAngular/angular-fundamentals-src/tree/master/16-container-component) module which lives in its own passenger-dashboard directory. We then import this module into our `app.ts` imports and the `imports` array. We also have to export it or it will not be available. It's a good idea to put container compents into a subdirectory called `containers`  
-- Note that `app.css` in top level `css` directory applies global styles but we usually use encapsulated styles (i.e. scoped to the component) for each component (and in this example we use passenger-dashboard.component.scss))
+- To enforce separation of concerns we can divide up our application into **feature modules**. Here we create a feature module ([passenger-dashboard](https://github.com/UltimateAngular/angular-fundamentals-src/tree/master/16-container-component)) which lives in its own `passenger-dashboard` directory. We then import this module into our `app.ts` imports and the `imports` array. We also have to export it or it will not be available. (It's a good idea to put container compents into a subdirectory called `containers`.) 
+- Note that `app.css` in top level `css` directory applies global styles but we usually use encapsulated styles (i.e. scoped to the component) for each component (and in this example we use `passenger-dashboard.component.scss`)
   
   <pre>
     import { NgModule } from '@angular/core';
@@ -210,7 +211,7 @@ _ [Pipes](https://angular.io/guide/pipes) are functions for data transformation 
     export class PassengerDashboardModule {}
   </pre>
  
-- And we have a our component and create a `models` directory which contains our interfaces (which we should be exported!)
+- We create a new component and create a `models` directory which contains our interfaces (which we should be exported!)
 
   <pre>
     import { Component } from '@angular/core';
@@ -247,7 +248,8 @@ _ [Pipes](https://angular.io/guide/pipes) are functions for data transformation 
    
 #### Lifecyle Hooks (`@OnInit`)
 - Lifecycle hooks allow Angular to perform certain actions on various lifecycle events. The `@OnInit` hook allows us to execute logic on initilisation of the component.
-- To use OnInit we must import it from `'@angular/core` and declare thar our class `implements OnInit` and implement the `ngOnInit()` method: 
+- To use `@OnInit` we must import it from `'@angular/core` and declare that our class `implements OnInit` and then implement the `ngOnInit()` method: 
+
   <pre>
     import { Component, OnInit } from '@angular/core';
     import { Passenger } from '../../models/passenger.interface';
@@ -287,7 +289,7 @@ _ [Pipes](https://angular.io/guide/pipes) are functions for data transformation 
   </pre>
   
 #### Presentational Components
-- To use presentaional components, we must first change our feature moddule so that we import our presentational components (PassengerCountComponent and PassengerDetailComponent) and add them to declarations but we don't export them as only our container needs to know about them. 
+- To use presentaional components, we must first change our feature moddule so that we import our presentational components (`PassengerCountComponent` and `PassengerDetailComponent`) and add them to declarations but we **don't export** them as only our container needs to know about them. 
 
   <pre>
     import { NgModule } from '@angular/core';
@@ -324,7 +326,9 @@ _ [Pipes](https://angular.io/guide/pipes) are functions for data transformation 
       constructor() {}
     }
   </pre>
-- Our simplified container now contains our passenger-count and passenger-detail components:
+  
+- Our simplified container now contains our `passenger-count` and `passenger-detail` components:
+  
   <pre>
       import { Component, OnInit } from '@angular/core';
       import { Passenger } from '../../models/passenger.interface';
@@ -351,7 +355,7 @@ _ [Pipes](https://angular.io/guide/pipes) are functions for data transformation 
   </pre>
   
 #### Binding Input Data with `@Input()`
-- We bind data to out container component using standard square bracket syntax. For iteration, we can use `*ngFor` and bind our individual collection element (i.e. `[detail]="passenger"`)
+- We bind data to out container component using standard square bracket (`[]`) syntax. For iteration, we can use `*ngFor` and bind our individual collection element (i.e. `[detail]="passenger"`)
 
   <pre>
     @Component({
