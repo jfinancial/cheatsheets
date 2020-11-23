@@ -1,7 +1,8 @@
 # ANGULAR BASICS 
 
 #### Angular Architecture Overview
-- There are 5 basic building blocks to Angular
+- There are 5 basic building blocks to Angular:
+
   - **Modules** are the main, high-level building block containing components, services and routes 
   - **Components** contains a template, data and logic (e.g. directives) and is part of a DOM tree and which contains subtree nodes
   - **Services** are generally the data layer and so make API requests
@@ -9,8 +10,10 @@
   - **Routing** renders a component based on the URL state
   
 #### Simple Component Example
-- To make a component we import Component, we set the `styleUrls` property to our [Sass](https://sass-lang.com/) stylesheet, the template our HTML and finally we export our component
+- To make a component, we import `Component`, set the `styleUrls` property to our [Sass](https://sass-lang.com/) stylesheet, define the template our HTML and finally we export our component.
+- The `selector` refers to the name of the html tag we'll use to embed our component
 - In this example, we use the sugar syntax (`{}`) for **interpolation** to bind the title property/expression in the HTML template  
+
   <pre>
     import { Component } from '@angular/core';
     
@@ -32,9 +35,8 @@
   </pre> 
   
 #### Root module with @NgModule
-- Think of a module like import/export in ES5. (We don't need to add the `.ts` extension for our component.) The @NgModule is a special decorator.
-- We include NgModule (these are Angular decorators), BrowserModule (for Broswer functionality) and CommonModule (for templating and directives) and add these to our `imports` section and then add our component to `declarations` and `bootstrap`. 
-- Boostrap corresponds to the &lt;appRoot&gt; tag in our HTML.
+- Angular modules are similar to ES5 modules and we use import/export but the @NgModule annotation works as a special decorator. (We don't need to add the `.ts` extension for our component.) 
+- We include NgModule, BrowserModule (for Broswer functionality) and CommonModule (for templating and directives) and add these to our `imports` section and then add our component to `declarations` and `bootstrap`. (Here, `bootstrap` corresponds to the &lt;appRoot&gt; tag in our HTML.
 
   <pre>
     import { NgModule } from '@angular/core';
@@ -59,7 +61,7 @@
   </pre>
   
 #### Bootstrapping Angular
-- We bootstrap Angular with our `main.ts` file. We import from Angular's `@angular/platform-browser-dynamic` which allows us to perform dependecy injection and then using the imported `platformBrowserDynamic()` function we tell it which module to bootsrap
+- We bootstrap Angular with our `main.ts` file. We import from Angular's `@angular/platform-browser-dynamic` which allows us to perform dependecy injection and then using the imported `platformBrowserDynamic()` function we tell it which module to bootsrap:
 
   <pre>
     import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
@@ -283,3 +285,144 @@ _ [Pipes](https://angular.io/guide/pipes) are functions for data transformation 
       }
     }
   </pre>
+  
+#### Presentational Components
+- To use presentaional components, we must first change our feature moddule so that we import our presentational components (PassengerCountComponent and PassengerDetailComponent) and add them to declarations but we don't export them as only our container needs to know about them. 
+
+  <pre>
+    import { NgModule } from '@angular/core';
+    import { CommonModule } from '@angular/common';
+    import { PassengerDashboardComponent } from './containers/passenger-dashboard/passenger-dashboard.component';
+    import { PassengerCountComponent } from './components/passenger-count/passenger-count.component';
+    import { PassengerDetailComponent } from './components/passenger-detail/passenger-detail.component';
+    
+    @NgModule({
+      declarations: [
+        PassengerDashboardComponent,
+        PassengerCountComponent,
+        PassengerDetailComponent
+      ],
+      imports: [
+        CommonModule
+      ],
+      exports: [
+        PassengerDashboardComponent
+      ]
+    })
+    export class PassengerDashboardModule {}
+  </pre>
+  
+- This is our simple presentational component. Note that our selector will be the name of the HTML tag we embed in our container
+  <pre>
+    import { Component } from '@angular/core';
+    
+    @Component({
+      selector: 'passenger-count',
+      template: `&lt;div&gt; Count component &lt;§/div&gt;`
+    })
+    export class PassengerCountComponent {
+      constructor() {}
+    }
+  </pre>
+- Our simplified container now contains our passenger-count and passenger-detail components:
+  <pre>
+      import { Component, OnInit } from '@angular/core';
+      import { Passenger } from '../../models/passenger.interface';
+      
+      @Component({
+        selector: 'passenger-dashboard',
+        styleUrls: ['passenger-dashboard.component.scss'],
+        template: `
+          &lt;div&gt;
+            &lt;passenger-count&gt;&lt;/passenger-count&gt;
+            &lt;passenger-detail&gt;&lt;/passenger-detail&gt;
+            &lt;h3&gt;Airline Passengers&lt;/h3&gt;
+           ....
+          &lt;/div&gt;
+        `
+      })
+      export class PassengerDashboardComponent implements OnInit {
+        passengers: Passenger[];
+        constructor() {}
+        ngOnInit() {
+          this.passengers = [...data....];
+        }
+      }
+  </pre>
+  
+#### Binding Input Data with `@Input()`
+- We bind data to out container component using standard square bracket syntax. For iteration, we can use `*ngFor` and bind our individual collection element (i.e. `[detail]="passenger"`)
+
+  <pre>
+    @Component({
+      selector: 'passenger-dashboard',
+      styleUrls: ['passenger-dashboard.component.scss'],
+      template: `
+        &lt;div&gt;
+          &lt;passenger-count [items]="passengers"&gt;
+          &lt;/passenger-count&gt;
+          
+          &lt;passenger-detail *ngFor="let passenger of passengers;" [detail]="passenger"&gt;
+          &lt;/passenger-detail&gt;
+        &lt;/div&gt;
+      `
+    })
+  </pre>
+
+- ...then can use Angular's `@Input()` annotation to bind one-way input data  
+
+  <pre>
+    import { Component, Input } from '@angular/core';
+    import { Passenger } from '../../models/passenger.interface';
+    
+    @Component({
+      selector: 'passenger-count',
+      template: `
+        &lt;div&gt;
+          &lt;h3&gt;Airline Passengers!&lt;/h3&gt;
+          &lt;div&gt;
+            Total checked in: {{ checkedInCount() }}/{{ items.length }}
+          &lt;/div&gt;
+        &lt;/div&gt;
+      `
+    })
+    export class PassengerCountComponent {
+      @Input()
+      items: Passenger[];
+      checkedInCount(): number {
+        if (!this.items) return;
+        return this.items.filter((passenger: Passenger) =&g§t; passenger.checkedIn).length;
+      }
+    }
+  </pre>
+  
+- For out iterated element we again add the `@Input()` annotation
+
+  <pre>
+    import { Component, Input } from '@angular/core';  
+    import { Passenger } from '../../models/passenger.interface';
+    
+    @Component({
+      selector: 'passenger-detail',
+      styleUrls: ['passenger-detail.component.scss'],
+      template: `
+        &lt;div&gt;
+          &lt;span class="status" [class.checked-in]="detail.checkedIn"&gt;&lt;/span&gt;
+          {{ detail.fullname }}
+          &lt;div class="date"&gt;
+            Check in date: 
+            {{ detail.checkInDate ? (detail.checkInDate | date: 'yMMMMd' | uppercase) : 'Not checked in' }}
+          &lt;/div&gt;
+          &lt;div class="children"&gt;
+            Children: {{ detail.children?.length || 0 }}
+          &lt;/div&gt;
+        &lt;/div&gt;
+      `
+    })
+    export class PassengerDetailComponent {
+      @Input()
+      detail: Passenger;
+      constructor() {}
+    }
+  </pre>  
+  
