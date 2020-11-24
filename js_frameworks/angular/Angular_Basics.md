@@ -430,3 +430,165 @@
     }
   </pre>  
   
+  
+#### Emitting changes with `@Output()` and Event Emitters
+- For getting data out of a component we import `Output` and `EventEmitter`
+- Here we have a child (presentational) component which emits custom output events for `onRemove()` and `onEdit()` using an `EventEmitter`. We then fire the event using the emitter with our object that's being edited/removed and this event will notify our parent (container) component. 
+
+  <pre>
+    import { Component, Input, Output, EventEmitter } from '@angular/core';
+    import { Passenger } from '../../models/passenger.interface';
+    
+    @Component({
+      selector: 'passenger-detail',
+      styleUrls: ['passenger-detail.component.scss'],
+      template: `
+        &lt;div&gt;
+          &lt;span class="status" [class.checked-in]="detail.checkedIn"&gt;&lt;/span&gt;
+          &lt;div *ngIf="editing"&gt;
+            &lt;input  type="text"  [value]="detail.fullname" (input)="onNameChange(name.value)" #name&gt;
+          &lt;/div&gt;
+          &lt;div *ngIf="!editing"&gt;{{ detail.fullname }}&lt;/div&gt;
+          &lt;div class="date"&gt; Check in date:  {{ detail.checkInDate ? (detail.checkInDate | date: 'yMMMMd' | uppercase) : 'Not checked in' }}&lt;/div&gt;
+          &lt;div class="children"&gt;  Children: {{ detail.children?.length || 0 }} &lt;/div&gt;
+          &lt;button (click)="toggleEdit()"&gt;
+            {{ editing ? 'Done' : 'Edit' }}
+          &lt;/button&gt;
+          &lt;button (click)="onRemove()"&gt;
+            Remove
+          &lt;/button&gt;
+        &lt;/div&gt;
+      `
+    })
+    export class PassengerDetailComponent {
+      @Input()
+      detail: Passenger;
+      @Output()
+      edit: EventEmitter<any> = new EventEmitter();
+      @Output()
+      remove: EventEmitter<any> = new EventEmitter();
+      editing: boolean = false;
+      constructor() {}
+      onNameChange(value: string) {
+        this.detail.fullname = value;
+      }
+      toggleEdit() {
+        if (this.editing) {
+          this.edit.emit(this.detail);
+        }
+        this.editing = !this.editing;
+      }
+      onRemove() { this.remove.emit(this.detail); }
+    }
+  </pre>
+  
+- In our **container component**, we can now implement the typed `handleEdit`/`handleRemove` methods and we do this preserving immutability and in our template we refer to the `passenger` object directly: 
+
+  <pre>
+     import { Component, OnInit } from '@angular/core';
+     import { Passenger } from '../../models/passenger.interface';
+     
+     @Component({
+       selector: 'passenger-dashboard',
+       styleUrls: ['passenger-dashboard.component.scss'],
+       template: `
+         &lt;div&gt;
+           &lt;passenger-count [items]="passengers"&gt; &lt;/passenger-count&gt;
+           &lt;div *ngFor="let passenger of passengers;"&gt;
+             {{ passenger.fullname }}
+           &lt;/div&gt;
+           &lt;passenger-detail *ngFor="let passenger of passengers;"
+             [detail]="passenger"
+             (edit)="handleEdit($event)"
+             (remove)="handleRemove($event)"&gt;
+           &lt;/passenger-detail&gt;
+         &lt;/div&gt;`
+     })
+     export class PassengerDashboardComponent implements OnInit {
+       passengers: Passenger[];
+       constructor() {}
+       ngOnInit() {
+         this.passengers = [{ ...passenger data... }];
+       }
+       handleEdit(event: Passenger) {
+         this.passengers = this.passengers.map((passenger: Passenger) => {
+           if (passenger.id === event.id) {
+             passenger = Object.assign({}, passenger, event);
+           }
+           return passenger;
+         });
+       }
+       handleRemove(event: Passenger) {
+         this.passengers = this.passengers.filter((passenger: Passenger) => {
+           return passenger.id !== event.id;
+         });
+       }
+     }
+  </pre> 
+  
+#### The `ngOnChanges` Lifecycle Hook
+- The `ngOnChanges` allows us to emit events containing state change and the event will have the `currentValue` and `previousValue` values. In this way, we can use the `ngOnChanges` hook to break the binding between the parent and child component. (We may need to do this to make sure edits are not immediately shown.)
+- In this example, we implement `ngOnChanges` (which is called before `ngOnInit`): we do a safety check and then we override the `detail` object with an empty object and *merge* it with the current value
+
+  <pre>
+     import { Component, OnChanges, OnInit, Input, Output, EventEmitter } from '@angular/core';
+     import { Passenger } from '../../models/passenger.interface';
+     
+     @Component({
+       selector: 'passenger-detail',
+       styleUrls: ['passenger-detail.component.scss'],
+       template: `
+         &lt;div&gt;
+           &lt;span class="status" [class.checked-in]="detail.checkedIn"&gt;&lt;/span&gt;
+           &lt;div *ngIf="editing"&gt; 
+             &lt;input type="text"  [value]="detail.fullname" (input)="onNameChange(name.value)" #name&gt;
+           &lt;/div&gt;
+           &lt;div *ngIf="!editing"&gt;
+             {{ detail.fullname }}
+           &lt;/div&gt;
+           &lt;div class="date"&gt;
+             Check in date: {{ detail.checkInDate ? (detail.checkInDate | date: 'yMMMMd' | uppercase) : 'Not checked in' }}
+           &lt;/div&gt;
+           &lt;div class="children"&gt;
+             Children: {{ detail.children?.length || 0 }}
+           &lt;/div&gt;
+           &lt;button (click)="toggleEdit()"&gt;
+             {{ editing ? 'Done' : 'Edit' }}
+           &lt;/button&gt;
+           &lt;button (click)="onRemove()"&gt;
+             Remove
+           &lt;/button&gt;
+         &lt;/div&gt;`
+     })
+     export class PassengerDetailComponent implements OnChanges, OnInit {
+     
+       @Input()
+       detail: Passenger;
+       @Output()
+       edit: EventEmitter<any> = new EventEmitter();
+       @Output()
+       remove: EventEmitter<any> = new EventEmitter();
+       editing: boolean = false;
+       constructor() {}
+       ngOnChanges(changes) {
+         if (changes.detail) {
+           this.detail = Object.assign({}, changes.detail.currentValue);
+         }
+       }
+       ngOnInit() {
+         console.log('ngOnInit');
+       }       
+       onNameChange(value: string) {
+         this.detail.fullname = value;
+       }
+       toggleEdit() {
+         if (this.editing) {
+           this.edit.emit(this.detail);
+         }
+         this.editing = !this.editing;
+       }
+       onRemove() {
+         this.remove.emit(this.detail);
+       }
+     }
+  </pre>    
