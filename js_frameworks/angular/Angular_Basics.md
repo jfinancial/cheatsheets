@@ -592,3 +592,225 @@
        }
      }
   </pre>    
+
+  
+#### Data Services And Dependency Injection
+- To create service (`passenger-dashboard-service.ts`) we import `HttpModule` and use `Http` (for which we need `Injectable`)  
+- We implement our `getPassengers()` object make makes an API call calling `get` on our injected Http token. We also then use `map` function (imported from `rxjs/add/operator/map`) to convert our json response of `Observable`: 
+- We also import `Headers` and `RequestOptions` so can set the content type on our Http header
+- We also import `catch` and `throw` for error handling
+
+  <pre>     
+    import { Injectable } from '@angular/core';
+    import { Http, Response, Headers, RequestOptions } from '@angular/http';
+    
+    import { Observable } from 'rxjs/Observable';
+    import 'rxjs/add/operator/map';
+    import 'rxjs/add/operator/catch';
+    import 'rxjs/add/observable/throw';
+    import { Passenger } from './models/passenger.interface';
+    
+    const PASSENGER_API: string = '/api/passengers';
+    
+    @Injectable()
+    export class PassengerDashboardService {
+      constructor(private http: Http) {}
+    
+      getPassengers(): Observable<Passenger[]> {
+        return this.http.get(PASSENGER_API)
+          .map((response: Response) => response.json())
+          .catch((error: any) => Observable.throw(error.json()));
+      }
+      
+      getPassenger(id: number): Observable<Passenger> {
+          return this.http
+            .get(`${PASSENGER_API}/${id}`)
+            .map((response: Response) => response.json())
+            .catch((error: any) => Observable.throw(error.json()));
+        }
+    
+      updatePassenger(passenger: Passenger): Observable<Passenger> {
+        let headers = new Headers({
+          'Content-Type': 'application/json'
+        });
+        let options = new RequestOptions({
+          headers: headers
+        });
+        return this.http
+          .put(`${PASSENGER_API}/${passenger.id}`, passenger, options)
+          .map((response: Response) => response.json())
+          .catch((error: any) => Observable.throw(error.json()));
+      }
+    
+      removePassenger(passenger: Passenger): Observable<Passenger> {
+        return this.http
+          .delete(`${PASSENGER_API}/${passenger.id}`)
+          .map((response: Response) => response.json())
+          .catch((error: any) => Observable.throw(error.json()));
+      }
+    }
+  </pre>
+  
+- Now in our container component we can use our new service (PassengerDashboardService). In `ngInit` and `handleRemove` and `handleEdit` methods we call `subscribe`:
+
+  <pre>
+    import { Component, OnInit } from '@angular/core';
+    import { PassengerDashboardService } from '../../passenger-dashboard.service';  
+    import { Passenger } from '../../models/passenger.interface';
+    
+    @Component({
+      selector: 'passenger-dashboard',
+      styleUrls: ['passenger-dashboard.component.scss'],
+      template: `
+        <div>
+          <passenger-count [items]="passengers"></passenger-count>
+          <div *ngFor="let passenger of passengers;">
+            {{ passenger.fullname }}
+          </div>
+          <passenger-detail *ngFor="let passenger of passengers;"
+            [detail]="passenger"
+            (edit)="handleEdit($event)"
+            (remove)="handleRemove($event)">
+          </passenger-detail>
+        </div>`
+    })
+    export class PassengerDashboardComponent implements OnInit {
+      passengers: Passenger[];
+      constructor(private passengerService: PassengerDashboardService) {}
+      ngOnInit() {
+         this.passengerService
+          .getPassengers()
+          .subscribe((data: Passenger[]) => this.passengers = data);
+      }
+      handleEdit(event: Passenger) {
+        this.passengerService
+          .updatePassenger(event)
+          .subscribe((data: Passenger) => {
+            this.passengers = this.passengers.map((passenger: Passenger) => {
+              if (passenger.id === event.id) {
+                passenger = Object.assign({}, passenger, event);
+              }
+              return passenger;
+            });
+          });
+      }
+      handleRemove(event: Passenger) {
+        this.passengerService
+          .removePassenger(event)
+          .subscribe((data: Passenger) => {
+            this.passengers = this.passengers.filter((passenger: Passenger) => {
+              return passenger.id !== event.id;
+            });
+          });
+      }
+    }
+  </pre>
+
+#### Using Promises (As Replacement For RxJs Subscriptions)
+- Instead of using RxJs subscriptions we can use promises by importing `rxjs/add/operator/toPromise` and calling `toPromise()` on the respone
+  <pre>
+    import { Injectable } from '@angular/core';
+    import { Http, Response, Headers, RequestOptions } from '@angular/http';   
+    import { Observable } from 'rxjs/Observable';
+    import 'rxjs/add/operator/toPromise';
+    import { Passenger } from './models/passenger.interface';
+    
+    const PASSENGER_API: string = '/api/passengers';
+    
+    @Injectable()
+    export class PassengerDashboardService {
+      constructor(private http: Http) {}
+    
+      getPassengers(): Promise<Passenger[]> {
+        return this.http.get(PASSENGER_API)
+          .toPromise()
+          .then((response: Response) => response.json());
+      }
+    
+      updatePassenger(passenger: Passenger): Promise<Passenger> {
+        let headers = new Headers({
+          'Content-Type': 'application/json'
+        });
+        let options = new RequestOptions({
+          headers: headers
+        });
+        return this.http
+          .put(`${PASSENGER_API}/${passenger.id}`, passenger, options)
+          .toPromise().then((response: Response) => response.json());
+      }
+    
+      removePassenger(passenger: Passenger): Promise<Passenger> {
+        return this.http
+          .delete(`${PASSENGER_API}/${passenger.id}`)
+          .toPromise().then((response: Response) => response.json());
+      } 
+    }
+  </pre>
+
+#### Template-Driven Forms with `ngForm` and `ngModel`, Inputs And Validation
+- To use forms we must import Angular's `FormsModule` in our feature module and also add it to our `imports` array
+- We bind the form with templateRef `#form="ngForm"` and note that when using forms the template becomes the source of truth and not the model
+ <pre>
+ import { FormsModule } from '@angular/forms';
+ </pre>
+- The we create a form component and our input we add the `ngModel` directive
+
+  <pre>
+    import { Component, Input } from '@angular/core';
+    import { Passenger } from '../../models/passenger.interface';
+    import { Baggage } from '../../models/baggage.interface';
+    
+    @Component({
+      selector: 'passenger-form',
+      styleUrls: ['passenger-form.component.scss'],
+      template: `
+        &lt;form #form="ngForm" novalidate&gt;
+          &lt;div&gt;
+            Passenger name: &lt;input type="text" name="fullname" required #fullname="ngModel"
+              [ngModel]="detail?.fullname"&gt;
+            &lt;div *ngIf="fullname.errors?.required && fullname.dirty" class="error"&gt;
+              Passenger name is required
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div&gt; Passenger ID: &lt;input type="number" name="id" required #id="ngModel"
+              [ngModel]="detail?.id"&gt;
+            &lt;div *ngIf="id.errors?.required && id.dirty" class="error"&gt;
+              Passenger ID is required
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div&gt;
+            &lt;label&gt;
+              &lt;input type="checkbox" name="checkedIn"
+                [ngModel]="detail?.checkedIn"
+                (ngModelChange)="toggleCheckIn($event)"&gt;
+            &lt;/label&gt;
+          &lt;/div&gt;
+          &lt;div *ngIf="form.value.checkedIn"&gt;
+            Check in date: &lt;input type="number" name="checkInDate" [ngModel]="detail?.checkInDate"&gt;
+          &lt;/div&gt;
+          &lt;div&gt;
+            Luggage: &lt;select
+              name="baggage"
+              [ngModel]="detail?.baggage"&gt;
+              &lt;option *ngFor="let item of baggage"
+                [value]="item.key"
+                [selected]="item.key === detail?.baggage"&gt;
+                {{ item.value }}
+              &lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/div&gt;
+          &lt;button type="submit" [disabled]="form.invalid"&gt;Update passenger&lt;/button&gt;
+        &lt;/form&gt;`
+    })
+    export class PassengerFormComponent {
+      @Input()
+      detail: Passenger;
+      baggage: Baggage[] = [{...baggageData....}];
+      toggleCheckIn(checkedIn: boolean) {
+        if (checkedIn) {
+          this.detail.checkInDate = Date.now();
+        }
+      }
+    
+    }
+  </pre>

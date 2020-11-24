@@ -235,6 +235,7 @@ Special property `raw` is available for the first argument of a tagged template.
     }
   </pre>
 
+- ES6 introduced [Object.assign()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign) which copies all enumerable own properties from one or more source objects to a target object and returns the target object.
 
 ### Dates and Times
 - A new Date() will always will create a new date object with current date/time. 
