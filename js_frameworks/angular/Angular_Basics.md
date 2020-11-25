@@ -71,7 +71,7 @@
   </pre>
 
 
-#### Property Binding And Event Binding
+#### Property Binding And Event Binding (`ngModelChange`)
  - We use `square bracket` notation to indicate **one-way dataflow** for binding a property (instead of standard sugar syntax for interpolation which is curly brackets)
  
    <pre>
@@ -749,14 +749,20 @@
 
 #### Template-Driven Forms with `ngForm` and `ngModel`, Inputs And Validation
 - To use forms we must import Angular's `FormsModule` in our feature module and also add it to our `imports` array
-- We bind the form with templateRef `#form="ngForm"` and note that when using forms the template becomes the source of truth and not the model
+- We bind the `form` element with templateRef `#form="ngForm"` and add `novalidate` as we will use Angular's validation.
+ 
  <pre>
- import { FormsModule } from '@angular/forms';
+   import { FormsModule } from '@angular/forms';
  </pre>
-- The we create a form component and our input we add the `ngModel` directive
+ 
+- We now create a **form component** and pass in `detail` of type `Passenger` and decorate this an `@Input`. Meanwhile, in out template the `input` elements on our form are bound to `ngModel` using the safe-navigation operator (`?`) (e.g. `[ngModel]="detail?.fullname"`). Likewise, we bind `checkedIn` using a checkbox and bind a function with `ngModelChange` 
+- For our `select` dropdown we again bind using `ngModel` and then use an `*ngFor` for creating our dropdown `option` elements from a collection. We also implement the logic for `selected` on the `option` element to see if a selection has already been made. We have implemented `selected` using `[selected]="item.key === detail?.baggage">` but we could instead replace `value` and `selected` with `[ngValue]="item.key"` which provides the same functionality.
+- To perform **validation**, we can also add the `required` attribute and templateRefs to our inputs (`#fullname="ngModel"`) so that ngModel keeps track of validation states. The form has properties `form.valid` and `form.invalid` which are boolean values for validation. We can get the individual errors for element e.g. `fullname.errors` which will be an object or null. We can implement showing an error for a required input using `ngIf` and the `dirty` property which means the input value has been changed (`*ngIf="fullname.errors?.required && fullname.dirty"`). We could use `touch` instead of dirty. Another useful validation property is `minlength`.
+- To prevent form submission if there are **validation errors** then we use `[disabled]="form.invalid"`
+- To implement **form submission**, we bind an event using `ngSubmit` and we submit the `form.value` which is of type Passenger and we also pass `form.valid` so we can do one final check on validation errors. Because this a stateless component, we don't want to interact with an API but instead we set up an `@Output` with an `EventEmitter<Passenger>` called `update` so that our container gets notified of the upate.
 
   <pre>
-    import { Component, Input } from '@angular/core';
+    import { Component, Input, Output, EventEmitter } from '@angular/core';
     import { Passenger } from '../../models/passenger.interface';
     import { Baggage } from '../../models/baggage.interface';
     
@@ -764,15 +770,18 @@
       selector: 'passenger-form',
       styleUrls: ['passenger-form.component.scss'],
       template: `
-        &lt;form #form="ngForm" novalidate&gt;
+        &lt;form (ngSubmit)="handleSubmit(form.value, form.valid)" #form="ngForm" novalidate&gt;
           &lt;div&gt;
-            Passenger name: &lt;input type="text" name="fullname" required #fullname="ngModel"
+            Passenger name:
+            &lt;input type="text" name="fullname" required #fullname="ngModel"
               [ngModel]="detail?.fullname"&gt;
             &lt;div *ngIf="fullname.errors?.required && fullname.dirty" class="error"&gt;
               Passenger name is required
             &lt;/div&gt;
           &lt;/div&gt;
-          &lt;div&gt; Passenger ID: &lt;input type="number" name="id" required #id="ngModel"
+          &lt;div&gt;
+            Passenger ID:
+            &lt;input type="number" name="id" required #id="ngModel"
               [ngModel]="detail?.id"&gt;
             &lt;div *ngIf="id.errors?.required && id.dirty" class="error"&gt;
               Passenger ID is required
@@ -780,21 +789,19 @@
           &lt;/div&gt;
           &lt;div&gt;
             &lt;label&gt;
-              &lt;input type="checkbox" name="checkedIn"
-                [ngModel]="detail?.checkedIn"
+              &lt;input type="checkbox" name="checkedIn" [ngModel]="detail?.checkedIn"
                 (ngModelChange)="toggleCheckIn($event)"&gt;
             &lt;/label&gt;
           &lt;/div&gt;
           &lt;div *ngIf="form.value.checkedIn"&gt;
-            Check in date: &lt;input type="number" name="checkInDate" [ngModel]="detail?.checkInDate"&gt;
+            Check in date:
+            &lt;input type="number" name="checkInDate" [ngModel]="detail?.checkInDate"&gt;
           &lt;/div&gt;
           &lt;div&gt;
-            Luggage: &lt;select
-              name="baggage"
-              [ngModel]="detail?.baggage"&gt;
+            Luggage:
+            &lt;select name="baggage" [ngModel]="detail?.baggage"&gt;
               &lt;option *ngFor="let item of baggage"
-                [value]="item.key"
-                [selected]="item.key === detail?.baggage"&gt;
+                [value]="item.key" [selected]="item.key === detail?.baggage"&gt;
                 {{ item.value }}
               &lt;/option&gt;
             &lt;/select&gt;
@@ -803,14 +810,96 @@
         &lt;/form&gt;`
     })
     export class PassengerFormComponent {
+      
       @Input()
-      detail: Passenger;
-      baggage: Baggage[] = [{...baggageData....}];
+      detail: Passenger;    
+      
+      @Output()
+      update: EventEmitter<Passenger> = new EventEmitter<Passenger>();
+      
+      baggage: Baggage[] = [{....baggage data....}];
+      
       toggleCheckIn(checkedIn: boolean) {
         if (checkedIn) {
           this.detail.checkInDate = Date.now();
         }
       }
-    
+      
+      handleSubmit(passenger: Passenger, isValid: boolean) {
+        if (isValid) {
+          this.update.emit(passenger);
+        }
+      }
     }
   </pre>
+
+- Instead of a checkbox for `checkedIn` we could use radio buttons and we need to add `[value]`:
+
+  <pre>
+     &lt;div&gt;
+        &lt;label&gt;
+          &lt;input type="radio" [value]="true" name="checkedIn" [ngModel]="detail?.checkedIn" (ngModelChange)="toggleCheckIn($event)"&gt;
+          Yes
+        &lt;/label&gt;
+        &lt;label&gt;
+          &lt;input type="radio" [value]="false" name="checkedIn" [ngModel]="detail?.checkedIn" (ngModelChange)="toggleCheckIn($event)"&gt;
+          No
+        &lt;/label&gt;
+      &lt;/div&gt;
+  </pre>
+  
+#### Component Routing
+
+- In our `index.html` we must include the `<base>` element inside our `<header>`:
+ <pre>
+   &lt;!doctype html&gt;
+   &lt;html&gt;
+   &lt;head&gt;
+     &lt;base href="/"&gt;
+     &lt;title&gt;Ultimate Angular&lt;/title&gt;
+     &lt;link rel="stylesheet" href="/css/app.css"&gt;
+   &lt;/head&gt;
+   &lt;body&gt;
+     &lt;app-root&gt;&lt;/app-root&gt;
+   
+     &lt;script src="/vendor/vendor.js"&gt;&lt;/script&gt;
+     &lt;script src="/build/app.js"&gt;&lt;/script&gt;
+   &lt;/body&gt;
+   &lt;/html&gt;
+ </pre>
+  
+- In the top level `app.module.ts` we must  import `RouterModule` and in our imports declare `RouterModule.forRoot(routes)`
+- For routes, we declare our custom `HomeComponent` and our `NotFoundComponent`
+
+  <pre>
+    import { NgModule } from '@angular/core';
+    import { BrowserModule } from '@angular/platform-browser';
+    import { CommonModule } from '@angular/common';
+    import { RouterModule, Routes } from '@angular/router';
+    import { PassengerDashboardModule } from './passenger-dashboard/passenger-dashboard.module';
+    import { HomeComponent } from './home.component';
+    import { NotFoundComponent } from './not-found.component';
+    import { AppComponent } from './app.component';
+    
+    const routes: Routes = [
+      { path: '', component: HomeComponent, pathMatch: 'full' },
+      { path: '**', component: NotFoundComponent }
+    ];
+    
+    @NgModule({
+      declarations: [
+        AppComponent,
+        HomeComponent,
+        NotFoundComponent
+      ],
+      imports: [
+        BrowserModule,
+        CommonModule,
+        RouterModule.forRoot(routes),
+        PassengerDashboardModule
+      ],
+      bootstrap: [AppComponent]
+    })
+    export class AppModule {}
+     
+  </pre>  
