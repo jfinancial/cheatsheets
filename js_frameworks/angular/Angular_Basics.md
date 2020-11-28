@@ -662,17 +662,17 @@
       selector: 'passenger-dashboard',
       styleUrls: ['passenger-dashboard.component.scss'],
       template: `
-        <div>
-          <passenger-count [items]="passengers"></passenger-count>
-          <div *ngFor="let passenger of passengers;">
+        &lt;div&lg;
+          &lt;passenger-count [items]="passengers"&lg;&lt;/passenger-count&lg;
+          &lt;div *ngFor="let passenger of passengers;"&lg;
             {{ passenger.fullname }}
-          </div>
-          <passenger-detail *ngFor="let passenger of passengers;"
+          &lt;/div&lg;
+          &lt;passenger-detail *ngFor="let passenger of passengers;"
             [detail]="passenger"
             (edit)="handleEdit($event)"
-            (remove)="handleRemove($event)">
-          </passenger-detail>
-        </div>`
+            (remove)="handleRemove($event)"&lg;
+          &lt;/passenger-detail&lg;
+        &lt;/div&lg;`
     })
     export class PassengerDashboardComponent implements OnInit {
       passengers: Passenger[];
@@ -868,8 +868,9 @@
    &lt;/html&gt;
  </pre>
   
-- In the top level `app.module.ts` we must  import `RouterModule` and in our imports declare `RouterModule.forRoot(routes)`
-- For routes, we declare our custom `HomeComponent` and our `NotFoundComponent`
+- In the top level `app.module.ts` we must  import `RouterModule` and in our imports declare `RouterModule.forRoot(routes)`. (Note that in `forRoot` we can also supply an additional argument of `useHash: true` which uses an old-school [HashLocation strategy(https://medium.com/@dao.houssene/angular-the-hash-trap-b2d415c2c241) for SPA)
+- For routes, we declare our custom `HomeComponent` and our `NotFoundComponent` which is routed via a wildcard (`**`)
+- In our routes, we could also replace our HomeComponent with a `redirectTo` e.g. (`redirectTo: passengers`) and this is how redirects are implemented
 
   <pre>
     import { NgModule } from '@angular/core';
@@ -903,3 +904,317 @@
     export class AppModule {}
      
   </pre>  
+  
+- Our home component (`home.component.ts`) must have a template selector of `app-home`:
+  
+  <pre>
+    import { Component } from '@angular/core';
+    
+    @Component({
+      selector: 'app-home',
+      template: `
+        &lt;div&gt;
+          Airline passenger app!
+        &lt;/div&gt;`
+    })
+    export class HomeComponent {}
+  </pre>
+
+- The `not-found` component also need to be defined: 
+
+  <pre>
+    import { Component } from '@angular/core';
+    
+    @Component({
+      selector: 'not-found',
+      template: `
+        &lt;div&gt;
+          Not found, &lt;a routerLink="/"&gt;go home&lt;/a&gt;?
+        &lt;/div&gt;`
+    })
+    export class NotFoundComponent {}
+  </pre>  
+
+- In the `app.component.ts`we specify `<router-outlet>` which is a directive via the router which acts as a placeholder for where our component will go. We also defined anchor tags with `routerLink` and to this add `routerLinkActiveOptions` to tell Angular to do an exact match and bind it to a property (so it only adds the styling if we are root and we ignore inherited roots.) We also create an interface `Nav` and use an `ngFor` to dynamically create our routes using bound properties:
+
+  <pre>
+    import { Component } from '@angular/core';
+    
+    interface Nav {
+      link: string,
+      name: string,
+      exact: boolean
+    }
+    
+    @Component({
+      selector: 'app-root',
+      styleUrls: ['app.component.scss'],
+      template: `
+        &lt;div class="app"&gt;
+          &lt;nav class="nav"&gt;
+            &lt;a *ngFor="let item of nav"
+              [routerLink]="item.link"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: item.exact }"&gt;
+              {{ item.name }}
+            &lt;/a&gt;
+          &lt;/nav&gt;
+          &lt;router-outlet&gt;&lt;/router-outlet&gt;
+        &lt;/div&gt;
+      `
+    })
+    export class AppComponent {
+      nav: Nav[] = [
+        {
+          link: '/',
+          name: 'Home',
+          exact: true
+        },
+        {
+          link: '/passengers',
+          name: 'Passengers',
+          exact: true
+        },
+        {
+          link: '/oops',
+          name: '404',
+          exact: false
+        }
+      ];
+  </pre>  
+
+- We can style our links using Sass:
+
+  <pre>
+    .nav {
+      margin: 0 0 10px;
+      padding: 0 0 20px;
+      border-bottom: 1px solid #dce5f2;
+      a {
+        background: #3a4250;
+        color: #fff;
+        padding: 4px 10px;
+        margin: 0 2px;
+        border-radius: 2px;
+        &.active {
+          color: #b690f1;
+          background: #363c48;
+        }
+      }
+    }
+  </pre>
+
+- In our feature module we also define our routes and define an array called `children` containing the child routes. We use query parameters (`:id`) here:
+
+  <pre>
+    import { NgModule } from '@angular/core';
+    import { CommonModule } from '@angular/common';
+    import { HttpModule } from '@angular/http';
+    import { FormsModule } from '@angular/forms';
+    import { RouterModule, Routes } from '@angular/router';
+    
+    // containers and components
+    import { PassengerDashboardComponent } from './containers/passenger-dashboard/passenger-dashboard.component';
+    import { PassengerViewerComponent } from './containers/passenger-viewer/passenger-viewer.component';
+    import { PassengerCountComponent } from './components/passenger-count/passenger-count.component';
+    import { PassengerDetailComponent } from './components/passenger-detail/passenger-detail.component';
+    import { PassengerFormComponent } from './components/passenger-form/passenger-form.component';
+    
+    // service
+    import { PassengerDashboardService } from './passenger-dashboard.service';
+    
+    const routes: Routes = [
+      {
+        path: 'passengers',
+        children: [
+         { path: '', component: PassengerDashboardComponent },
+         { path: ':id', component: PassengerViewerComponent }
+        ]
+      }
+    ];
+    
+    @NgModule({
+      declarations: [
+        PassengerDashboardComponent,
+        PassengerViewerComponent,
+        PassengerCountComponent,
+        PassengerDetailComponent,
+        PassengerFormComponent
+      ],
+      imports: [
+        CommonModule,
+        HttpModule,
+        FormsModule,
+        RouterModule.forChild(routes)
+      ],
+      providers: [
+        PassengerDashboardService
+      ]
+    })
+    export class PassengerDashboardModule {}
+  </pre>
+
+- Finally in our container component, we can inject the `Router` and the `ActivatedRoute` through the constructor (adding these to the imports). We can now get the route params (of type `Params`) via `route.params`  (so we could call `subscribe` on it) but instead we'll use RxJs' `switchMap` (which also needs to be imported) and which takes our subscription and returns an `Observable`
+
+  <pre>
+     import { Component, OnInit } from '@angular/core';
+     import { Router, ActivatedRoute, Params } from '@angular/router';
+     import 'rxjs/add/operator/switchMap';
+     import { PassengerDashboardService } from '../../passenger-dashboard.service';
+     import { Passenger } from '../../models/passenger.interface';
+     
+     @Component({
+       selector: 'passenger-viewer',
+       styleUrls: ['passenger-viewer.component.scss'],
+       template: `
+         &lt;div&gt;
+           &lt;passenger-form
+             [detail]="passenger"
+             (update)="onUpdatePassenger($event)"&gt;
+           &lt;/passenger-form&gt;
+         &lt;/div&gt;
+       `
+     })
+     export class PassengerViewerComponent implements OnInit {
+       passenger: Passenger;
+       constructor(
+         private router: Router,
+         private route: ActivatedRoute,
+         private passengerService: PassengerDashboardService
+       ) {}
+       ngOnInit() {
+         this.route.params
+           .switchMap((data: Passenger) => this.passengerService.getPassenger(data.id))
+           .subscribe((data: Passenger) => this.passenger = data);
+       }
+       onUpdatePassenger(event: Passenger) {
+         this.passengerService
+           .updatePassenger(event)
+           .subscribe((data: Passenger) => {
+             this.passenger = Object.assign({}, this.passenger, event);
+           });
+       }
+     }
+  </pre>
+
+- In our stateless component we could implement **imperative routing** by adding a button and then implementing a function:
+
+  <pre>
+    &lt;button (click)="goBack()"&gt;
+  </pre>    
+
+- ..and then implement our function calling `navigate` method on the `router`:
+
+  <pre>
+     goBack(){
+       this.router.navigate(['/passengers'])
+     }
+  </pre>
+
+- Likewise, we use **imperative routing**, injecting the router into our stateless 
+
+  <pre>
+    import { Component, OnInit } from '@angular/core';
+    import { PassengerDashboardService } from '../../passenger-dashboard.service';
+    import { Passenger } from '../../models/passenger.interface';
+    
+    @Component({
+      selector: 'passenger-dashboard',
+      styleUrls: ['passenger-dashboard.component.scss'],
+      template: `<div>
+          <passenger-count [items]="passengers"></passenger-count>
+          <div *ngFor="let passenger of passengers;">
+            {{ passenger.fullname }}
+          </div>
+          <passenger-detail *ngFor="let passenger of passengers;"
+            [detail]="passenger"
+            (edit)="handleEdit($event)"
+            (remove)="handleRemove($event)">
+          </passenger-detail>
+        </div>`
+    })
+    export class PassengerDashboardComponent implements OnInit {
+      passengers: Passenger[];
+      constructor(private passengerService: PassengerDashboardService) {}
+      ngOnInit() {
+         this.passengerService
+          .getPassengers()
+          .subscribe((data: Passenger[]) => this.passengers = data);
+      }
+      handleEdit(event: Passenger) {
+        this.passengerService
+          .updatePassenger(event)
+          .subscribe((data: Passenger) => {
+            this.passengers = this.passengers.map((passenger: Passenger) => {
+              if (passenger.id === event.id) {
+                passenger = Object.assign({}, passenger, event);
+              }
+              return passenger;
+            });
+          });
+      }
+      handleRemove(event: Passenger) {
+        this.passengerService
+          .removePassenger(event)
+          .subscribe((data: Passenger) => {
+            this.passengers = this.passengers.filter((passenger: Passenger) => {
+              return passenger.id !== event.id;
+            });
+          });
+      }
+    }
+  </pre>
+  
+  <pre>
+      import { Component, OnChanges, Input, Output, EventEmitter } from '@angular/core';
+      import { Passenger } from '../../models/passenger.interface';
+      
+      @Component({
+        selector: 'passenger-detail',
+        styleUrls: ['passenger-detail.component.scss'],
+        template: `
+          &lt;div&gt;
+            &lt;span class="status" [class.checked-in]="detail.checkedIn"&gt;&lt;/span&gt;
+            &lt;div *ngIf="editing"&gt;
+              &lt;input type="text"  [value]="detail.fullname" (input)="onNameChange(name.value)" #name&gt;
+            &lt;/div&gt;
+            &lt;div *ngIf="!editing"&gt;
+              {{ detail.fullname }}
+            &lt;/div&gt;
+            &lt;div class="date"&gt;
+              Check in date:  {{ detail.checkInDate ? (detail.checkInDate | date: 'yMMMMd' | uppercase) : 'Not checked in' }}
+            &lt;/div&gt;
+            &lt;button (click)="toggleEdit()"&gt;{{ editing ? 'Done' : 'Edit' }}&lt;/button&gt;
+            &lt;button (click)="onRemove()"&gt;Remove&lt;/button&gt;
+          &lt;/div&gt;`
+      })
+      export class PassengerDetailComponent implements OnChanges {
+      
+        @Input()
+        detail: Passenger;
+        @Output()
+        edit: EventEmitter<Passenger> = new EventEmitter<Passenger>();
+        @Output()
+        remove: EventEmitter<Passenger> = new EventEmitter<Passenger>();
+        editing: boolean = false;
+        constructor() {}
+        ngOnChanges(changes) {
+          if (changes.detail) {
+            this.detail = Object.assign({}, changes.detail.currentValue);
+          }
+        }
+        
+        onNameChange(value: string) {
+          this.detail.fullname = value;
+        }
+        toggleEdit() {
+          if (this.editing) {
+            this.edit.emit(this.detail);
+          }
+          this.editing = !this.editing;
+        }
+        onRemove() {
+          this.remove.emit(this.detail);
+        }
+      }
+  </pre>
