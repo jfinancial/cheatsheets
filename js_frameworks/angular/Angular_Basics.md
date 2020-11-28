@@ -868,7 +868,7 @@
    &lt;/html&gt;
  </pre>
   
-- In the top level `app.module.ts` we must  import `RouterModule` and in our imports declare `RouterModule.forRoot(routes)`. (Note that in `forRoot` we can also supply an additional argument of `useHash: true` which uses an old-school [HashLocation strategy(https://medium.com/@dao.houssene/angular-the-hash-trap-b2d415c2c241) for SPA)
+- In the top level `app.module.ts` we must  import `RouterModule` and in our imports declare `RouterModule.forRoot(routes)`. (Note that in `forRoot` we can also supply an additional argument of `useHash: true` which uses an old-school [HashLocation Strategy](https://medium.com/@dao.houssene/angular-the-hash-trap-b2d415c2c241) for SPA)
 - For routes, we declare our custom `HomeComponent` and our `NotFoundComponent` which is routed via a wildcard (`**`)
 - In our routes, we could also replace our HomeComponent with a `redirectTo` e.g. (`redirectTo: passengers`) and this is how redirects are implemented
 
