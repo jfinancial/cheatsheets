@@ -1121,17 +1121,17 @@
     @Component({
       selector: 'passenger-dashboard',
       styleUrls: ['passenger-dashboard.component.scss'],
-      template: `<div>
-          <passenger-count [items]="passengers"></passenger-count>
-          <div *ngFor="let passenger of passengers;">
+      template: `&lt;div&gt;
+          &lt;passenger-count [items]="passengers"&gt;&lt;/passenger-count&gt;
+          &lt;div *ngFor="let passenger of passengers;"&gt;
             {{ passenger.fullname }}
-          </div>
-          <passenger-detail *ngFor="let passenger of passengers;"
+          &lt;/div&gt;
+          &lt;passenger-detail *ngFor="let passenger of passengers;"
             [detail]="passenger"
             (edit)="handleEdit($event)"
-            (remove)="handleRemove($event)">
-          </passenger-detail>
-        </div>`
+            (remove)="handleRemove($event)"&gt;
+          &lt;/passenger-detail&gt;
+        &lt;/div&gt;`
     })
     export class PassengerDashboardComponent implements OnInit {
       passengers: Passenger[];
