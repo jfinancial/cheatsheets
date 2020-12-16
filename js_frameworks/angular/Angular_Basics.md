@@ -115,7 +115,7 @@
      &lt;input type="text" [ngModel]="{{name}}" (ngModelChange)="handleChange($event)"&gt;
      
      //This uses two-way data-binding
-     &lt;input type="text" [(ngModel)]="{{name}}" (input)="handleChange($event)"&gt;ngModel)]="{{name}}""&gt;  
+     &lt;input type="text" [(ngModel)]="{{name}}" (input)="handleChange($event)"&gt;ngModel)]="{{name}}"&gt;  
    </pre>
 
 #### Template Refs (`#`)
