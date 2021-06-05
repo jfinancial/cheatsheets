@@ -530,3 +530,175 @@ click$
       repo: ajax.getJSON(`${GITHUB_API_BASE}/users/reactivex/repos`)
     }).subscribe(console.log);
 </pre>
+
+### RxJS's `Subject`
+- An `Observable` is by default unicast. (*Unicasting* means that each subscribed observer owns an independent, individual execution path of the Observable.) RxJs's `Subject` is still an Observable (and it also an Observer so it has next, error and complete method) allows for sharing an execution of **multicasting** so it can broadcast changes to other observables which are subscribed to the Subject. We use `Subject` to share state amongst multiple components. Subjects comes in various flavours:
+  - `BehaviourSubject` is used to share execution and deliver an initial value and the most common use case is late subscribers
+  - `ReplaySubject` is used to replay values to late subscribers
+  - `AsyncSubject` is ued to emitting the last values to subscribers before completion
+- **Warning:** Generally we do not want to expose a Subject directly as anything which has the subject can then send values. (In Angular we might want to hide the subject behind a service.) But we may want to expose the subject as an observable to the other consumers/subscribers and `Subject` has a `toObservable()` method    
+<pre>
+    const observer = {
+      next: val => console.log('next', val),
+      error: err => console.log('error', err),
+      complete: () => console.log('complete')
+    };
+    const subject = new Subject();
+    subject.next('Hello');
+    const subscription = subject.subscribe(observer);
+    const secondSubscription = subject.subscribe(observer);
+    subject.next('World');
+</pre>    
+
+### Sharing state using `multicast` and `share()`      
+- Most common use case for Subject is converting from unicast to multicast and sometimes we wan to share state amongst observables. The `share()` operator which internally uses a subject to multicast any value it receives to other subscribers
+- In this example, the multicast returns a `ConnectableObservable` so we have to connect and unsubscribe from this ConnectedObservable:
+<pre>
+    const interval$ = interval(2000).pipe(
+      tap(i => console.log('new interval', i))
+    );
+    const multicastedInterval$ = interval$.pipe(
+       //The multicast operator will subscribe the Subject you return to the underlying observable when connect() is called.
+       //This can be any flavor of Subject, for instance you can also multicast with a Behavior or ReplaySubject
+       multicast(() => new Subject())
+    );
+    const connectedSub = multicastedInterval$.connect(); //need to call connect here
+    const subOne = multicastedInterval$.subscribe(observer);
+    const subTwo = multicastedInterval$.subscribe(observer);
+    setTimeout(() => {
+      connectedSub.unsubscribe();
+    }, 3000);
+</pre>
+
+Rather than call `unsubscribe()` on the ConnectedObservable, the `refCount()` operator can do this:
+
+<pre>
+    const interval$ = interval(2000).pipe(
+      tap(i => console.log('new interval', i))
+    );
+    const multicastedInterval$ = interval$.pipe(
+      multicast(() => new Subject())
+      refCount()
+    );
+
+    const subOne = multicastedInterval$.subscribe(observer);
+    const subTwo = multicastedInterval$.subscribe(observer);
+
+    setTimeout(() => {
+        subOne.unsubscribe();
+        subTwo.unsubscribe();
+    }, 3000);
+</pre>
+
+This process of calling multicast with a refcount is so common RxJs provides `share()` which use `multicast()` and `refCount()` behind the scenes: 
+
+<pre>
+    const observer = {
+      next: val => console.log('next', val),
+      error: err => console.log('error', err),
+      complete: () => console.log('complete')
+    };
+    
+    const multicastedInterval$ = interval$.pipe(
+      // We can actually optimize this example even further. Because multicasting with a refCount is so common, RxJS offers 
+      // an operator that does both of these things for us, the share operator. This let's us replace multicast and refCount with share for the same behavior.
+      share()
+    );
+    const subOne = multicastedInterval$.subscribe(observer);
+    const subTwo = multicastedInterval$.subscribe(observer);
+    
+    setTimeout(() => {
+      subOne.unsubscribe();
+      subTwo.unsubscribe();
+    }, 3000);
+    </pre>
+### `BehaviourSubject`
+- If you late subscribers want to receive the last submitted value (or a seed value) then you want `BehaviourSubject` so use this when the delivery of current state to late subscribers is important
+
+  <pre>
+    const observer = {
+      next: val => console.log('next', val),
+      error: err => console.log('error', err),
+      complete: () => console.log('complete')
+    };
+    
+    // BehaviorSubject's accept an argument, the initial seed value.
+    // This value will be emitted to subscribers until .next is called
+     
+    const subject = new BehaviorSubject('Hello');
+    const subscription = subject.subscribe(observer);
+    subject.next('World');
+        
+      //Contrary to the normal Subject, BehaviorSubject will deliver the last emitted value to late subscribers.
+    const secondSubscription = subject.subscribe(observer);
+    subject.next('Goodbye!');
+    
+    //You can also access the current value of the BehaviorSubject synchronously by calling getValue(), 
+    //although this is generally not advised.
+    console.log('getValue()', subject.getValue());
+  </pre>
+
+### Implementing an ObservableStore using Subjects
+
+<pre>
+    export class ObservableStore {
+      
+      private _store: BehaviorSubject<any>;
+      private _stateUpdate = new Subject();
+    
+      constructor(initialState) {
+        this._store = new BehaviorSubject(initialState);
+        this._stateUpdate.pipe(
+          //Accumulate state over time using scan.
+          scan((current, updated) => {
+            return { ...current, ...updated }
+          }, initialState)
+        ).subscribe(this._store);
+      }
+    
+      selectState(key: string) {
+        return this._store.pipe(
+          distinctUntilKeyChanged(key),
+          map(state => state[key])
+        );
+      }
+    
+      updateState(newState: object) {
+        this._stateUpdate.next(newState);
+      }
+    
+      stateChanges() {
+        return this._store.asObservable();
+      }
+    }
+
+    //Test the Observable store
+    const store = new ObservableStore({user: 'joe', isAuthenticated: true});
+    store.selectState('user').subscribe(console.log);
+    store.updateState({user: 'bob'});
+    store.updateState({isAuthenticated: true});
+    store.updateState({isAuthenticated: false});
+
+</pre>
+
+### `ReplaySubject`
+- `ReplaySubject` is used to emit old values to new subscribers and are typically used when late subscribers are required to receive more than the last emitted value (or seed) or need to reply all values. The typical use case is where you need a late subscriber to receeive all previously emitted values. `ReplaySubject` also takes an integer argument specifyng the number of values to be replayed if you don't want the entire history. 
+- Unlike `BehaviourSubject`, `ReplaySubject` does not accept an initial seed value. If you have an initial state and only want o  want to receive updated state then use `BehaviourSubject`
+<pre>
+    const observer = {
+      next: val => console.log('next', val),
+      error: err => console.log('error', err),
+      complete: () => console.log('complete')
+    };
+    
+    const subject = new ReplaySubject(2);
+    subject.next('Hello');
+    const subscription = subject.subscribe(observer);
+    subject.next('World');
+    
+    const secondSubscription = subject.subscribe(observer);
+    subject.next('Goodbye!');
+    subject.next('World!');
+    const thirdSubscription = subject.subscribe(observer);
+
+</pre>
