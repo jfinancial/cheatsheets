@@ -6,16 +6,16 @@
 - Spring Webflux is used to build reactive java webapps and was born out of Spring's adoption of the [Reactor Project](https://projectreactor.io/) as an implementation of Reactive Streams
 - Webflux and reactive libraries can be used for building reactive microservices which are asynchronous and non-blocking so higher throughput can be achieved. This can be demonstrated using [Apache AB](http://httpd.apache.org/docs/2.4/programs/ab.html) which is a server benchmarking tool 
 - The [Reactive Manifesto](https://www.reactivemanifesto.org/) defines 4 pillars: 
-   - **Responsive** => returning a timely manner and doing work lazily (i.e only when required) and when use closes browser then work stops
-   - **Resilient** => can handle failure but the whole system doesn't fail and it stays responsive
-   - **Elastic** => remains responsive despite the workload so the system should not have any bottlenecks so the system should use resources efficiently and being horizontally scalable
-   - **Message-Driven** => components talk in any asynchronous way by passing messages and use [backpressure](https://medium.com/@jayphelps/backpressure-explained-the-flow-of-data-through-software-2350b3e77ce7) to handle emission rates
+   - **Responsive** => returns in a timely manner and does work lazily (i.e only when required) and when user closes browser then work stops
+   - **Resilient** => can handle failure; the whole system doesn't fail due to one individual failure and instead it stays responsive
+   - **Elastic** => remains responsive despite the workload so the system should not have any bottlenecks so the system should use resources efficiently and be horizontally scalable
+   - **Message-Driven** => components talk in an asynchronous manner by passing messages and use [backpressure](https://medium.com/@jayphelps/backpressure-explained-the-flow-of-data-through-software-2350b3e77ce7) to handle emission rates
  
 
 #### Traditional Servlet Containers vs Netty
 
-- Traditional servlet engines such as Tomcat use a a single thread per request model. This is costly so even with a high thread pool the server can easily meet maximum throughput. More explanation [here](https://dzone.com/articles/spring-webflux-eventloop-vs-thread-per-request-mod) 
-- Netty uses different [thread model](http://tutorials.jenkov.com/netty/overview.html) based on EventLoopGroup group in which there is a Boss thread and Worker threads and the worker threads are continuously running but never blocked so we want to avoid blocking operations wherever possible
+- Traditional servlet engines such as Tomcat use a a single thread per request model. This is costly so even with a high thread pool the server can easily meet maximum throughput. (More explanation [here](https://dzone.com/articles/spring-webflux-eventloop-vs-thread-per-request-mod).)
+- Netty uses a different [thread model](http://tutorials.jenkov.com/netty/overview.html) based on EventLoopGroup in which there is a Boss thread and Worker threads and the worker threads are continuously running but never blocked, therefore, we want to avoid blocking operations wherever possible
 
 #### Quick Refresher On `@ControllerAdvice`
 - The proper way to handle exceptions from a `@RestController` is to use Spring's `@ControllerAdvice` to handle specific exceptions and return a `ResponseEntity` with the appropriate HTTP error code (e.g 500:
@@ -35,8 +35,8 @@ public class InputValidationHandler {
 }
 ````
 
-#### Reactive Service
-- The service returns a `Mono` for a single item or `FLux` for multiple items
+#### Reactive Services
+- A Reactive service method returns a `Mono` for a single item or `FLux` for multiple items
 
 ```java
 @Service
@@ -63,7 +63,7 @@ public class ReactiveMathService {
 ```
 
 #### Reactive Controller
-- Ths reactive controlling uses `@RequestController` and changing the MediaType to `TEXT_EVENT_STREAM_VALUE` means streaming is enable so this will be treated by the browser as a Reactive stream so the browser will consume elements from the stream as they are produced and if we quit the browser (i.e. the consumer cancels) then the server will stop producing elements
+- A class marked as a `@RequestController` can still be used to return Reactive types. Changing the MediaType to `TEXT_EVENT_STREAM_VALUE` means streaming is enable so this will be treated by the browser as a Reactive stream so the browser will consume elements from the stream as they are produced and if we quit the browser (i.e. the consumer cancels) then the server will stop producing elements
 - If you do not have the MediaType set to stream then even though we are sending a Flux, all the results will be collected - in Spring this is done in the encode method of `AbstractJackson2Encoder` - so it will send a `Mono<List<Response>>`
 - Note that in the Post mapping we actually take a reactive type in whereas for the path variable it has to remain a DTO. Using a reactive type as an input is useful where we have a huge request and we cant to consume it in a non-blocking manner
 ```java
@@ -98,7 +98,7 @@ public class ReactiveMathController {
 
 
 #### Reactive Pipeline
-- To make your code reactive you have to be *within* the reative pipeline. The following code is not creative because the real work is done outside the pipeline:
+- To make your code reactive you have to be *within* the reactive pipeline. The following code is not creative because the real work is done outside the pipeline:
 
 ```java
 public class NonReactiveController {
@@ -145,24 +145,15 @@ Here are the Flux equivalents to RxJS functions:
 |  sampleFirst |  throttleFirst |
 |  sample      |  throttleLast  |
 
-
-, , and throttleLast are most conspicuously absent from Project Reactor's Flux. Do they have any counterparts?
-
-
-The sample operators are the once relating to the behavior you're searching for.
-
-sampleTimeout could be used as debounce.
-sampleFirst could be used as throttleFirst.
-sample could be used as throttleLast.
-
+----
 
 #### Functional Endpoints
 - Instead of using `@GetMapping` and `@PostMapping` we can create [Functional Endpoints](https://spring.getdocs.org/en-US/spring-framework-docs/docs/spring-web-reactive/webflux/webflux-fn.html) that are defined in DSL-style configuration. Note that you still can mix-and-match both approaches
-- Not the difference between `body` and `bodyValue` methods? 
+- Not the difference between `body` and `bodyValue` methods:
   - `bodyValue()` takes the raw type 
   - `body()` take the publisher type (i.e. `Flux` or `Mono`)
 - To hit the functional endpoint you go to the router url e.g. `http://localhost:8080/router/square/5`
-- Not the use of `RequestPredicates` to map certain request parameters
+- Note the use of `RequestPredicates` to map certain request parameters
 ```java
 @Configuration
 public class RouterConfig {
@@ -514,7 +505,8 @@ public class WebClientConfig {
 
 ### Server Side Events (SSE)
 - Server Side Events (SSE) allow updates to be sent to the browser/front-end and are similar to websocket except that websocket allows for 2-way communication whereas SSE is one way
-- We implement this using Project Reactor [`Sink`](https://projectreactor.io/docs/core/release/reference/#processors) which acts like a subscriber and a publisher so mulitple threads can both publish and consume to the sink
+- We implement this using Project Reactor [`Sink`](https://projectreactor.io/docs/core/release/reference/#processors) which acts like a subscriber and a publisher so mulitple threads can both publish and consume to the sink - when using sinks use `many()` for emitting many updates and `one()` for single updates. You can also use `limit()` when emitting multiple times
+- We define the `Sink` and the broadcast `Flux` from the sink in some configuration 
 ```java
 @Configuration
 public class SinkConfig {
@@ -528,6 +520,108 @@ public class SinkConfig {
     @Bean
     public Flux<ProductDto> productBroadcast(Sinks.Many<ProductDto> sink){
         return sink.asFlux();
+    }
+
+}
+```
+- We can now create a stream controller which takes the `FLux` from the sink we already configured:
+```java
+@RestController
+@RequestMapping("product")
+public class ProductStreamController {
+
+    @Autowired
+    private Flux<ProductDto> flux;
+
+    @GetMapping(value = "stream/{maxPrice}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<ProductDto> getProductUpdates(@PathVariable int maxPrice){
+        return this.flux
+                    .filter(dto -> dto.getPrice() <= maxPrice);
+    }
+
+}
+```
+- We now implement a `ProductService` which allows updates and therefore takes the `Sink`and we send the update to think using `doOnNext(this.sink::tryEmitNext)`:
+```java
+@Service
+public class ProductService {
+
+    @Autowired
+    private ProductRepository repository;
+
+    @Autowired
+    private Sinks.Many<ProductDto> sink;
+
+    public Flux<ProductDto> getAll(){
+        return this.repository.findAll()
+                    .map(EntityDtoUtil::toDto);
+    }
+
+    public Flux<ProductDto> getProductByPriceRange(int min, int max){
+        return this.repository.findByPriceBetween(Range.closed(min, max))
+                .map(EntityDtoUtil::toDto);
+    }
+
+    public Mono<ProductDto> getProductById(String id){
+        return this.repository.findById(id)
+                             .map(EntityDtoUtil::toDto);
+    }
+
+    public Mono<ProductDto> insertProduct(Mono<ProductDto> productDtoMono){
+        return productDtoMono
+                .map(EntityDtoUtil::toEntity)
+                .flatMap(this.repository::insert)
+                .map(EntityDtoUtil::toDto)
+                .doOnNext(this.sink::tryEmitNext);  //emit to sink here
+    }
+
+    public Mono<ProductDto> updateProduct(String id, Mono<ProductDto> productDtoMono){
+       return this.repository.findById(id)
+                            .flatMap(p -> productDtoMono
+                                            .map(EntityDtoUtil::toEntity)
+                                            .doOnNext(e -> e.setId(id)))
+                            .flatMap(this.repository::save)
+                            .map(EntityDtoUtil::toDto);
+    }
+
+    public Mono<Void> deleteProduct(String id){
+        return this.repository.deleteById(id);
+    }
+
+}
+```
+### Reactvive Mongo Repository
+- MongoDB can be used for reactive service and has a reactive library with `ReactiveMongoRepository`
+```java
+@Repository
+public interface ProductRepository extends ReactiveMongoRepository<Product, String> {
+    Flux<Product> findByPriceBetween(Range<Integer> range);
+}
+
+```
+### R2DBC - Reactive DB libraries
+- There are also reactive database drivers which implement the [R2DBC](https://r2dbc.io/) spec
+- Using the R2DBC driver for our DB we can use the standard `JpaRepository`
+```java
+@Repository
+public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrder, Integer> {
+
+    List<PurchaseOrder> findByUserId(int userId);
+
+}
+```
+- We can then create a flux from a stream created from the List returned by the repository
+```java
+@Service
+public class OrderQueryService {
+
+    @Autowired
+    private PurchaseOrderRepository orderRepository;
+
+    public Flux<PurchaseOrderResponseDto> getProductsByUserId(int userId){
+        return Flux.fromStream(() -> this.orderRepository.findByUserId(userId).stream()) // blocking
+                .map(EntityDtoUtil::getPurchaseOrderResponseDto)
+                .subscribeOn(Schedulers.boundedElastic());
     }
 
 }
