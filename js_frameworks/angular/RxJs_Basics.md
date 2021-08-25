@@ -8,7 +8,7 @@
 - RxJs is often referred to as *"[Lodash](https://lodash.com/) for events"*
 - To use RxJs add the `rxjs` dependency in `package.json` as shown below:
 
-<pre>
+```json
 {
   "name": "rxjs-starter",
   "version": "1.0.0",
@@ -22,7 +22,7 @@
     "start": "parcel index.html"
   },
 }
-</pre>
+```
 
 Summary:
 
@@ -36,7 +36,7 @@ Summary:
 - You can create an Observable using `Observable.create()` or calling `new Observable()`. 
 - You can also supply no argument to `subscribe()` but you should normally take this as a warning that you have moved logic upwards into other operators where you shouldn't have.
 
-<pre>
+```typescript
     /*
      * Observers can register up to 3 callbacks
      * next is called 1:M times to push new values to observer
@@ -62,17 +62,17 @@ Summary:
     // Subscribe hooks observer up to observable, beginning execution.
     // This creates a 1 to 1 relationship between the producer (observable) and the consumer (observer).
     observable.subscribe(observer);
-</pre>
+```
 
 You can supply any (`next`, `error` or `complete`) or none. So rather than supply an observer you can either create a **partial observer**  by only implementing certain arguments or via functions passed to `subscribe()` but these rely on order: 
 
-<pre> 
+```typescript
     observable.subscribe(
         value => console.log('next',value),
         null, //no error handler
         () => console.log('complete!)
     );
-</pre>
+```
 
 **Tip:** Generally, we supply function arguments if we are just going to implement `next` or use an Observer if we are going to implement more than one of the callbacks.
 
@@ -81,14 +81,14 @@ You can supply any (`next`, `error` or `complete`) or none. So rather than suppl
 - You finish subscribing to an observable via the `unsubscribe()` method which cleans up any resources being used by the Observable. 
 - Note that the `complete` will not be fired as *complete is only fired for complete notifications that happen within the Observable*
 
-<pre>
+```typescript
     const subscription = observable.subscribe(observer);
     subscription.unsubscribe()
-</pre>
+```
 
 You can also add a subscription to another subscription and then unsubscribe is called it is called on both
 
-<pre>
+```typescript
     const subscription = observable.subscribe(observer);
     const subscriptionTwo = observable.subscribe(observer);
     subscription.add(subscriptionTwo);
@@ -96,7 +96,7 @@ You can also add a subscription to another subscription and then unsubscribe is 
       subscription.unsubscribe();
     }, 3500);
 
-</pre>
+```
 
 ### Creation Operators
 
@@ -108,61 +108,63 @@ You can also add a subscription to another subscription and then unsubscribe is 
   - `range()` create an observable from a range e.g.`range(1,5)`
  - `fromEvent()` from a DOM event e.g. `const clickSource$ = fromEvent(document, 'click)`
   - `interval(1000)`(emits every second) and `timer(2000,1000)` (starts emitting after 2 seconds and then every second) are time-based streams. (Note: `timer(2000)` emits a value after 2 seconds and then none)
-<pre>
+
+```typescript
     const observer = {
       next: val => console.log('next', val),
     };
     const source$ = fromEvent(document, 'keyup');
     const subOne = source$.subscribe(observer);
-</pre>
+```
 
 ### Introduction To Operators (`map`, `pluck`, `mapTo`, `filter`, `reduce`, `scan` and `tap`)
 - Operators transform elements in the stream and are *pipeable* so the stream becomes like an assembly like e.g.
 
-<pre> observable$.pipe(
+```typescript
+    observable$.pipe(
          operatorOne(config), 
          operatorTwo(config)
     ).subscribe(observer)`
-</pre>
+```
 
 - `map()` works like map elements in an array
 
-<pre>
+```typescript
     const keyup$ = fromEvent(document, 'keyup');
     const keycode$ = keyup$.pipe(
       map((event: any) => event.code)
     );
     keycode$.subscribe(console.log);
-</pre>
+```
 
 - `pluck()` is used to take a property from an object so the code above (which maps the key code) could be written as:
-<pre>
+```typescript
     const keyup$ = fromEvent(document, 'keyup');
     const keycode$ = keyup$.pipe(
       pluck('code')
     );
     keycode$.subscribe(console.log);
-</pre>
+```
 
 - `mapTo()` is used to emit a constant
 - `filter()` allows you to filter out based on a condition
-<pre>
+```typescript
     const keycode$ = keyup$.pipe(map((event: any) => event.code));
     const enter$ = keycode$.pipe(filter(code => code === 'Enter'));
     enter$.subscribe(console.log);
-</pre>
+```
 
 - `reduce()` applies a reducer function and when the observable completes the value is emitted. 
-<pre>
+```typescript
     from([1, 2, 3, 4, 5])
       .pipe( reduce((accumulator, currentValue) => {
          return accumulator + currentValue;
         },0)
        .subscribe(console.log);
-</pre>
+```
 
 - `scan()` applies a reducer function on each emitted, joining new values emitted from the source to the new value (in contrast to `reduce()` which only emits on completion):
-<pre>
+```typescript
     //scan is similar to reduce, except it emits each new acculumated value as it occurs.
     // This is great for managing state changes in your application over time.
      */
@@ -171,9 +173,9 @@ You can also add a subscription to another subscription and then unsubscribe is 
         return accumulator + currentValue;
        }, 0))
       .subscribe(console.log);
-</pre>
+```
 - ...we use `scan` to accumlulate state (like Redux or NgRx)
-<pre>
+```typescript
     const user = [
       { name: 'Brian', loggedIn: false, token: null },
       { name: 'Brian', loggedIn: true, token: 'abc' },
@@ -185,9 +187,9 @@ You can also add a subscription to another subscription and then unsubscribe is 
         return { ...accumulator, ...currentValue }  //spread operator to update object
       }, {})
     );
-</pre>
+```
 - `tap()` lets you spy on the stream and perform side effect without mutating the values in the stream. Tap also accepts an observer object (if you wish to also receieve notifications on complete or error but you will use this less often)
-<pre>
+```typescript
     from([1, 2, 3, 4, 5]).pipe(
         tap(value => console.log('before', value)),
         map(value => value * 10),
@@ -200,11 +202,11 @@ You can also add a subscription to another subscription and then unsubscribe is 
       .subscribe(value => {
         console.log('from subscribe', value);
       });
-</pre>
+```
 
 ### Introduction to Filtering Operators (`take`, `first`, `takeWhile`, `takeUntil`, `distinctUntilChanged` and `distinctUntilKeyChanged`)
 - `take(x)` emits the first x values from the source and then completes
-<pre>
+```typescript
     // Take the first value that matches provided criteria before completing
     // We could use a combination of filter(condition) and take(1),here  use the first operator to do the same
     // Note: If you supply no values to first, it is equivalent to take(1).
@@ -218,9 +220,9 @@ You can also add a subscription to another subscription and then unsubscribe is 
       .subscribe({
         next: console.log,
       });
-</pre>
+```
 - `takeWhile(p)` take a predicate and will take values while that predicate is met (has optional boolean to return last value)
-<pre>
+```typescript
     const counter$ = interval(1000);
     counter$.pipe(
         mapTo(-1),
@@ -236,9 +238,9 @@ You can also add a subscription to another subscription and then unsubscribe is 
           message.innerHTML = 'Liftoff!';
         }
       });
-</pre>
+```
 - `takeUntil` is *heavily used operator* which take values until another Observable emits a value
-<pre>
+```typescript
     //counts down until the mouse is clicked
     const counter$ = interval(1000);
     const clicks$ = fromEvent(document, 'click');
@@ -246,10 +248,10 @@ You can also add a subscription to another subscription and then unsubscribe is 
         takeUntil(click$)
     ).subscribe(console.log);
 
-</pre>
+```
 - `distinctUntilChanged()` emits unique values based on a === comparison (so has to be same type) to the last emitted value . It can take a comparison function to work out whether a value has changes
 - `distinctUntilKeyChanged(n)` takes a string property name (n) and  
-<pre>
+```typescript
 const user = [
   { name: 'Brian', loggedIn: false, token: null },
   { name: 'Brian', loggedIn: true, token: 'abc' },
@@ -273,12 +275,12 @@ const name$ = state$.pipe(
   map((state: any) => state.name)
 );
 name$.subscribe(console.log);
-</pre>
+```
 
 ### Introduction to Rate Limiting Operators (`debounceTime`, `throttleTime`, `sampleTime` and `auditTime`)
 - Rate limiting operators represent a subset of filtering operators which ignore values based on certain time windows. You can use time-based criteria to either do sampling or emitting after a pause
 - `debounceTime(n)` allows you to emit a value after a certain time n (in ms) has passed (prime examples are saving from user input or making a request for data after a certain time like a search ahead) 
-<pre>
+```typescript
     const input$ = fromEvent(inputBox, 'keyup');
     input$.pipe(
         debounceTime(200),
@@ -286,10 +288,10 @@ name$.subscribe(console.log);
         distinctUntilChanged()
       )
       .subscribe(console.log);
-</pre>
+```
 - `debounce(fn)` accepts fun which can set the interval so this is useful if you need to dynamically set the debounce time so we can mimic the debounceTime of 1000 by using `debounce( () => internal(1000))` 
 - `throttleTime(n)` allows first value to be emitted and then all values are ignored for n milliseconds (so use for spammy events). It can take an *`aschyncScheduler`* which allows you set then the value should be emitted (i.e. *leading* or *trailing* edge of time window)
-<pre>
+```typescript
     const input$ = fromEvent(inputBox, 'keyup');
     input$.pipe(
         throttleTime(3000),  
@@ -297,26 +299,26 @@ name$.subscribe(console.log);
         distinctUntilChanged()
       )
       .subscribe(console.log);
-</pre>
+```
 - `sampleTime(n)` emits the most recently emitted value on the source Observaable based on a sample time interval n and is then repeated (and unlike `debounce` and `throttle` the sample time *begins on subscription*). So this lets you sample from a stream based on a specified duration.
-<pre>
+```typescript
     const click$ = fromEvent(document, 'click');
     const timer$ = interval(1000);
     click$.pipe(
         sampleTime(4000),
         map(({ clientX, clientY }) => ( { clientX, clientY }))
       ).subscribe(console.log);
-</pre>
+```
 - `sample(o)` allows you to sample from the source based on a notifier observable
-<pre>
+```typescript
     const timer$ = interval(1000);
     const click$ = fromEvent(document, 'click');
     timer$.pipe(
       sample(click$)
     ).subscribe(console.log);
-</pre>
+```
 - `auditTIme(n)` ignores source values for the specified duration after an emitted value. After this window has passed, the last emitted value from the source observable is emitted. Note that `auditTime` differs from `sampleTime` as the silence windows is triggered by emitted values from the source rather than repeated after subscription and differs from 'throttleTime' as 'auditTime' emits a value on the trailing edge of the silence window rather than the value on the leading edge.
-<pre>
+```typescript
 const timer$ = interval(1000);
 click$
   .pipe(
@@ -328,12 +330,12 @@ click$
     map(({clientX, clientY}) => ({clientX, clientY}))
   )
   .subscribe(console.log);
-</pre>
+```
 
 ### Transformaton Operators (`mergeMap`, `switchMap`, `concatMap` and  `exhaustMap`)
 - Among the most popular transformation operators are **flattening operators** which take an Observable that itself emits an Observable subscribing internally and emitting the results to the outer stream
 - `mergeMap(o)` maps each value to an Observable and then flattens these observables (so when the inner Observable emits a value so does the outer Observable. What makes `mergeMap` unique is that it doesn't put a limit on subscriptions on inner observables but this also makes it dangerous and you can easily get memory leaks). Use `mergeMap` when you want fine-grained control of over the lifetime of any inner observable particularly when if this depends on output from another observable.
-<pre>
+```typescript
     const interval$ = interval(1000);
     const click$ = fromEvent(document, 'click');
     const mousedown$ = fromEvent(document, 'mousedown');
@@ -344,9 +346,9 @@ click$
           takeUntil(mouseup$)    //has a finite lifetime based on another event
         ))
      ).subscribe(console.log);
-</pre>
+```
 - `mergeMap` is good for fire-and-forget (e.g. save request you do not want to be cancelled.) In this example, we are emulating a save of coordinates when the user clicks:
-<pre>
+```typescript
     const coordinates$ = click$.pipe(
       map((event: any) => ({x: event.clientX,y: event.clientY}))
     );
@@ -355,17 +357,17 @@ click$
     );
     coordinatesWithSave$.subscribe(console.log);
 
-</pre>
+```
 - `switchMap()` is safest default for flattening as it maps each value to an Observable and flattens that Observable but **only maintains one active inner subscription** so each time we map to a new Observable the previous is completed. In the example, If you click once a new interval observable will be subscribed to internally, with its values emitted. When you click again, that observable will be completed, and the next interval will be subscribed to, restarting the count. This will happen on each emission from the `click$` observable.
-<pre>
+```typescript
     const interval$ = interval(1000);
     const click$ = fromEvent(document, 'click');
     click$.pipe(
       switchMap(() => interval$)
     ).subscribe(console.log);
-</pre>
+```
 - A typical use case of `switchMap` is for **type ahead** functionality such as this example where we fire GET requests at a search engine:
-<pre>
+```typescript
     const input$ = fromEvent(inputBox, 'keyup');
     input$.pipe(
         debounceTime(200),
@@ -382,9 +384,9 @@ click$
       .subscribe((response: any[]) => {
         typeaheadContainer.innerHTML = response.map(b => b.name).join('<br>'); //update the UI
       });
-</pre>
+```
 - `concatMap()` maps a value to an observable and flattens the result but unlike `mergeMap` or `switchMap` queues them until each completes. So it used when you need **maintain order of execution** and the **inner observables have finite life spans**. Think of it as first-come-first-served so you need it when you need to maintain order of request on the client rather than the server (e.g quiz answers)
-<pre>
+```typescript
     const saveAnswer = answer => {
       return of(`Saved: ${answer}`).pipe(delay(1500));  // simulate delayed request
     };
@@ -397,7 +399,7 @@ click$
         concatMap((event: any) => saveAnswer(event.target.value))
       )
       .subscribe(console.log);
-</pre>
+```
 
 - `exhaustMap()` (like concatMap and switchMap) only maintains one inner subscription but the difference is how it manages new values being emitted when an inner subscription is already active. While switchMap switches to it and concatMap queues it, exhaustMap just ignores it (or throws it away). Use `exhaustMap` where yo want to ignore subsequent value (e.g. making a post for authentication - we wouldn't want to queue these or switch to a second post as we just want to wait until the first post returns)
 
@@ -408,7 +410,7 @@ click$
 - RxJS has special operator for *retrying*
 
 
-<pre>
+```typescript
     const input$ = fromEvent(inputBox, 'keyup');
     input$.pipe(
         debounceTime(200),
@@ -427,11 +429,11 @@ click$
         // update ui
         typeaheadContainer.innerHTML = response.map(b => b.name).join('<br>');
       });
-</pre>
+```
 
 ### Combination Operators (`startWith()`, `endWith()`, `merge()`, `combineLatest()` and `forkJoin()`)
 - `startWith()` appends a specified value (or values) to the start of a stream (and `endWith()` appends values to the end of a stream):
-<pre>
+```typescript
     const counter$ = interval(1000);
     const abort$ = fromEvent(abortButton, 'click');
     const COUNTDOWN_FROM = 10;
@@ -452,10 +454,10 @@ click$
           message.innerHTML = 'Liftoff!';
         }
       });
-</pre>
+```
 - `concat()` lets you create an observable from a variable number of other variables. On subscription, `concat()` will **subscribe to the inner observables in order** ( so it effectively **queues** the other observables) and it will only take values from the other inner observables when each has completed. Therefore, the primary use case of concat is where you wish to *maintain order* of observables
 - You can use `concat()` as a creation operator and a pipe operator
-<pre>
+```typescript
     const delayed$ = empty().pipe(delay(1000));
     delayed$.pipe(
         concat(
@@ -467,9 +469,9 @@ click$
         startWith('Get Ready!')
       )
       .subscribe(console.log);
-</pre>
+```
 - `merge()` lets you create an observable from a variable number of other variables and on subscription `merge()` subscribes to **all these observables** at once, **emitting any values as they occur**
-<pre>
+```typescript
     const counter$ = interval(1000);
     const pauseClick$ = fromEvent(pauseButton, 'click');
     const startClick$ = fromEvent(startButton, 'click');
@@ -497,9 +499,9 @@ click$
         message.innerHTML = 'Liftoff!';
       }
     });
-</pre>
+```
 - `combineLatest()` will combine a number of observables and **after each observable has emitted at least one value** then `combineLatest()` will emit an array containing the **latest emitted values from each** inner observables . The use case for combine latest `combineLatest()` is when you want to do an update based on the status of two thing or more things
-<pre>
+```typescript
     const first = document.getElementById('first');
     const second = document.getElementById('second');
     const keyup$ = fromEvent(document, 'keyup');
@@ -520,16 +522,16 @@ click$
       }),
       map(([first, second]) => first + second)
     ).subscribe(console.log);
-</pre>
+```
 
 - `forkJoin()` will combine a number of observables and on subscription will subscribe to all inner observables but only after **all inner observables have completed** will the **last emitted values from each** inner observable be emitted as an array. So The use cases for forkJoin are generally similar to Promise.all
-<pre>
+```typescript
     const GITHUB_API_BASE = 'https://api.github.com';
     forkJoin({
       user: ajax.getJSON(`${GITHUB_API_BASE}/users/reactivex`),
       repo: ajax.getJSON(`${GITHUB_API_BASE}/users/reactivex/repos`)
     }).subscribe(console.log);
-</pre>
+```
 
 ### RxJS's `Subject`
 - An `Observable` is by default unicast. (*Unicasting* means that each subscribed observer owns an independent, individual execution path of the Observable.) RxJs's `Subject` is still an Observable (and it also an Observer so it has next, error and complete method) allows for sharing an execution of **multicasting** so it can broadcast changes to other observables which are subscribed to the Subject. We use `Subject` to share state amongst multiple components. Subjects comes in various flavours:
@@ -537,7 +539,7 @@ click$
   - `ReplaySubject` is used to replay values to late subscribers
   - `AsyncSubject` is ued to emitting the last values to subscribers before completion
 - **Warning:** Generally we do not want to expose a Subject directly as anything which has the subject can then send values. (In Angular we might want to hide the subject behind a service.) But we may want to expose the subject as an observable to the other consumers/subscribers and `Subject` has a `toObservable()` method    
-<pre>
+```typescript
     const observer = {
       next: val => console.log('next', val),
       error: err => console.log('error', err),
@@ -548,12 +550,12 @@ click$
     const subscription = subject.subscribe(observer);
     const secondSubscription = subject.subscribe(observer);
     subject.next('World');
-</pre>    
+```    
 
 ### Sharing state using `multicast` and `share()`      
 - Most common use case for Subject is converting from unicast to multicast and sometimes we wan to share state amongst observables. The `share()` operator which internally uses a subject to multicast any value it receives to other subscribers
 - In this example, the multicast returns a `ConnectableObservable` so we have to connect and unsubscribe from this ConnectedObservable:
-<pre>
+```typescript
     const interval$ = interval(2000).pipe(
       tap(i => console.log('new interval', i))
     );
@@ -568,11 +570,11 @@ click$
     setTimeout(() => {
       connectedSub.unsubscribe();
     }, 3000);
-</pre>
+```
 
 Rather than call `unsubscribe()` on the ConnectedObservable, the `refCount()` operator can do this:
 
-<pre>
+```typescript
     const interval$ = interval(2000).pipe(
       tap(i => console.log('new interval', i))
     );
@@ -588,11 +590,11 @@ Rather than call `unsubscribe()` on the ConnectedObservable, the `refCount()` op
         subOne.unsubscribe();
         subTwo.unsubscribe();
     }, 3000);
-</pre>
+```
 
 This process of calling multicast with a refcount is so common RxJs provides `share()` which use `multicast()` and `refCount()` behind the scenes: 
 
-<pre>
+```typescript
     const observer = {
       next: val => console.log('next', val),
       error: err => console.log('error', err),
@@ -611,11 +613,11 @@ This process of calling multicast with a refcount is so common RxJs provides `sh
       subOne.unsubscribe();
       subTwo.unsubscribe();
     }, 3000);
-    </pre>
+    ```
 ### `BehaviourSubject`
 - If you late subscribers want to receive the last submitted value (or a seed value) then you want `BehaviourSubject` so use this when the delivery of current state to late subscribers is important
 
-  <pre>
+  ```typescript
     const observer = {
       next: val => console.log('next', val),
       error: err => console.log('error', err),
@@ -636,11 +638,11 @@ This process of calling multicast with a refcount is so common RxJs provides `sh
     //You can also access the current value of the BehaviorSubject synchronously by calling getValue(), 
     //although this is generally not advised.
     console.log('getValue()', subject.getValue());
-  </pre>
+  ```
 
 ### Implementing an ObservableStore using Subjects
 
-<pre>
+```typescript
     export class ObservableStore {
       
       private _store: BehaviorSubject<any>;
@@ -679,12 +681,12 @@ This process of calling multicast with a refcount is so common RxJs provides `sh
     store.updateState({isAuthenticated: true});
     store.updateState({isAuthenticated: false});
 
-</pre>
+```
 
 ### `ReplaySubject`
 - `ReplaySubject` is used to emit old values to new subscribers and are typically used when late subscribers are required to receive more than the last emitted value (or seed) or need to reply all values. The typical use case is where you need a late subscriber to receeive all previously emitted values. `ReplaySubject` also takes an integer argument specifyng the number of values to be replayed if you don't want the entire history. 
 - Unlike `BehaviourSubject`, `ReplaySubject` does not accept an initial seed value. If you have an initial state and only want o  want to receive updated state then use `BehaviourSubject`
-<pre>
+```typescript
     const observer = {
       next: val => console.log('next', val),
       error: err => console.log('error', err),
@@ -700,5 +702,4 @@ This process of calling multicast with a refcount is so common RxJs provides `sh
     subject.next('Goodbye!');
     subject.next('World!');
     const thirdSubscription = subject.subscribe(observer);
-
-</pre>
+```
