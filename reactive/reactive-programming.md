@@ -838,5 +838,99 @@ public class NameGenerator {
 ----
 
 ## Sinks
-- Sinks is both a publisher and a subscriber and allows us to control values which we are emitting
+- Sinks is both a publisher and a subscriber and allows us to control values which we are emitting. A simple sink which emits a mono can be created using `Sinks.One<T> sink = Sinks.one()`:
+- By default sinks are thread-safe
 
+```java
+    Sinks.One<Object> sink = Sinks.one();
+    Mono<Object> mono = sink.asMono();
+    mono.subscribe(Util.subscriber("sam"));
+    mono.subscribe(Util.subscriber("mike"));
+    sink.tryEmitValue("Hello");
+```
+- The `emitValue` internally calls `tryEmitValue` so the former take a value and retry handler:
+
+```java
+    Sinks.One<Object> sink = Sinks.one();
+    Mono<Object> mono = sink.asMono();
+    mono.subscribe(Util.subscriber("sam"));
+    mono.subscribe(Util.subscriber("mike"));
+    sink.emitValue("hi", (signalType, emitResult) -> {
+        System.out.println(signalType.name());
+        System.out.println(emitResult.name());
+        return false;
+    });
+    sink.emitValue("hello", (signalType, emitResult) -> {
+        System.out.println(signalType.name());
+        System.out.println(emitResult.name());
+        return false;
+     });
+```
+
+| Type             | Behaviour  | Pub:Sub                                              |
+|------------------|------------|------------------------------------------------------|
+| one              | Mono       | 1:N                                                  |
+| many - unicast   | Flux       | 1:1  (only 1 subscriber)                             |
+| many - multicast | Flux       | 1:N  (n subscribers)                                 |
+| many - replay    | Flux       | 1:N  (with replay of all values to late subscribers) |
+
+- Example of unicast sink - in this example the second subscriber will receive an error `UnitcastProcessor allows only a single Subcriber` - to fix this then use `Sinks.many().multicast()` :
+
+```java
+    // handle through which we would push items
+    Sinks.Many<Object> sink = Sinks.many().unicast().onBackpressureBuffer();
+    // handle through which subscribers will receive items
+    Flux<Object> flux = sink.asFlux();
+    flux.subscribe(Util.subscriber("sam"));
+    flux.subscribe(Util.subscriber("mike"));
+    sink.tryEmitNext("hi");
+    sink.tryEmitNext("how are you");
+    sink.tryEmitNext("?");
+```
+- In this example, we use a retry handler because we are inserting into a non-threadsafe ArrayList :
+
+```java
+        // handle through which we would push items
+        Sinks.Many<Object> sink = Sinks.many().unicast().onBackpressureBuffer();
+        // handle through which subscribers will receive items
+        Flux<Object> flux = sink.asFlux();
+        List<Object> list = new ArrayList<>();
+        flux.subscribe(list::add);
+        for (int i = 0; i < 1000; i++) {
+            final int j = i;
+            CompletableFuture.runAsync(() -> {
+                sink.emitNext(j, (s, e) -> true);
+            });
+        }
+        Util.sleepSeconds(3);
+        System.out.println(list.size());
+```
+ - You are some options with  we can use with mutlicast:
+   - `directAllOrNothing` => prevents buffering behaviour for first subscriber - either everyone gets the results of noone gets them (so 1+ subscriber can slow others down)
+   - `directBestEffort` => other slower subscribers do not impact performance 
+
+```java
+        System.setProperty("reactor.bufferSize.small", "16");
+        Sinks.Many<Object> sink = Sinks.many().multicast().directBestEffort();  // handle through which we would push items
+        Flux<Object> flux = sink.asFlux(); // handle through which subscribers will receive items
+        flux.subscribe(Util.subscriber("sam"));
+        flux.delayElements(Duration.ofMillis(200)).subscribe(Util.subscriber("mike")); //this subscriber is slower at processing
+        for (int i = 0; i < 100; i++) {
+            sink.tryEmitNext(i);
+        }
+        Util.sleepSeconds(10);
+```     
+
+- `replay()' provides more of a history/cacheing type strategy:
+
+```java
+        Sinks.Many<Object> sink = Sinks.many().replay().all();
+        Flux<Object> flux = sink.asFlux();
+        sink.tryEmitNext("hi");
+        sink.tryEmitNext("how are you");
+        flux.subscribe(Util.subscriber("sam"));
+        flux.subscribe(Util.subscriber("mike"));
+        sink.tryEmitNext("?");
+        flux.subscribe(Util.subscriber("jake"));
+        sink.tryEmitNext("new msg");
+```
