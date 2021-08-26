@@ -921,7 +921,7 @@ public class NameGenerator {
         Util.sleepSeconds(10);
 ```     
 
-- `replay()' provides more of a history/cacheing type strategy:
+- `replay()` provides more of a history/cacheing type strategy:
 
 ```java
         Sinks.Many<Object> sink = Sinks.many().replay().all();
@@ -934,3 +934,36 @@ public class NameGenerator {
         flux.subscribe(Util.subscriber("jake"));
         sink.tryEmitNext("new msg");
 ```
+
+----
+
+## Context
+
+The context object is a map which allows supplementary data to be provided in key/value pairs
+
+```java
+    public static void main(String[] args) {
+        getWelcomeMessage()
+                .contextWrite(ctx -> ctx.put("user", ctx.get("user").toString().toUpperCase()))
+                .contextWrite(Context.of("user", "sam"))
+                .subscribe(Util.subscriber());
+    }
+
+
+    private static Mono<String> getWelcomeMessage(){
+        return Mono.deferContextual(ctx -> {
+            if(ctx.hasKey("user")){
+                return Mono.just("Welcome  " + ctx.get("user"));
+            }else{
+                return Mono.error(new RuntimeException("unauthenticated"));
+            }
+        });
+    }
+```
+
+----
+
+## Unit-testing with Step Verifier
+-  For using step verifier you required the `reactor-test` dependency
+
+
