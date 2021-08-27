@@ -8,22 +8,30 @@
   - **Services** are generally the data layer and so make API requests
   - **Directives** are bound to an existing element (or inside a template) and attach behaviour, extend, or transform a particular element and its children 
   - **Routing** renders a component based on the URL state
-  
+
+#### Angular Concepts
+
+- `imports` makes the exported declarations of other modules available in the current module
+- `declarations` are to make directives (including components and pipes) from the current module available to other directives in the current module. Selectors of directives, components or pipes are only matched against the HTML if they are declared or imported.
+- `providers` are to make services and values known to DI (dependency injection). They are added to the root scope and they are injected to other services or directives that have them as dependency.
+- A special case for providers are lazy loaded modules that get their own child injector. providers of a lazy loaded module are only provided to this lazy loaded module by default (not the whole application as it is with other modules).
+
+
 #### Simple Component Example
 - To make a component, we import `Component`, set the `styleUrls` property to our [Sass](https://sass-lang.com/) stylesheet, define the template our HTML and finally we export our component.
 - The `selector` refers to the name of the html tag we'll use to embed our component
 - In this example, we use the sugar syntax (`{}`) for **interpolation** to bind the title property/expression in the HTML template  
 
-  <pre>
+```typescript
     import { Component } from '@angular/core';
     
     @Component({
       selector: 'app-root',
       styleUrls: ['app.component.scss'],
       template: `
-        &lt;div class="app"&gt;
+        <div class="app">
           {{ title }}
-        &lt;/div&gt;
+        </div>
       `
     })
     export class AppComponent {
@@ -32,13 +40,13 @@
         this.title = 'Ultimate Angular';
       }
     }
-  </pre> 
+``` 
   
 #### Root module with @NgModule
 - Angular modules are similar to ES5 modules and we use import/export but the @NgModule annotation works as a special decorator. (We don't need to add the `.ts` extension for our component.) 
-- We include NgModule, BrowserModule (for Broswer functionality) and CommonModule (for templating and directives) and add these to our `imports` section and then add our component to `declarations` and `bootstrap`. (Here, `bootstrap` corresponds to the &lt;appRoot&gt; tag in our HTML.
+- We include NgModule, BrowserModule (for Broswer functionality) and CommonModule (for templating and directives) and add these to our `imports` section and then add our component to `declarations` and `bootstrap`. (Here, `bootstrap` corresponds to the <appRoot> tag in our HTML.
 
-  <pre>
+```typescript
     import { NgModule } from '@angular/core';
     import { BrowserModule } from '@angular/platform-browser';
     import { CommonModule } from '@angular/common';
@@ -58,37 +66,37 @@
       ]
     })
     export class AppModule {}
-  </pre>
+```
   
 #### Bootstrapping Angular
 - We bootstrap Angular with our `main.ts` file. We import from Angular's `@angular/platform-browser-dynamic` which allows us to perform dependecy injection and then using the imported `platformBrowserDynamic()` function we tell it which module to bootsrap:
 
-  <pre>
+```typescript
     import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
     import { AppModule } from './app/app.module';
     
     platformBrowserDynamic().bootstrapModule(AppModule);
-  </pre>
+```
 
 
 #### Property Binding And Event Binding (`ngModelChange`)
  - We use `square bracket` notation to indicate **one-way dataflow** for binding a property (instead of standard sugar syntax for interpolation which is curly brackets)
  
-   <pre>
-      &lt;h1 [innerHTML]="title"&gt;&lt;/h1&gt;      
-      &lt;img [src]="logo"&gt;                     //we bind the expression 'logo' which might be 'img/logo.svc'   
-   </pre>
+ ```html
+      <h1 [innerHTML]="title"></h1>      
+      <img [src]="logo">                     //we bind the expression 'logo' which might be 'img/logo.svc'   
+ ```
       
 - We can perform **event binding** using normal brackets `()` and...
 
-   <pre>
-     &lt;button (click)="handleClick()" &gt;
-     &lt;input type="text" [value]="{{name}}" (input)="handleInput($event)" (blur)="handleBlur($event)"&gt;
-   </pre>
+ ```html
+     <button (click)="handleClick()" >
+     <input type="text" [value]="{{name}}" (input)="handleInput($event)" (blur)="handleBlur($event)">
+ ```
    
 - ...then add the event handler function to our component:
 
-  <pre>
+```typescript
     export class AppComponent {
           title: string;
           constructor() {
@@ -105,85 +113,85 @@
             console.log(event);
           }
         }
-  </pre>
+```
      
 - To perform **two-way data-binding** we have to use Angular's Forms Module so `import { FormsModule } from '@angular/forms'` and add it to our imports array
 - We use combination of normal and square brackets `[()]` to tell Angular we are using two-way data-binding
 
-   <pre>
-     &lt;button (click)=@handleClick()" &gt;
-     &lt;input type="text" [ngModel]="{{name}}" (ngModelChange)="handleChange($event)"&gt;
+ ```html
+     <button (click)=@handleClick()" >
+     <input type="text" [ngModel]="{{name}}" (ngModelChange)="handleChange($event)">
      
      //This uses two-way data-binding
-     &lt;input type="text" [(ngModel)]="{{name}}" (input)="handleChange($event)"&gt;ngModel)]="{{name}}"&gt;  
-   </pre>
+     <input type="text" [(ngModel)]="{{name}}" (input)="handleChange($event)">ngModel)]="{{name}}">  
+ ```
 
 #### Template Refs (`#`)
 - A template ref allows to set a reference to a DOM node using the # syntax. In this example, we give the input box a `#username` reference and pass the value of this node to the onClick function on our button: 
 
-  <pre>
-     &lt;button (click)=@handleClick(username.value)" &gt;
-     &lt;input type="text" #username"&gt;
-  </pre>   
+```html
+     <button (click)=@handleClick(username.value)" >
+     <input type="text" #username">
+```   
   
 #### Basic Angular Directives  
 - `ngIf` is Angular's if expression. Here name references a javascript variable. (Note that the * in `*ngIf` refers to a [WebComponent](https://developer.mozilla.org/en-US/docs/Web/Web_Components) template element. Angular sits on top of the Web Platform so we can use things like [ShadowDom](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM) and so in reality Angular is using the directive to put the our HTML inside a template which is what the * really represents)
 
-  <pre>
-      &lt;input type="text" [value]="name" (input)="handleChange($event.target.value)"&gt;
-      &lt;div *ngIf="name.length &gt; 2"&gt;
+```html
+      <input type="text" [value]="name" (input)="handleChange($event.target.value)">
+      <div *ngIf="name.length > 2">
         Searching for... {{ name }}
-      &lt;/div&gt;  
-  </pre>
+      </div>  
+```
 
 - `ngFor` is used to iterate over an iterable. Here we have an array of passenger objects which have a fullname property. Angular also exposes the index for us.
 
-  <pre>
-      &lt;li *ngFor="let passenger of passengers; let i = index;"&gt;
+```html
+      <li *ngFor="let passenger of passengers; let i = index;">
         {{i}} : {{ passenger.fullname }}
-      &lt;/li&gt;
+      </li>
       
 - `ngClass` is used to apply styling for CSS/SASS classes. In this example, when the boolean flag `checkedIn` the `checked-in` style is applied and then when checkedIn is false the `checked-out` class is applied
 
-  <pre>
-    &lt;ul&gt;
-      &lt;li *ngFor="let passenger of passengers; let i = index;"&gt;
-        &lt;span class="status" [ngClass]="{
+```html
+    <ul>
+      <li *ngFor="let passenger of passengers; let i = index;">
+        <span class="status" [ngClass]="{
               'checked-in': passenger.checkedIn,
               'checked-out': !passenger.checkedIn
-            }"&gt;
-        &lt;/span&gt;
+            }">
+        </span>
         {{ i }}: {{ passenger.fullname }}
-      &lt;/li&gt;
-    &lt;/ul&gt;  
-  </pre>
+      </li>
+    </ul>  
+```
 
 - `ngStyle` is another directive which allows CSS/SASS styling to be applied to elements
 
-   <pre>
-     &lt;li *ngFor="let passenger of passengers; let i = index;"&gt;
-       &lt;span class="status" [ngStyle]="{ backgroundColor: (passenger.checkedIn ? '#2ecc71' : '#c0392b')}"&gt;
-       &lt;/span&gt;
+ ```html
+     <li *ngFor="let passenger of passengers; let i = index;">
+       <span class="status" [ngStyle]="{ backgroundColor: (passenger.checkedIn ? '#2ecc71' : '#c0392b')}">
+       </span>
        {{ i }}: {{ passenger.fullname }}
-     &lt;/li&gt;  
-   </pre>
+     </li>  
+ ```
 
 #### Pipes
 - [Pipes](https://angular.io/guide/pipes) are functions for data transformation and can be applied (and chained) using `|` syntax similar to piping unix commands.
 - Examples of pipe are json (which turns a JS object into JSON), date (performs date formatting) and uppercase
-  <pre>
-    &lt;p&gt;{{ passenger | json }}&lt;/p&gt;
-    &lt;div class="date"&gt;
+```html
+    <p>{{ passenger | json }}</p>
+    <div class="date">
       Check in date: 
       {{ passenger.checkInDate ? (passenger.checkInDate | date: 'yMMMMd' | uppercase) : 'Not checked in' }}
-    &lt;/div&gt;
-  </pre>
+    </div>
+```
   
 #### Safe Navigation Operator (`?`)
 - The safe navigation operator allows us to perform an implicit null check:
-  <pre>
-     &lt;div class="children"&gt;Children: {{ passenger.children?.length || 0 }}&lt;/div&gt;
-  </pre>
+```html
+     <div class="children">Children: {{ passenger.children?.length || 0 }}</div>
+```
 
 #### Component Architecture and Presentational Components
 - One important distinction with respect to components is **container components** and **presentational components**. (These are also referred to as stateful/stateless components or smart/dumb components). Smart/Container components may *receive data from a service* and then feed dumb/presentational components.
@@ -191,7 +199,7 @@
 - To enforce separation of concerns we can divide up our application into **feature modules**. Here we create a feature module ([passenger-dashboard](https://github.com/UltimateAngular/angular-fundamentals-src/tree/master/16-container-component)) which lives in its own `passenger-dashboard` directory. We then import this module into our `app.ts` imports and the `imports` array. We also have to export it or it will not be available. (It's a good idea to put container compents into a subdirectory called `containers`.) 
 - Note that `app.css` in top level `css` directory applies global styles but we usually use encapsulated styles (i.e. scoped to the component) for each component (and in this example we use `passenger-dashboard.component.scss`)
   
-  <pre>
+```typescript
     import { NgModule } from '@angular/core';
     import { CommonModule } from '@angular/common';
     import { PassengerDashboardComponent } from './containers/passenger-dashboard/passenger-dashboard.component';
@@ -209,11 +217,11 @@
     })
     export class PassengerDashboardModule {}
     export class PassengerDashboardModule {}
-  </pre>
+```
  
 - We create a new component and create a `models` directory which contains our interfaces (which we should be exported!)
 
-  <pre>
+```typescript
     import { Component } from '@angular/core';
     import { Passenger } from '../../models/passenger.interface';
     
@@ -221,36 +229,36 @@
       selector: 'passenger-dashboard',
       styleUrls: ['passenger-dashboard.component.scss'],
       template: `
-        &lt;div&gt;
-          &lt;h3&gt;Airline Passengers&lt;/h3&gt;
-          &lt;ul&gt;
-            &lt;li *ngFor="let passenger of passengers; let i = index;"&gt;
-              &lt;span 
+        <div>
+          <h3>Airline Passengers</h3>
+          <ul>
+            <li *ngFor="let passenger of passengers; let i = index;">
+              <span 
                 class="status"
-                [class.checked-in]="passenger.checkedIn"&gt;&lt;/span&gt;
+                [class.checked-in]="passenger.checkedIn"></span>
               {{ i }}: {{ passenger.fullname }}
-              &lt;div class="date"&gt;
+              <div class="date">
                 Check in date: 
                 {{ passenger.checkInDate ? (passenger.checkInDate | date: 'yMMMMd' | uppercase) : 'Not checked in' }}
-              &lt;/div&gt;
-              &lt;div class="children"&gt;
+              </div>
+              <div class="children">
                 Children: {{ passenger.children?.length || 0 }}
-              &lt;/div&gt;
-            &lt;/li&gt;
-          &lt;/ul&gt;
-        &lt;/div&gt;
+              </div>
+            </li>
+          </ul>
+        </div>
       `
     })
     export class PassengerDashboardComponent {
       passengers: Passenger[] = [...passenger array...];
     }
-  </pre>
+```
    
 #### Lifecyle Hooks (`@OnInit`)
 - Lifecycle hooks allow Angular to perform certain actions on various lifecycle events. The `@OnInit` hook allows us to execute logic on initilisation of the component.
 - To use `@OnInit` we must import it from `'@angular/core` and declare that our class `implements OnInit` and then implement the `ngOnInit()` method: 
 
-  <pre>
+```typescript
     import { Component, OnInit } from '@angular/core';
     import { Passenger } from '../../models/passenger.interface';
     
@@ -258,24 +266,24 @@
       selector: 'passenger-dashboard',
       styleUrls: ['passenger-dashboard.component.scss'],
       template: `
-        &lt;div&gt;
-          &lt;h3&gt;Airline Passengers&lt;/h3&gt;
-          &lt;ul&gt;
-            &lt;li *ngFor="let passenger of passengers; let i = index;"&gt;
-              &lt;span 
+        <div>
+          <h3>Airline Passengers</h3>
+          <ul>
+            <li *ngFor="let passenger of passengers; let i = index;">
+              <span 
                 class="status"
-                [class.checked-in]="passenger.checkedIn"&gt;&lt;/span&gt;
+                [class.checked-in]="passenger.checkedIn"></span>
               {{ i }}: {{ passenger.fullname }}
-              &lt;div class="date"&gt;
+              <div class="date">
                 Check in date: 
                 {{ passenger.checkInDate ? (passenger.checkInDate | date: 'yMMMMd' | uppercase) : 'Not checked in' }}
-              &lt;/div&gt;
-              &lt;div class="children"&gt;
+              </div>
+              <div class="children">
                 Children: {{ passenger.children?.length || 0 }}
-              &lt;/div&gt;
-            &lt;/li&gt;
-          &lt;/ul&gt;
-        &lt;/div&gt;
+              </div>
+            </li>
+          </ul>
+        </div>
       `
     })
     export class PassengerDashboardComponent implements OnInit {
@@ -286,12 +294,12 @@
         this.passengers = [...some data...;
       }
     }
-  </pre>
+```
   
 #### Presentational Components
 - To use presentaional components, we must first change our feature moddule so that we import our presentational components (`PassengerCountComponent` and `PassengerDetailComponent`) and add them to declarations but we **don't export** them as only our container needs to know about them. 
 
-  <pre>
+```typescript
     import { NgModule } from '@angular/core';
     import { CommonModule } from '@angular/common';
     import { PassengerDashboardComponent } from './containers/passenger-dashboard/passenger-dashboard.component';
@@ -312,24 +320,24 @@
       ]
     })
     export class PassengerDashboardModule {}
-  </pre>
+```
   
 - This is our simple presentational component. Note that our selector will be the name of the HTML tag we embed in our container
-  <pre>
+```typescript
     import { Component } from '@angular/core';
     
     @Component({
       selector: 'passenger-count',
-      template: `&lt;div&gt; Count component &lt;§/div&gt;`
+      template: `<div> Count component <§/div>`
     })
     export class PassengerCountComponent {
       constructor() {}
     }
-  </pre>
+```
   
 - Our simplified container now contains our `passenger-count` and `passenger-detail` components:
   
-  <pre>
+```typescript
       import { Component, OnInit } from '@angular/core';
       import { Passenger } from '../../models/passenger.interface';
       
@@ -337,12 +345,12 @@
         selector: 'passenger-dashboard',
         styleUrls: ['passenger-dashboard.component.scss'],
         template: `
-          &lt;div&gt;
-            &lt;passenger-count&gt;&lt;/passenger-count&gt;
-            &lt;passenger-detail&gt;&lt;/passenger-detail&gt;
-            &lt;h3&gt;Airline Passengers&lt;/h3&gt;
+          <div>
+            <passenger-count></passenger-count>
+            <passenger-detail></passenger-detail>
+            <h3>Airline Passengers</h3>
            ....
-          &lt;/div&gt;
+          </div>
         `
       })
       export class PassengerDashboardComponent implements OnInit {
@@ -352,42 +360,42 @@
           this.passengers = [...data....];
         }
       }
-  </pre>
+```
   
 #### Binding Input Data with `@Input()`
 - We bind data to out container component using standard square bracket (`[]`) syntax. For iteration, we can use `*ngFor` and bind our individual collection element (i.e. `[detail]="passenger"`)
 
-  <pre>
+```typescript
     @Component({
       selector: 'passenger-dashboard',
       styleUrls: ['passenger-dashboard.component.scss'],
       template: `
-        &lt;div&gt;
-          &lt;passenger-count [items]="passengers"&gt;
-          &lt;/passenger-count&gt;
+        <div>
+          <passenger-count [items]="passengers">
+          </passenger-count>
           
-          &lt;passenger-detail *ngFor="let passenger of passengers;" [detail]="passenger"&gt;
-          &lt;/passenger-detail&gt;
-        &lt;/div&gt;
+          <passenger-detail *ngFor="let passenger of passengers;" [detail]="passenger">
+          </passenger-detail>
+        </div>
       `
     })
-  </pre>
+```
 
 - ...then can use Angular's `@Input()` annotation to bind one-way input data  
 
-  <pre>
+```typescript
     import { Component, Input } from '@angular/core';
     import { Passenger } from '../../models/passenger.interface';
     
     @Component({
       selector: 'passenger-count',
       template: `
-        &lt;div&gt;
-          &lt;h3&gt;Airline Passengers!&lt;/h3&gt;
-          &lt;div&gt;
+        <div>
+          <h3>Airline Passengers!</h3>
+          <div>
             Total checked in: {{ checkedInCount() }}/{{ items.length }}
-          &lt;/div&gt;
-        &lt;/div&gt;
+          </div>
+        </div>
       `
     })
     export class PassengerCountComponent {
@@ -395,14 +403,14 @@
       items: Passenger[];
       checkedInCount(): number {
         if (!this.items) return;
-        return this.items.filter((passenger: Passenger) =&g§t; passenger.checkedIn).length;
+        return this.items.filter((passenger: Passenger) =(passenger.checkedIn).length;
       }
     }
-  </pre>
+```
   
 - For out iterated element we again add the `@Input()` annotation
 
-  <pre>
+```typescript
     import { Component, Input } from '@angular/core';  
     import { Passenger } from '../../models/passenger.interface';
     
@@ -410,17 +418,17 @@
       selector: 'passenger-detail',
       styleUrls: ['passenger-detail.component.scss'],
       template: `
-        &lt;div&gt;
-          &lt;span class="status" [class.checked-in]="detail.checkedIn"&gt;&lt;/span&gt;
+        <div>
+          <span class="status" [class.checked-in]="detail.checkedIn"></span>
           {{ detail.fullname }}
-          &lt;div class="date"&gt;
+          <div class="date">
             Check in date: 
             {{ detail.checkInDate ? (detail.checkInDate | date: 'yMMMMd' | uppercase) : 'Not checked in' }}
-          &lt;/div&gt;
-          &lt;div class="children"&gt;
+          </div>
+          <div class="children">
             Children: {{ detail.children?.length || 0 }}
-          &lt;/div&gt;
-        &lt;/div&gt;
+          </div>
+        </div>
       `
     })
     export class PassengerDetailComponent {
@@ -428,14 +436,14 @@
       detail: Passenger;
       constructor() {}
     }
-  </pre>  
+```  
   
   
 #### Emitting changes with `@Output()` and Event Emitters
 - For getting data out of a component we import `Output` and `EventEmitter`
 - Here we have a child (presentational) component which emits custom output events for `onRemove()` and `onEdit()` using an `EventEmitter`. We then fire the event using the emitter with our object that's being edited/removed and this event will notify our parent (container) component. 
 
-  <pre>
+```typescript
     import { Component, Input, Output, EventEmitter } from '@angular/core';
     import { Passenger } from '../../models/passenger.interface';
     
@@ -443,21 +451,21 @@
       selector: 'passenger-detail',
       styleUrls: ['passenger-detail.component.scss'],
       template: `
-        &lt;div&gt;
-          &lt;span class="status" [class.checked-in]="detail.checkedIn"&gt;&lt;/span&gt;
-          &lt;div *ngIf="editing"&gt;
-            &lt;input  type="text"  [value]="detail.fullname" (input)="onNameChange(name.value)" #name&gt;
-          &lt;/div&gt;
-          &lt;div *ngIf="!editing"&gt;{{ detail.fullname }}&lt;/div&gt;
-          &lt;div class="date"&gt; Check in date:  {{ detail.checkInDate ? (detail.checkInDate | date: 'yMMMMd' | uppercase) : 'Not checked in' }}&lt;/div&gt;
-          &lt;div class="children"&gt;  Children: {{ detail.children?.length || 0 }} &lt;/div&gt;
-          &lt;button (click)="toggleEdit()"&gt;
+        <div>
+          <span class="status" [class.checked-in]="detail.checkedIn"></span>
+          <div *ngIf="editing">
+            <input  type="text"  [value]="detail.fullname" (input)="onNameChange(name.value)" #name>
+          </div>
+          <div *ngIf="!editing">{{ detail.fullname }}</div>
+          <div class="date"> Check in date:  {{ detail.checkInDate ? (detail.checkInDate | date: 'yMMMMd' | uppercase) : 'Not checked in' }}</div>
+          <div class="children">  Children: {{ detail.children?.length || 0 }} </div>
+          <button (click)="toggleEdit()">
             {{ editing ? 'Done' : 'Edit' }}
-          &lt;/button&gt;
-          &lt;button (click)="onRemove()"&gt;
+          </button>
+          <button (click)="onRemove()">
             Remove
-          &lt;/button&gt;
-        &lt;/div&gt;
+          </button>
+        </div>
       `
     })
     export class PassengerDetailComponent {
@@ -480,11 +488,11 @@
       }
       onRemove() { this.remove.emit(this.detail); }
     }
-  </pre>
+```
   
 - In our **container component**, we can now implement the typed `handleEdit`/`handleRemove` methods and we do this preserving immutability and in our template we refer to the `passenger` object directly: 
 
-  <pre>
+```typescript
      import { Component, OnInit } from '@angular/core';
      import { Passenger } from '../../models/passenger.interface';
      
@@ -492,17 +500,17 @@
        selector: 'passenger-dashboard',
        styleUrls: ['passenger-dashboard.component.scss'],
        template: `
-         &lt;div&gt;
-           &lt;passenger-count [items]="passengers"&gt; &lt;/passenger-count&gt;
-           &lt;div *ngFor="let passenger of passengers;"&gt;
+         <div>
+           <passenger-count [items]="passengers"> </passenger-count>
+           <div *ngFor="let passenger of passengers;">
              {{ passenger.fullname }}
-           &lt;/div&gt;
-           &lt;passenger-detail *ngFor="let passenger of passengers;"
+           </div>
+           <passenger-detail *ngFor="let passenger of passengers;"
              [detail]="passenger"
              (edit)="handleEdit($event)"
-             (remove)="handleRemove($event)"&gt;
-           &lt;/passenger-detail&gt;
-         &lt;/div&gt;`
+             (remove)="handleRemove($event)">
+           </passenger-detail>
+         </div>`
      })
      export class PassengerDashboardComponent implements OnInit {
        passengers: Passenger[];
@@ -524,13 +532,13 @@
          });
        }
      }
-  </pre> 
+``` 
   
 #### The `ngOnChanges` Lifecycle Hook
 - The `ngOnChanges` allows us to emit events containing state change and the event will have the `currentValue` and `previousValue` values. In this way, we can use the `ngOnChanges` hook to break the binding between the parent and child component. (We may need to do this to make sure edits are not immediately shown.)
 - In this example, we implement `ngOnChanges` (which is called before `ngOnInit`): we do a safety check and then we override the `detail` object with an empty object and *merge* it with the current value
 
-  <pre>
+```typescript
      import { Component, OnChanges, OnInit, Input, Output, EventEmitter } from '@angular/core';
      import { Passenger } from '../../models/passenger.interface';
      
@@ -538,27 +546,27 @@
        selector: 'passenger-detail',
        styleUrls: ['passenger-detail.component.scss'],
        template: `
-         &lt;div&gt;
-           &lt;span class="status" [class.checked-in]="detail.checkedIn"&gt;&lt;/span&gt;
-           &lt;div *ngIf="editing"&gt; 
-             &lt;input type="text"  [value]="detail.fullname" (input)="onNameChange(name.value)" #name&gt;
-           &lt;/div&gt;
-           &lt;div *ngIf="!editing"&gt;
+         <div>
+           <span class="status" [class.checked-in]="detail.checkedIn"></span>
+           <div *ngIf="editing"> 
+             <input type="text"  [value]="detail.fullname" (input)="onNameChange(name.value)" #name>
+           </div>
+           <div *ngIf="!editing">
              {{ detail.fullname }}
-           &lt;/div&gt;
-           &lt;div class="date"&gt;
+           </div>
+           <div class="date">
              Check in date: {{ detail.checkInDate ? (detail.checkInDate | date: 'yMMMMd' | uppercase) : 'Not checked in' }}
-           &lt;/div&gt;
-           &lt;div class="children"&gt;
+           </div>
+           <div class="children">
              Children: {{ detail.children?.length || 0 }}
-           &lt;/div&gt;
-           &lt;button (click)="toggleEdit()"&gt;
+           </div>
+           <button (click)="toggleEdit()">
              {{ editing ? 'Done' : 'Edit' }}
-           &lt;/button&gt;
-           &lt;button (click)="onRemove()"&gt;
+           </button>
+           <button (click)="onRemove()">
              Remove
-           &lt;/button&gt;
-         &lt;/div&gt;`
+           </button>
+         </div>`
      })
      export class PassengerDetailComponent implements OnChanges, OnInit {
      
@@ -591,7 +599,7 @@
          this.remove.emit(this.detail);
        }
      }
-  </pre>    
+```    
 
   
 #### Data Services And Dependency Injection
@@ -600,7 +608,8 @@
 - We also import `Headers` and `RequestOptions` so can set the content type on our Http header
 - We also import `catch` and `throw` for error handling
 
-  <pre>     
+```typescript
+ 
     import { Injectable } from '@angular/core';
     import { Http, Response, Headers, RequestOptions } from '@angular/http';
     
@@ -649,11 +658,11 @@
           .catch((error: any) => Observable.throw(error.json()));
       }
     }
-  </pre>
+```
   
 - Now in our container component we can use our new service (PassengerDashboardService). In `ngInit` and `handleRemove` and `handleEdit` methods we call `subscribe`:
 
-  <pre>
+```typescript
     import { Component, OnInit } from '@angular/core';
     import { PassengerDashboardService } from '../../passenger-dashboard.service';  
     import { Passenger } from '../../models/passenger.interface';
@@ -662,17 +671,17 @@
       selector: 'passenger-dashboard',
       styleUrls: ['passenger-dashboard.component.scss'],
       template: `
-        &lt;div&gt;
-          &lt;passenger-count [items]="passengers"&gt;&lt;/passenger-count&gt;
-          &lt;div *ngFor="let passenger of passengers;"&gt;
+        <div>
+          <passenger-count [items]="passengers"></passenger-count>
+          <div *ngFor="let passenger of passengers;">
             {{ passenger.fullname }}
-          &lt;/div&gt;
-          &lt;passenger-detail *ngFor="let passenger of passengers;"
+          </div>
+          <passenger-detail *ngFor="let passenger of passengers;"
             [detail]="passenger"
             (edit)="handleEdit($event)"
-            (remove)="handleRemove($event)"&gt;
-          &lt;/passenger-detail&gt;
-        &lt;/div&gt;`
+            (remove)="handleRemove($event)">
+          </passenger-detail>
+        </div>`
     })
     export class PassengerDashboardComponent implements OnInit {
       passengers: Passenger[];
@@ -704,11 +713,11 @@
           });
       }
     }
-  </pre>
+```
 
 #### Using Promises (As Replacement For RxJs Subscriptions)
 - Instead of using RxJs subscriptions we can use promises by importing `rxjs/add/operator/toPromise` and calling `toPromise()` on the respone
-  <pre>
+```typescript
     import { Injectable } from '@angular/core';
     import { Http, Response, Headers, RequestOptions } from '@angular/http';   
     import { Observable } from 'rxjs/Observable';
@@ -745,15 +754,15 @@
           .toPromise().then((response: Response) => response.json());
       } 
     }
-  </pre>
+```
 
 #### Template-Driven Forms with `ngForm` and `ngModel`, Inputs And Validation
 - To use forms we must import Angular's `FormsModule` in our feature module and also add it to our `imports` array
 - We bind the `form` element with templateRef `#form="ngForm"` and add `novalidate` as we will use Angular's validation.
  
- <pre>
-   import { FormsModule } from '@angular/forms';
- </pre>
+ ```typescript
+  import { FormsModule } from '@angular/forms';
+```
  
 - We now create a **form component** and pass in `detail` of type `Passenger` and decorate this an `@Input`. Meanwhile, in out template the `input` elements on our form are bound to `ngModel` using the safe-navigation operator (`?`) (e.g. `[ngModel]="detail?.fullname"`). Likewise, we bind `checkedIn` using a checkbox and bind a function with `ngModelChange` 
 - For our `select` dropdown we again bind using `ngModel` and then use an `*ngFor` for creating our dropdown `option` elements from a collection. We also implement the logic for `selected` on the `option` element to see if a selection has already been made. We have implemented `selected` using `[selected]="item.key === detail?.baggage">` but we could instead replace `value` and `selected` with `[ngValue]="item.key"` which provides the same functionality.
@@ -761,7 +770,7 @@
 - To prevent form submission if there are **validation errors** then we use `[disabled]="form.invalid"`
 - To implement **form submission**, we bind an event using `ngSubmit` and we submit the `form.value` which is of type Passenger and we also pass `form.valid` so we can do one final check on validation errors. Because this a stateless component, we don't want to interact with an API but instead we set up an `@Output` with an `EventEmitter<Passenger>` called `update` so that our container gets notified of the upate.
 
-  <pre>
+```typescript
     import { Component, Input, Output, EventEmitter } from '@angular/core';
     import { Passenger } from '../../models/passenger.interface';
     import { Baggage } from '../../models/baggage.interface';
@@ -770,44 +779,44 @@
       selector: 'passenger-form',
       styleUrls: ['passenger-form.component.scss'],
       template: `
-        &lt;form (ngSubmit)="handleSubmit(form.value, form.valid)" #form="ngForm" novalidate&gt;
-          &lt;div&gt;
+        <form (ngSubmit)="handleSubmit(form.value, form.valid)" #form="ngForm" novalidate>
+          <div>
             Passenger name:
-            &lt;input type="text" name="fullname" required #fullname="ngModel"
-              [ngModel]="detail?.fullname"&gt;
-            &lt;div *ngIf="fullname.errors?.required && fullname.dirty" class="error"&gt;
+            <input type="text" name="fullname" required #fullname="ngModel"
+              [ngModel]="detail?.fullname">
+            <div *ngIf="fullname.errors?.required && fullname.dirty" class="error">
               Passenger name is required
-            &lt;/div&gt;
-          &lt;/div&gt;
-          &lt;div&gt;
+            </div>
+          </div>
+          <div>
             Passenger ID:
-            &lt;input type="number" name="id" required #id="ngModel"
-              [ngModel]="detail?.id"&gt;
-            &lt;div *ngIf="id.errors?.required && id.dirty" class="error"&gt;
+            <input type="number" name="id" required #id="ngModel"
+              [ngModel]="detail?.id">
+            <div *ngIf="id.errors?.required && id.dirty" class="error">
               Passenger ID is required
-            &lt;/div&gt;
-          &lt;/div&gt;
-          &lt;div&gt;
-            &lt;label&gt;
-              &lt;input type="checkbox" name="checkedIn" [ngModel]="detail?.checkedIn"
-                (ngModelChange)="toggleCheckIn($event)"&gt;
-            &lt;/label&gt;
-          &lt;/div&gt;
-          &lt;div *ngIf="form.value.checkedIn"&gt;
+            </div>
+          </div>
+          <div>
+            <label>
+              <input type="checkbox" name="checkedIn" [ngModel]="detail?.checkedIn"
+                (ngModelChange)="toggleCheckIn($event)">
+            </label>
+          </div>
+          <div *ngIf="form.value.checkedIn">
             Check in date:
-            &lt;input type="number" name="checkInDate" [ngModel]="detail?.checkInDate"&gt;
-          &lt;/div&gt;
-          &lt;div&gt;
+            <input type="number" name="checkInDate" [ngModel]="detail?.checkInDate">
+          </div>
+          <div>
             Luggage:
-            &lt;select name="baggage" [ngModel]="detail?.baggage"&gt;
-              &lt;option *ngFor="let item of baggage"
-                [value]="item.key" [selected]="item.key === detail?.baggage"&gt;
+            <select name="baggage" [ngModel]="detail?.baggage">
+              <option *ngFor="let item of baggage"
+                [value]="item.key" [selected]="item.key === detail?.baggage">
                 {{ item.value }}
-              &lt;/option&gt;
-            &lt;/select&gt;
-          &lt;/div&gt;
-          &lt;button type="submit" [disabled]="form.invalid"&gt;Update passenger&lt;/button&gt;
-        &lt;/form&gt;`
+              </option>
+            </select>
+          </div>
+          <button type="submit" [disabled]="form.invalid">Update passenger</button>
+        </form>`
     })
     export class PassengerFormComponent {
       
@@ -817,7 +826,7 @@
       @Output()
       update: EventEmitter<Passenger> = new EventEmitter<Passenger>();
       
-      baggage: Baggage[] = [{....baggage data....}];
+      baggage: Baggage[] = [{...baggage data...}];
       
       toggleCheckIn(checkedIn: boolean) {
         if (checkedIn) {
@@ -831,48 +840,48 @@
         }
       }
     }
-  </pre>
+```
 
 - Instead of a checkbox for `checkedIn` we could use radio buttons and we need to add `[value]`:
 
-  <pre>
-     &lt;div&gt;
-        &lt;label&gt;
-          &lt;input type="radio" [value]="true" name="checkedIn" [ngModel]="detail?.checkedIn" (ngModelChange)="toggleCheckIn($event)"&gt;
+```typescript
+     <div>
+        <label>
+          <input type="radio" [value]="true" name="checkedIn" [ngModel]="detail?.checkedIn" (ngModelChange)="toggleCheckIn($event)">
           Yes
-        &lt;/label&gt;
-        &lt;label&gt;
-          &lt;input type="radio" [value]="false" name="checkedIn" [ngModel]="detail?.checkedIn" (ngModelChange)="toggleCheckIn($event)"&gt;
+        </label>
+        <label>
+          <input type="radio" [value]="false" name="checkedIn" [ngModel]="detail?.checkedIn" (ngModelChange)="toggleCheckIn($event)">
           No
-        &lt;/label&gt;
-      &lt;/div&gt;
-  </pre>
+        </label>
+      </div>
+```
   
 #### Component Routing
 
 - In our `index.html` we must include the `<base>` element inside our `<header>`:
  <pre>
-   &lt;!doctype html&gt;
-   &lt;html&gt;
-   &lt;head&gt;
-     &lt;base href="/"&gt;
-     &lt;title&gt;Ultimate Angular&lt;/title&gt;
-     &lt;link rel="stylesheet" href="/css/app.css"&gt;
-   &lt;/head&gt;
-   &lt;body&gt;
-     &lt;app-root&gt;&lt;/app-root&gt;
+   <!doctype html>
+   <html>
+   <head>
+     <base href="/">
+     <title>Ultimate Angular</title>
+     <link rel="stylesheet" href="/css/app.css">
+   </head>
+   <body>
+     <app-root></app-root>
    
-     &lt;script src="/vendor/vendor.js"&gt;&lt;/script&gt;
-     &lt;script src="/build/app.js"&gt;&lt;/script&gt;
-   &lt;/body&gt;
-   &lt;/html&gt;
+     <script src="/vendor/vendor.js"></script>
+     <script src="/build/app.js"></script>
+   </body>
+   </html>
  </pre>
   
 - In the top level `app.module.ts` we must  import `RouterModule` and in our imports declare `RouterModule.forRoot(routes)`. (Note that in `forRoot` we can also supply an additional argument of `useHash: true` which uses an old-school [HashLocation Strategy](https://medium.com/@dao.houssene/angular-the-hash-trap-b2d415c2c241) for SPA)
 - For routes, we declare our custom `HomeComponent` and our `NotFoundComponent` which is routed via a wildcard (`**`)
 - In our routes, we could also replace our HomeComponent with a `redirectTo` e.g. (`redirectTo: passengers`) and this is how redirects are implemented
 
-  <pre>
+```typescript
     import { NgModule } from '@angular/core';
     import { BrowserModule } from '@angular/platform-browser';
     import { CommonModule } from '@angular/common';
@@ -903,41 +912,41 @@
     })
     export class AppModule {}
      
-  </pre>  
+```  
   
 - Our home component (`home.component.ts`) must have a template selector of `app-home`:
   
-  <pre>
+```typescript
     import { Component } from '@angular/core';
     
     @Component({
       selector: 'app-home',
       template: `
-        &lt;div&gt;
+        <div>
           Airline passenger app!
-        &lt;/div&gt;`
+        </div>`
     })
     export class HomeComponent {}
-  </pre>
+```
 
 - The `not-found` component also need to be defined: 
 
-  <pre>
+```typescript
     import { Component } from '@angular/core';
     
     @Component({
       selector: 'not-found',
       template: `
-        &lt;div&gt;
-          Not found, &lt;a routerLink="/"&gt;go home&lt;/a&gt;?
-        &lt;/div&gt;`
+        <div>
+          Not found, <a routerLink="/">go home</a>?
+        </div>`
     })
     export class NotFoundComponent {}
-  </pre>  
+```  
 
 - In the `app.component.ts`we specify `<router-outlet>` which is a directive via the router which acts as a placeholder for where our component will go. We also defined anchor tags with `routerLink` and to this add `routerLinkActiveOptions` to tell Angular to do an exact match and bind it to a property (so it only adds the styling if we are root and we ignore inherited roots.) We also create an interface `Nav` and use an `ngFor` to dynamically create our routes using bound properties:
 
-  <pre>
+```typescript
     import { Component } from '@angular/core';
     
     interface Nav {
@@ -950,17 +959,17 @@
       selector: 'app-root',
       styleUrls: ['app.component.scss'],
       template: `
-        &lt;div class="app"&gt;
-          &lt;nav class="nav"&gt;
-            &lt;a *ngFor="let item of nav"
+        <div class="app">
+          <nav class="nav">
+            <a *ngFor="let item of nav"
               [routerLink]="item.link"
               routerLinkActive="active"
-              [routerLinkActiveOptions]="{ exact: item.exact }"&gt;
+              [routerLinkActiveOptions]="{ exact: item.exact }">
               {{ item.name }}
-            &lt;/a&gt;
-          &lt;/nav&gt;
-          &lt;router-outlet&gt;&lt;/router-outlet&gt;
-        &lt;/div&gt;
+            </a>
+          </nav>
+          <router-outlet></router-outlet>
+        </div>
       `
     })
     export class AppComponent {
@@ -981,11 +990,11 @@
           exact: false
         }
       ];
-  </pre>  
+```  
 
 - We can style our links using Sass:
 
-  <pre>
+```typescript
     .nav {
       margin: 0 0 10px;
       padding: 0 0 20px;
@@ -1002,11 +1011,11 @@
         }
       }
     }
-  </pre>
+```
 
 - In our feature module we also define our routes and define an array called `children` containing the child routes. We use query parameters (`:id`) here:
 
-  <pre>
+```typescript
     import { NgModule } from '@angular/core';
     import { CommonModule } from '@angular/common';
     import { HttpModule } from '@angular/http';
@@ -1052,11 +1061,11 @@
       ]
     })
     export class PassengerDashboardModule {}
-  </pre>
+```
 
 - Finally in our container component, we can inject the `Router` and the `ActivatedRoute` through the constructor (adding these to the imports). We can now get the route params (of type `Params`) via `route.params`  (so we could call `subscribe` on it) but instead we'll use RxJs' `switchMap` (which also needs to be imported) and which takes our subscription and returns an `Observable`
 
-  <pre>
+```typescript
      import { Component, OnInit } from '@angular/core';
      import { Router, ActivatedRoute, Params } from '@angular/router';
      import 'rxjs/add/operator/switchMap';
@@ -1067,12 +1076,12 @@
        selector: 'passenger-viewer',
        styleUrls: ['passenger-viewer.component.scss'],
        template: `
-         &lt;div&gt;
-           &lt;passenger-form
+         <div>
+           <passenger-form
              [detail]="passenger"
-             (update)="onUpdatePassenger($event)"&gt;
-           &lt;/passenger-form&gt;
-         &lt;/div&gt;
+             (update)="onUpdatePassenger($event)">
+           </passenger-form>
+         </div>
        `
      })
      export class PassengerViewerComponent implements OnInit {
@@ -1095,25 +1104,25 @@
            });
        }
      }
-  </pre>
+```
 
 - In our stateless component we could implement **imperative routing** by adding a button and then implementing a function:
 
-  <pre>
-    &lt;button (click)="goBack()"&gt;
-  </pre>    
+```typescript
+    <button (click)="goBack()">
+```    
 
 - ..and then implement our function calling `navigate` method on the `router`:
 
-  <pre>
+```typescript
      goBack(){
        this.router.navigate(['/passengers'])
      }
-  </pre>
+```
 
 - Likewise, we use **imperative routing**, injecting the router into our stateless 
 
-  <pre>
+```typescript
     import { Component, OnInit } from '@angular/core';
     import { PassengerDashboardService } from '../../passenger-dashboard.service';
     import { Passenger } from '../../models/passenger.interface';
@@ -1121,17 +1130,17 @@
     @Component({
       selector: 'passenger-dashboard',
       styleUrls: ['passenger-dashboard.component.scss'],
-      template: `&lt;div&gt;
-          &lt;passenger-count [items]="passengers"&gt;&lt;/passenger-count&gt;
-          &lt;div *ngFor="let passenger of passengers;"&gt;
+      template: `<div>
+          <passenger-count [items]="passengers"></passenger-count>
+          <div *ngFor="let passenger of passengers;">
             {{ passenger.fullname }}
-          &lt;/div&gt;
-          &lt;passenger-detail *ngFor="let passenger of passengers;"
+          </div>
+          <passenger-detail *ngFor="let passenger of passengers;"
             [detail]="passenger"
             (edit)="handleEdit($event)"
-            (remove)="handleRemove($event)"&gt;
-          &lt;/passenger-detail&gt;
-        &lt;/div&gt;`
+            (remove)="handleRemove($event)">
+          </passenger-detail>
+        </div>`
     })
     export class PassengerDashboardComponent implements OnInit {
       passengers: Passenger[];
@@ -1163,9 +1172,9 @@
           });
       }
     }
-  </pre>
+```
   
-  <pre>
+```typescript
       import { Component, OnChanges, Input, Output, EventEmitter } from '@angular/core';
       import { Passenger } from '../../models/passenger.interface';
       
@@ -1173,20 +1182,20 @@
         selector: 'passenger-detail',
         styleUrls: ['passenger-detail.component.scss'],
         template: `
-          &lt;div&gt;
-            &lt;span class="status" [class.checked-in]="detail.checkedIn"&gt;&lt;/span&gt;
-            &lt;div *ngIf="editing"&gt;
-              &lt;input type="text"  [value]="detail.fullname" (input)="onNameChange(name.value)" #name&gt;
-            &lt;/div&gt;
-            &lt;div *ngIf="!editing"&gt;
+          <div>
+            <span class="status" [class.checked-in]="detail.checkedIn"></span>
+            <div *ngIf="editing">
+              <input type="text"  [value]="detail.fullname" (input)="onNameChange(name.value)" #name>
+            </div>
+            <div *ngIf="!editing">
               {{ detail.fullname }}
-            &lt;/div&gt;
-            &lt;div class="date"&gt;
+            </div>
+            <div class="date">
               Check in date:  {{ detail.checkInDate ? (detail.checkInDate | date: 'yMMMMd' | uppercase) : 'Not checked in' }}
-            &lt;/div&gt;
-            &lt;button (click)="toggleEdit()"&gt;{{ editing ? 'Done' : 'Edit' }}&lt;/button&gt;
-            &lt;button (click)="onRemove()"&gt;Remove&lt;/button&gt;
-          &lt;/div&gt;`
+            </div>
+            <button (click)="toggleEdit()">{{ editing ? 'Done' : 'Edit' }}</button>
+            <button (click)="onRemove()">Remove</button>
+          </div>`
       })
       export class PassengerDetailComponent implements OnChanges {
       
@@ -1217,4 +1226,4 @@
           this.remove.emit(this.detail);
         }
       }
-  </pre>
+```
