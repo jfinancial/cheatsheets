@@ -860,7 +860,7 @@
 #### Component Routing
 
 - In our `index.html` we must include the `<base>` element inside our `<header>`:
- <pre>
+```html
    <!doctype html>
    <html>
    <head>
@@ -875,7 +875,7 @@
      <script src="/build/app.js"></script>
    </body>
    </html>
- </pre>
+ ```
   
 - In the top level `app.module.ts` we must  import `RouterModule` and in our imports declare `RouterModule.forRoot(routes)`. (Note that in `forRoot` we can also supply an additional argument of `useHash: true` which uses an old-school [HashLocation Strategy](https://medium.com/@dao.houssene/angular-the-hash-trap-b2d415c2c241) for SPA)
 - For routes, we declare our custom `HomeComponent` and our `NotFoundComponent` which is routed via a wildcard (`**`)
@@ -994,7 +994,7 @@
 
 - We can style our links using Sass:
 
-```typescript
+```css
     .nav {
       margin: 0 0 10px;
       padding: 0 0 20px;
@@ -1108,7 +1108,7 @@
 
 - In our stateless component we could implement **imperative routing** by adding a button and then implementing a function:
 
-```typescript
+```html`
     <button (click)="goBack()">
 ```    
 
