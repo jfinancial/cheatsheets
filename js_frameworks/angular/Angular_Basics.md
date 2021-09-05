@@ -166,6 +166,28 @@
     </ul>  
 ```
 
+- We can also `ngClass`to apply **conditional styling** by referring to a method:
+
+```html
+    <ul>
+      <li *ngFor="let passenger of passengers; let i = index;">
+        <span class="status" [ngClass]="passengerClasses(passenger)">
+        </span>
+        {{ i }}: {{ passenger.fullname }}
+      </li>
+    </ul>  
+```
+The `passengerClasses()` method on the component:
+
+```typescript
+  passengerClasses(passenger){
+    if(passenger.isCheckedIn()){
+        return 'checkedInClass'
+    }    
+  }
+```
+
+
 - `ngStyle` is another directive which allows CSS/SASS styling to be applied to elements
 
  ```html
