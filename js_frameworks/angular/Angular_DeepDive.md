@@ -46,7 +46,6 @@ The source for these notes are the [Angular University's Angular Core Deep Dive]
       </ng-template> 
     </div>
 ```
-
 - We can use use `ngSwitch` as a switch statement - note we use`*ngSwitchCase` and `*ngSwitchDefault` for individual cases and the default condition
 
 ```angular2html
@@ -85,20 +84,22 @@ The source for these notes are the [Angular University's Angular Core Deep Dive]
     <div *ngIf="foo" [ngClass]="myClasses()" [ngStyle]="{'text-decoration' : 'underline'}"> 
 ```
 
-### Pipes
-- Pipe is a template mechanism for transforming date
+### Components: Pipes
 
-| Pipe            | Example                                           | Description                                                                    |
-|-----------------|---------------------------------------------------|--------------------------------------------------------------------------------|
-| Date Pipe       | `{{ startDate `&#124;` date: 'dd/MMM/yyyy' }}`    | Formats a javascript date given a specific format                              |
-| String Pipe     | `{{ title `&#124;` titlecase }}`                  | Formats a string to titlecase                                                  |
-| Number Pipe     | `{{ price `&#124;` number'3.3-5 }}`               | Formats 3 min integer digits and min 3 fractional and max 5                    |
-| Currency Pipe   | `{{ price `&#124;` currency: 'GBP' }}`            | Formats a number as currency (USD by default)                                  |
-| Percentage Pipe | `{{ rate `&#124;` percent }}`                     | Formats as a percentage i.e. 0.67 = 67%                                        |
-| Slice Pipe      | `*ngFor="let course of courses &#124;` slice:0:2` | Works like js slice function - here we slice first 2 elements of a collection  |
-| JSON Pipe       | `{courses `&#124;` json }}`                       | Outputs an object as json (useful for debugging                                |
-| Key value Pipe  | `*ngFor="let pair of course `&#124; `keyvalue"`   | Outputs key value pairs - we can refer to `pair.key` and `pair.value`          |
+- A pipe is a template mechanism for transforming date
 
+| Pipe            | Example                                             | Description                                                                    |
+|-----------------|-----------------------------------------------------|--------------------------------------------------------------------------------|
+| Date Pipe       | `{{ startDate `&#124;` date: 'dd/MMM/yyyy' }}`      | Formats a javascript date given a specific format                              |
+| String Pipe     | `{{ title `&#124;` titlecase }}`                    | Formats a string to titlecase                                                  |
+| Number Pipe     | `{{ price `&#124;` number'3.3-5 }}`                 | Formats 3 min integer digits and min 3 fractional and max 5                    |
+| Currency Pipe   | `{{ price `&#124;` currency: 'GBP' }}`              | Formats a number as currency (USD by default)                                  |
+| Percentage Pipe | `{{ rate `&#124;` percent }}`                       | Formats as a percentage i.e. 0.67 = 67%                                        |
+| Slice Pipe      | `*ngFor="let course of courses `&#124;` slice:0:2"` | Works like js slice function - here we slice first 2 elements of a collection  |
+| JSON Pipe       | `{courses` &#124; `json }}`                         | Outputs an object as json (useful for debugging                                |
+| Key value Pipe  | `*ngFor="let pair of course `&#124; `keyvalue"`     | Outputs key value pairs - we can refer to `pair.key` and `pair.value`          |
+
+---
 
 ### Template Querying  using `@ViewChild` and `@ViewChildren` and the `AfterViewInit` LifecycleHook
 - We can use a template query to get a reference in a component to an element in a child component - we can do this referring to the class...
@@ -129,6 +130,8 @@ The source for these notes are the [Angular University's Angular Core Deep Dive]
     @ViewChild(CourseCardComponent)
     card: QueryList<Course>
 ```
+---
+## Content Projection
 
 ### Content Projection using `<ng-Content>`, `@ContentChild`,  `@ContentChildren` and `AfterContentInit` Lifecycle hook
 - Templates have fixed content but using content projection we can make this more configurable (e.g instead of display an image, we display a video)
@@ -152,25 +155,355 @@ The source for these notes are the [Angular University's Angular Core Deep Dive]
 - To get a reference to a collection of elements inside the content projection we need to user `@ContentChildren` (the scope is restricted to what is inside the `ng-Content`)
 - We need to use the `AfterContentInit` lifecycle hook to get references to elements which are rendered via content projection
 
+---
+
+## Angular Templates
 
 ### Content injection using `ng-template` and `TemplateRef`
 - The `ng-template` directive allows content to be injected which is not displayable but which can be rendered based on logic. Perhaps the most use is in the else of `ngIf`:
-```html 
+```angular2html
     <img [src]="foo.icon" *ngIf="isImageAvailable(); else noImage">
 ```
 - We can programmatically instantiate a template using `*ngTemplateOutlet`pass a `context` and we can give our template its own variable scope using the `let` keyword:
-```html 
+```angular2html
     <ng-template #blankTemplate let-courseName="description">
        <p>{{coursename}} has image is available </p>
     </ng-template> 
     
-    <div *ngTemplateOutlet="blankTemplate; context: {description: course.name}">
-    </div>
+    <ng-container *ngTemplateOutlet="blankTemplate; context: {description: course.name}">
+    </ng-container>
 ```
 - The most common usage is to actually inject the template on to our component by declaring an input:
 
 ````typescript
   @Input()
-  noImgTemplate: TemplateRef<any>
+  noImageTpl: TemplateRef<any>
   
 ````
+- ..and we use the `*ngTemplateOutlet` to render the inputted template: 
+
+```angular2html
+    <ng-content select="course-image" *ngIf="course.iconUrl; else noImage"></ng-content>
+    <ng-template #noImage>
+        <ng-container *ngTemplateOutlet="noImageTpl; context: {description: course.name}"></ng-container>  //we are now using the template injected as an input
+    </ng-template>
+    
+```    
+---
+## Angular Directives  
+
+## Attribute Directives: Using `@HostBinding` to Bind to Dom Elements
+- Commons structural directives are `*ngFor` and `*ngIf`. Attribute directives are attributes on an Angular element e.g. `disabled` or `required` (e.g. `<input name="email" required>`)
+- We can create our own custom directives using the CLI: `ng g directive directives/highlighted` and notice the selector now refers to the element directive. 
+- We can use the `@HostBinding` to bind to any **known DOM element** but note that we have to use a getter method (`get`) - if the DOM property is not known then Angular will throw an error.
+- We create our directive which is binding to the host elment of `course-card`
+```angular2html
+    <course-card highlighted #highlighter="hl"  [isHighlighted]="true" (toggleHighlight)="onToggle($event)" (courseSelected)="onCourseSelected($event)" [course]="course">
+```
+- ..The selector in this case refers to the attribute `highlighted`:
+```typescript
+    import {Directive, EventEmitter, HostBinding, HostListener, Input, Output} from '@angular/core';
+    
+    @Directive({
+        selector: '[highlighted]', //this is an attribute selector so it will be applied to any elemnt with this attribute
+        exportAs: 'hl'
+    })
+    export class HighlightedDirective {
+        constructor() {}
+        
+        @Input('highlighted')
+        isHighlighted = false;
+    
+        @HostBinding('className')   //we are binding here to the className DOM property
+        get cssClasses() {
+            return this.isHighlighted;
+        }
+    
+        @HostBinding('class.highlighted')   //provides a short hand for referring to CSS class names
+        get cssClasses() {
+            return true
+        }
+
+        @HostBinding('attr.disabled')   //provides a short hand for referring a DOM attribute
+        get disabled() {
+            return true
+        }
+    }
+```
+
+## Angular Directives: Interacting with Events using `@HostListener`
+- In our directive we can listen to events using `@HostListener` - we can also emit events
+```typescript
+    import {Directive, EventEmitter, HostBinding, HostListener, Input, Output} from '@angular/core';
+    
+    @Directive({
+        selector: '[highlighted]', //this is an attribute selector so it will be applied to any elemnt with this attribute
+        exportAs: 'hl'
+    })
+    export class HighlightedDirective {
+        constructor() {}
+        
+        @Output
+        toggleHighlight = new EventEmitter()
+            
+        @HostListener('mouseover')   //we are binding here to the mouseover event
+        get cssClasses() {
+            this.isHighlighted = false;
+            this.toggleHighlight.emit(isHighlighted)
+        }
+
+        @HostListener('mouseleave')   //we are binding here to the mouseleave event
+        get cssClasses() {
+            this.isHighlighted = false;
+            this.toggleHighlight.emit(isHighlighted)
+        }
+    
+    }
+```
+
+## Angular Directives: Get A Handle on Directives in Components Using `exportAs`
+
+- We make a directive's functionality available to the template using `exportAs` of the directive decorator. In the above example, we export the directive as `hl` - in the template, we create a template reference and assign it to the name to export the directive `#highlighter="hl"` and then in the child we can call the `toggle()` method i.e. `(dblclick)="highlighter.toggle()"` 
+```angular2html
+     <div class="courses">
+    <course-card highlighted #highlighter="hl" (toggleHighlight)="onToggle($event)" (courseSelected)="onCourseSelected($event)" [course]="course">
+        <course-image [src]="course.iconUrl" *ngxUnless="!course.iconUrl"></course-image>
+        <div class="course-description" (dblclick)="highlighter.toggle()" >{{ course.longDescription }}
+        </div>
+    </course-card>
+```
+- In the parent component we can also get a reference to the directive using:
+```typescript
+  @ViewChild(HighlightedDirective)
+  highlighted: HighlightedDirective
+```
+- If the component had multiple uses of the same directive we can use `@ViewChild` on the component and `read` property to get a handle on the directive:
+```typescript
+  @ViewChild(CourseCardComponent, {read: HighlightedDirective})
+  highlighted: HighlightedDirective
+```
+
+## Angular Directives: Custom Structural Directives
+- Structural directives use the `*` syntax and allow us to add or remove other elements from the page. We can build our own structural directives and by convention we prefix custom structural directives using `*ngx-` 
+- Structural directives are always applied to templates so there is an implicit template (or `ng-template` if the syntax was de-sugared). In our custom structural directive we pass a `TemplateRef` in the constructor (which is our template) but we also need a `ViewContainerRef` so we can programatically render the template using the `createEmbeddedView(this.templateRef)` method
+- We required a setter method (using method marked as `set`) which related to the condition in the template:
+```typescript
+import {Directive, Input, TemplateRef, ViewContainerRef} from '@angular/core';
+
+@Directive({
+  selector: '[ngxUnless]'
+})
+export class NgxUnlessDirective {
+
+  visible = false;
+  
+  constructor(private templateRef: TemplateRef<any>, private viewContainer: ViewContainerRef) {}
+
+  @Input()
+  set ngxUnless(condition:boolean) {
+      if (!condition && !this.visible) {
+          this.viewContainer.createEmbeddedView(this.templateRef);
+          this.visible = true;
+      }
+      else if (condition && this.visible) {
+          this.viewContainer.clear();
+          this.visible = false;
+      }
+  }
+}
+```
+---
+## Angular View Encapsulation: `:host, `::host-context` selector and `ng-deep`
+- When defining a component we can specify a `styleUrls` which has styles which are specific in scope to this component. These styles are only available to the component and not to parent or child components.
+```angular2html
+@Component({
+    selector: 'course-card',
+    templateUrl: './course-card.component.html',
+    styleUrls: ['./course-card.component.css']
+})
+```
+- We can use the special selector `:host` is a special selector which targets the host element itself
+- We can also use `::ng-deep` modifier is a way of bypassing view encapulation. The part before this selector is still specific but not after so in the case of `course-card ::ng-deep .course-description` the `course-description` styling is not specific to the component. Typically the use case for this is if we want to style elements which we have received via content projection.
+- The `::host-context` allows us to style  a component depending on the presence of styles outside the component itself but the style will be only be applied to whatever is after the `::host-context` 
+- The default encapulation of style is `ViewEncapulation.Emulated`. We can also choose `ShadowDom` which is similar to emulated but does it natively using the browser APIs which uses styles inside `#shadowRoot`
+```angular2html
+@Component({
+selector: 'course-card',
+templateUrl: './course-card.component.html',
+styleUrls: ['./course-card.component.css'],
+encapulation: ViewEncapulation.ShadowDom
+})
+```
+---
+## Angular Injectable Services
+- We can use Angular's `httpClient` along with `HttpParams` to make an HTTP get call `http.get<T>('/api/courses', {params})` and this will return an `Observable` which we must subscribe to. 
+- In the view we use the `async` pipe to implicitly subscribe to an Observable and Angular will also handle unsubscribing. We can put in an `*ngIf`
+```angular2html
+    <div class="courses>"*ngIf="courses$ | async as courses">
+        <course-card *ngFor="let course of courses" [course]="course" (courseChanged)="save($event)">
+    </div>
+```
+- It is preferred to encapsulate making HTTP calls using a custom service in a `services` folder. We use the `@Injectable({providedIn: 'root'})` annotation to perform dependency injection which injects the service as a singleton:
+```typescript
+import { Injectable } from '@angular/core';
+import { Observable} from 'rxjs';
+import { Course} from '../model/course';
+import { HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+
+@Injectable()
+export class CoursesService {
+    
+  constructor(private http: HttpClient) {}
+
+  loadCourses(): Observable<Course[]> {
+      const params = new HttpParams().set("page", "1").set("pageSize", "10");
+      return this.http.get<Course[]>('/api/courses', {params});
+  }
+
+  saveCourse(course:Course) {
+      const headers = new HttpHeaders().set("X-Auth", "userId");
+      return this.http.put(`/api/courses/${course.id}`,course,{headers});
+  }
+
+}
+```
+- To perform the save then in our course-card component we have an `EventEmitter` which will cause the `save` method to be called when it receives the `courseChanged` event:
+```typescript
+    @Output('courseChanged')
+    courseEmitter = new EventEmitter<Course>();
+
+    onSaveClicked(description: string) {
+        this.courseEmitter.emit({...this.course, description}); //we use the spread and override the description
+    }
+```
+and in the corresponding html template we have a button where the `onSaveClicked` is wired to a click event:
+```angular2html
+<div class="course-card" *ngIf="course" #container>
+  <div class="course-title">
+      {{ cardIndex || '' + ' ' + course.description }}
+  </div>
+  <ng-content select="course-image" *ngIf="course.iconUrl"></ng-content>
+  <div class="course-description">
+    Edit Title: <input #courseTitle [value]="course.description"
+                       (keyup)="onTitleChanged(courseTitle.value)">
+  </div>
+  <div class="course-category">
+    <div class="category" i18n>
+        {
+            course.category,
+            select,
+            BEGINNER {Beginner}
+            INTERMEDIATE {Intermediate}
+            ADVANCED {Advanced}
+        }
+    </div>
+  </div>
+  <button (click)="onSaveClicked(courseTitle.value)">Save Course</button>
+
+</div>
+```
+- Note that in our application component we have the save method which must subscribe to the observable to take effect:
+```typescript
+    save(course: Course) {
+        this.coursesService.saveCourse(course)
+            .subscribe(
+                () => console.log('Course Saved!')
+            );
+    }
+```
+---
+## Angular Dependency Injection: Custom Providers, InjectionTokens and injecting Configuration
+- By default, Angular will support class names as injection tokens (because class names are available at runtime) but not interfaces because interfaces don't exist at runtime only at compile time. When a component is instantiated it Angular will go through the providers for that component to see if there is a provider for that dependency and if there is not one then it will move on to its parents to see if there is a provider and if there is then it will take it from there (this is called **hierarchical dependency injection**). 
+- Generally speaking, we want singletons when they are stateless but if a dependency is stateful then we might want to provider at a level of a component
+- Angular dependency injection depends on `providers`. If a provider is not found then Angular will complain `NullInjectorError: No provider for FooService`. The provider is what creates the dependency and it provides Angular a factory function which can be called. The `@Injectable({providedIn: 'root'})` allow us to create a [Tree-shakeable provider](https://coryrylan.com/blog/tree-shakeable-providers-and-services-in-angular) but we can also define our factory function and associate with a unique key known as an **Injection Token**:
+```typescript
+ 
+    const COURSES_SERVICE = InjectionToken<CoursesService>('COURSES_SERVICE')
+    
+    function coursesServiceProvider(httpClient: HttpClient): CoursesService{
+        return new CoursesService(httpClient);
+    }
+```
+- We can now configure the dependency injection with our factory function and our injection token and we also need to supply dependencies for the factory using `deps`:
+```typescript
+    @Component({
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css'],
+    providers: [
+        {
+            provide: COURSES_SERVICE, //If we just put the classname (CoursesService) then this would also work
+            useFactory: coursesServiceProvider, 
+            deps: [HttpClient]}
+    ]
+    })
+```
+- Now in our constructor we inject our service by using `@Inject` annotation taking the injection token:
+``` typescript
+    constructor(@Inject(COURSES_SERVICE) private coursesService: CoursesService) {
+    }
+```
+- In our provider if we use `useClass: CoursesService` then Angular will use the class and can supply all dependencies - this could actually be simplified to `providers: [ CoursesService]`
+- **Tree-shaking** is the concept of Angular 'shaking the dependency tree' to make sure dependencies are removed which are not used and which could bloat the application bundle (e.g a generic module which has services attached to it). Therefore, the purpose of tree-shaking is to remove dead/unused code.
+- We can override our injectable settings to provide a tree-shakeable dependency - `providedIn` specifies the level at which the component is injected with `root` being available to the entire system. Now if our services is never passed in any constructor then it will not be included in the bundle
+```typescript
+
+@Injectable({
+    providedIn: 'root',
+    useFactory: (http) => new CoursesService(http), //factory function
+    deps: [HttpClient]
+})
+export class CoursesService {
+
+}    
+```
+- But we can replace factory function with `useClass: CoursesService` and remove dependencies specified in `deps` and since this is default behaviour so doesn't need to be specified we are just left with:
+```typescript
+
+@Injectable({providedIn: 'root'})
+export class CoursesService {
+
+}    
+```
+- Sometimes we want to an object (maybe containing application wide config)
+```typescript
+export interface AppConfig{
+    apiUrl: string
+}
+export const APP_CONFIG: AppConfig = {
+    apiUrl: 'http://localhost:9000'
+}
+export const CONFIG_TOKEN = new InjectionToken<AppConfig>('CONFIG_TOKEN');
+
+```
+- In our `app.component.ts` we can inject the `AppConfig` but because this is an interface and not a class we must specify the injection token using `@Inject(CONFIG_TOKEN)`:
+```typescript
+import {AppConfig, CONFIG_TOKEN} from './config';
+
+@Component({
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css'],
+    providers: [{ provide: CONFIG_TOKEN, useValue: APP_CONFIG}]   //note this is not tree-shakeable
+})
+export class AppComponent implements OnInit {
+    
+    constructor(
+        private coursesService: CoursesService,
+        @Inject(CONFIG_TOKEN) private config: AppConfig,
+        private injector: Injector) {
+    }
+}
+```
+- To make the above tree-shakeable we must change our `InjectionToken` and now we can remove providers in our `app.component.ts`:
+```typescript
+export const CONFIG_TOKEN = new InjectionToken<AppConfig>('CONFIG_TOKEN', { providedIn: 'root', factory: () => APP_CONFIG });
+```
+- There are additional **dependency injection decorators** 
+ - We can mark a dependency as `@Optional()` but we need to guard about when it will not be defined
+ - `@Self` (which might be used on a constructor dependency) overrides hiercharical dependency injection
+ - `@SkipSelf` skips local providers and will always go to parent through hiercharical dependency injection
+ - `@Host` ensures the provider comes from directly from the host/parent but not beyond it (i.e. any further up the hierarchy)
+
+---
+## Angular Change Detection
