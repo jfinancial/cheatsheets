@@ -384,8 +384,7 @@ and in the corresponding html template we have a button where the `onSaveClicked
   </div>
   <ng-content select="course-image" *ngIf="course.iconUrl"></ng-content>
   <div class="course-description">
-    Edit Title: <input #courseTitle [value]="course.description"
-                       (keyup)="onTitleChanged(courseTitle.value)">
+    Edit Title: <input #courseTitle [value]="course.description">
   </div>
   <div class="course-category">
     <div class="category" i18n>
@@ -506,4 +505,130 @@ export const CONFIG_TOKEN = new InjectionToken<AppConfig>('CONFIG_TOKEN', { prov
  - `@Host` ensures the provider comes from directly from the host/parent but not beyond it (i.e. any further up the hierarchy)
 
 ---
-## Angular Change Detection
+## Angular Change Detection: Default vs OnPush
+- We can use change detection such as a `keyup` event to call a method `onTitleChanged()` passing our template reference. Angular's default change detection will *scan the entire component tree* after each event (because all javascript objects are mutable). Note that Ajax requests or a `setTimeout` or `setInterval` event will also trigger Angular's change detection. Angular's default change detection is therefore very safe but it is quite expensive because it has to compare the entire tree:
+
+```angular2html
+<div class="course-card" *ngIf="course" #container>
+  <div class="course-title">
+      {{ cardIndex || '' + ' ' + course.description }}
+  </div>
+  <ng-content select="course-image" *ngIf="course.iconUrl"></ng-content>
+  <div class="course-description">
+    Edit Title: <input #courseTitle [value]="course.description" (keyup)="onTitleChanged(courseTitle.value)">
+  </div>
+  <div class="course-category">
+    <div class="category" i18n>
+        {
+            course.category,
+            select,
+            BEGINNER {Beginner}
+            INTERMEDIATE {Intermediate}
+            ADVANCED {Advanced}
+        }
+    </div>
+  </div>
+  <button (click)="onSaveClicked(courseTitle.value)">Save Course</button>
+</div>
+```
+- Now in our component we can have which changes the model (i.e the course) and 
+```typescript
+    onTitleChanged(newTitle: string) {
+        this.course.description = newTitle;
+    }
+```
+- For performance reasons, we sometimes may want to override default change detection to avoid Angular comparing the entire tree and we can specify another change detection strategy for the component using `ChangeDetectionStrategy.OnPush` which means parts of the hierarchy does not get checked for changes. Angular is now not trying to detect changes in each expressions of the template but only on certain places and it does so by **object reference comparison** s(which is much faster) and the places where it tries to detect change are:
+  - change in the component's inputs (i.e. marked with `@Input`) or 
+  - chane in any `Observable` streams which are resgistered with the async pipe in the template
+ 
+```typescript
+@Component({
+  selector: 'course-card',
+  templateUrl: './course-card.component.html',
+  styleUrls: ['./course-card.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush  
+})
+export class CourseCardComponent implements  OnInit { }
+```
+- Another performance optimisation is to use the attribute decorator, `@Attribute`. We can use this to avoid using an `@Input` for a value which we know will not change and therefore which does not need to be checked by Angular for changes ("one time binding"). So in our our child component (which is a course card) we use the constructor:
+```typescript
+    constructor(private coursesService: CoursesService, @Attribute('type') private type: string) { }
+```
+and in in our parent template we remove the square brackets from our `courses` attribute that would bind it to an `@Input`:
+```angular2html
+  <div class="courses">
+    <course-card *ngFor="let course of  courses" (courseChanged)="save($event)" type="beginner" [course]="course">
+      <course-image [src]="course.iconUrl"></course-image>
+    </course-card>
+  </div>
+```
+- We can also do custom change detection via any component's `ChangeDetectorRef`. Every components has it own instance of `ChangeDetectorRef` and we can use `markForDetect()`
+```typescript
+    constructor( private service: MyService, private changeDetector: ChangeDetectorRef){ 
+    
+   }
+   
+   ngOnInit(){
+      this.service.loadItems().subscribe( items =>{
+          this.items = items;
+          this.changeDetector.markForCheck();
+      }) 
+   }
+```
+- As a last resort to address performance issues, we can also perform custom change detection via the lifecycle hook `DoCheck` and implementing `ngDoCheck()` which will get called every time change detection happens:
+
+```typescript
+    constructor( private service: MyService, private changeDetector: ChangeDetectorRef){}
+
+    ngDoCheck(){
+      this.changeDetector.markForCheck();
+   }
+```
+---
+## Angular Lifecycle Hooks
+- `OnInit` => Only gets called once on creation of component after the constructor - note that with the constructor the component's inputs (marked as `@Input`) will still be undefined hence the need for `ngInit`. So constructors should never contain logic but only assignment to member variables. 
+- `OnDestroy` => Only gets called once on destruction of component so is used to release resource and unsubscribe from observables (but should not be needed if we are using the async pipe)
+- `OnChanges` => Will first get called after constructor but before `ngOnInit` but will then get changed whenever something changes in the component lifecycle. The `ngOnChanges` method takes the `changes` object and this may contain a simple change which will include before and after values. Note that `ngOnChanges` doesn't get triggered if an object properties changes but only if the object itself changes
+- `AfterContentChecked` => Will first get called after constructor and after `ngOnInit` or whenever Angular finishes checking the content which is after every event Angular is handling (i.e. whenever there is change detection). It gets called a lot so any implementation we put in must be lightweight. If we try to change parts of the content part of the component in this method we may get `ExpressionChangedAfterItHasBeenCheckedError` - this is because the Angular's change detection mechanism should not itself change the state or we could get into an infinite loop
+- `AfterViewChecked` => Will first get called after `ngAfterContentChecked`. We cannot use to change any view/template elements, but we can apply DOM operation to elements (e.g. scrolling, setting focus)
+- The order of lifecycle hooks from construction is follows: constructor -> ngOnChanges -> ngOnInit -> ngDoCheck -> ngAfterContentInit -> ngAfterContentChecked -> ngAfterViewInit -> ngAfterViewChecked -> ngDoCheck -> ngAfterContentChecked -> ngAfterViewChecked
+- The order of lifecycle hooks when editing (i.e. source has changed) is follows: ngOnChanges -> ngDoCheck -> ngAfterContentChecked -> ngAfterViewChecked -
+
+---
+## Angular Modules Deep Dive
+- A module is an organisational unit where we can put together components, services and directives which are related and also defines
+   - `declarations` contains all the components/pipes/directives which *belong* to the module
+    - `imports` contains a list all other module dependencies which must be imported
+    - `providers` defines providers so if we just use `@Injectable()` (i.e. not tree-shakeable) then we must define a provider here
+    - `bootstrap` defines the root component(s) so we could have 2 bootstrap (e.g `<app-module></app-module> <other-module></other-module>`)
+    - `exports` defines what is visible outside the module (i.e. not private to the module) - this is typically to fix the error `Can't bind to foo since it isn't a known property of bar`
+- Here we define the AppModule:    
+```typescript
+import {BrowserModule} from '@angular/platform-browser';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
+
+import {AppComponent} from './app.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {HttpClientModule} from '@angular/common/http';
+import {CoursesModule} from './courses/courses.module';
+import {CourseTitleComponent} from './course-title/course-title.component';
+
+@NgModule({
+    declarations: [
+        AppComponent,
+        CourseTitleComponent
+    ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        HttpClientModule,
+        CoursesModule
+    ],
+    providers: [],
+    bootstrap: [AppComponent],
+    entryComponents: [CourseTitleComponent]
+})
+export class AppModule {
+}
+```
+- We can generate a feature module (which we'll call Courses) using CLI with `ng generate module Courses` - we will need to include `CommonModule`
