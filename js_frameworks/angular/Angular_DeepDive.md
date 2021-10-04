@@ -632,3 +632,18 @@ export class AppModule {
 }
 ```
 - We can generate a feature module (which we'll call Courses) using CLI with `ng generate module Courses` - we will need to include `CommonModule`
+
+---
+## AngularPipes Deep Dive
+- We can implement a simple pipe which has no side effect ("pure pipe"):
+```typescript
+@Pipe({
+  name: 'myFilter'
+})
+export class MyFilter implements PipeTransform { 
+    
+    transform(myItems: Item[], category: string){
+        return myItems.filter(item => item.category == category)
+    }
+}
+```
