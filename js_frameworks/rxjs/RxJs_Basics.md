@@ -453,7 +453,7 @@ click$
 
 - `exhaustMap()` (like concatMap and switchMap) only maintains one inner subscription but the difference is how it manages new values being emitted when an inner subscription is already active. While switchMap switches to it and concatMap queues it, exhaustMap just ignores it (or throws it away). Use `exhaustMap` where yo want to ignore subsequent value (e.g. making a post for authentication - we wouldn't want to queue these or switch to a second post as we just want to wait until the first post returns)
 
-### Error Handling With `catchErro()`
+### Error Handling With `catchError()`
 
 - `catchErro()` receives the error and the observable on which the error was caught (in case you wish to retry). In this example, we are catching the error on the ajax observable returned by our switchMap function, as we don't want the entire `input$` stream to be completed in the case of an error.
 - **Warning:** Be careful when you please the catch as it if you place in the outer stream is will cause that stream to complete on an error!

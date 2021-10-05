@@ -626,7 +626,6 @@ import {CourseTitleComponent} from './course-title/course-title.component';
     ],
     providers: [],
     bootstrap: [AppComponent],
-    entryComponents: [CourseTitleComponent]
 })
 export class AppModule {
 }
@@ -681,7 +680,24 @@ We now add our custom component under `entryComponents` of the module, to tell A
 @NgModule({
   bootstrap: [AppComponent],
   entryComponents: [CourseTitleComponent]
+  schemas: [CUSTOM_SCHEMAS_ELEMENT]
 })
 export class AppModule {
 
+```
+- We need to add `CUSTOM_SCHEMAS_ELEMENT` to the Module to tell Angular's compiler that our custom elements will be added to broser
+- IF we now start up and get a runtime error `Failed to construct 'HTMLElement'` then this telling us we need a polyfill - use `@webcomponents/webcomponentsjs  and we may need 2 polyfills as we need polyfills for
+  - loader (templates, Custom Elements, Shadow Dom)
+  - es5-adapter (For DOM broswers that DO support custom elements)
+- So in `src/pofyfills.ts` add:
+```typescript
+import '@webcomponents/custom-elements/custom-elements.min';
+```
+- See [A Deep Look At Angular Elements | Manfred Steyer](https://www.youtube.com/watch?v=_QU0mpyF7bQ)
+
+### ng-build-plus 
+- The [`ng-build-plus`](https://github.com/manfredsteyer/ngx-build-plus) CLI extension adds a lot of utilities including adding support for polyfills
+```shell
+ng add ngx-build-plus
+ng g ngx-build-plus:wc-polyfill
 ```
