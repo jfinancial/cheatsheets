@@ -1,4 +1,4 @@
-# RxJS
+# RxJS: Reactive Javascript Extensions
 
 ### RxJS Overview
 
@@ -76,6 +76,44 @@ You can supply any (`next`, `error` or `complete`) or none. So rather than suppl
 
 **Tip:** Generally, we supply function arguments if we are just going to implement `next` or use an Observer if we are going to implement more than one of the callbacks.
 
+#### The Observable Contract
+As seen above, Observable provide a contract for next, completion and error conditions and this called the "Observable Contract" in which errors and values are mutually exclusive so no further values will be emitted after an error occurred or after completing:
+```typescript
+  cont stream = fromEvent(document, 'click');
+  stream.subscribe( 
+        evt => console.log('next item ' + evt),
+        err => console.log('error ' + err),
+        () => console.log('completed')
+  );
+)
+```
+- The `subscribe()` returns a `Subscription` and on this subsciption we can also call `unsubscribe()`
+
+
+### Avoiding multiple HTTP Requests using `shareReplay`
+You generally want to use `shareReplay` when you have side-effects or taxing computations that you do not wish to be executed amongst multiple subscribers e.g making an HTTP call which we do not want to call multiple times
+```typescript
+    const http$ = createHttpObservable('/api/courses');
+    const courses$: Observable<Course[]> = http$.pipe(
+            map(res => Object.values(res["payload"]) ),
+            shareReplay(),
+            retryWhen(errors =>
+                errors.pipe(
+                delayWhen(() => timer(2000)
+                )
+            ) )
+        );
+    const beginnerCourses$: Observable<Course[]> = courses$.pipe(
+            map(courses => courses
+                .filter(course => course.category == 'BEGINNER'))
+        );
+    const advancedCourses$: Observable<Course[]> = courses$.pipe(
+            map(courses => courses
+                .filter(course => course.category == 'ADVANCED'))
+        );
+    }
+```
+
 #### Managing subscriptions
 
 - You finish subscribing to an observable via the `unsubscribe()` method which cleans up any resources being used by the Observable. 
@@ -97,6 +135,18 @@ You can also add a subscription to another subscription and then unsubscribe is 
     }, 3500);
 
 ```
+### Operator Summary
+| Type                                | Description                                                                    |
+|-------------------------------------|--------------------------------------------------------------------------------|
+| `of`, `from`, `range`, `fromEvent`  | Creation operators for creating observables from scratch                       |
+| `pipe`                              | Creates a functional pipelines of operations to be performed on stream         |
+| `map`                               | Maps an observable to another observable                                       |
+| `concat` / `concatMap`              | Concatenates stream of observables *on each one completing* => **Use case**: we want to perform something sequentially/serially (e.g. saving where we dont want to do multiple HTTP puts at same time)  |
+| `merge` / `mergeMap`                | Merge by *interleaving* stream of observables, completes when all complete  => **Use case**: we want to perform something in parallel (e.g. we want to do multiple HTTP gets at same time)  |
+| `exhaustMap`                        | Map to inner observable, ignore other values until that observable completes => **Use case**: click event on save button where we ignore save event that happen after until we complete the operation    |
+| `switchMap`                         | Maps each source value to an Observable which is merged in the output Observable, emitting values only from the most recently projected Observable => **Use case**: type ahead search where old http requests are cancelled|
+| `debounceTime(delayInMs)`           | Will discard emitted values that take less than the specified time between output=> **Use case**: search head - will wait for value to to be 'stablele |
+| `distinctUntilChanged`              | Filtering out duplicates|
 
 ### Creation Operators
 

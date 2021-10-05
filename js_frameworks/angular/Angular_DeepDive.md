@@ -634,16 +634,54 @@ export class AppModule {
 - We can generate a feature module (which we'll call Courses) using CLI with `ng generate module Courses` - we will need to include `CommonModule`
 
 ---
-## AngularPipes Deep Dive
+## Angular Pipes Deep Dive
 - We can implement a simple pipe which has no side effect ("pure pipe"):
 ```typescript
 @Pipe({
-  name: 'myFilter'
+  name: 'filterByCategory'
 })
-export class MyFilter implements PipeTransform { 
+export class FilterByCategory implements PipeTransform { 
     
-    transform(myItems: Item[], category: string){
-        return myItems.filter(item => item.category == category)
+    transform(courses: Course[], category: string){
+        return courses.filter(courses => courses.category == category)
     }
 }
+```
+In the template we pass `category` after colon which will be second argument to pipe:
+```angular2html
+   <course-card *ngFor="let course of  (courses | filterByCategory: 'BEGINNER')" (courseChanged)="save($event)" 
+             type="beginner"  [course]="course">
+```
+- Note that the change detection will only happen when the input value `courses` changes and then Angular knows the template needs to be re-rendered but mutating the input of the pipe directly will not cause the pipe to be retriggered - this is an Angular optimisation as pipes are pure by default. We can override the behaviour described and make the pipe impure as follows:
+```typescript
+@Pipe({
+  name: 'filterByCategory',
+  pure: false
+})
+```
+
+---
+## Angular Elements Deep Dive
+- Sometimes we may want to generate our own content or a custom element which is outside of Angular (e.g. 3rd party widget). In this case the browser take care of it via the browser's [Custom Elements API](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements) which is part of the [Web Components](https://developer.mozilla.org/en-US/docs/Web/Web_Components) standard. 
+  Firstly, we need to add Angular elements:
+  
+```shell
+  ng add @angular/elemeents --project-name=angular-course
+``` 
+Now in the `ngOnInit` method our `AppComponent` we call `createCustomElement` passing the component we want to turn into a custom element. We also pass the Angular injector to fetch dependencies and then we register with the browser using `customElements.define('course-title', htmlElement)` where `course-title'` is the tag we are defining as a custome element:
+ ```typescript
+ ngOnInit() {
+        const htmlElement = createCustomElement(CourseTitleComponent, {injector:this.injector});
+        customElements.define('course-title', htmlElement); 
+    }
+```
+We now add our custom component under `entryComponents` of the module, to tell Angular this is a programmatically defined component and declaratively defined:
+
+```typescript
+@NgModule({
+  bootstrap: [AppComponent],
+  entryComponents: [CourseTitleComponent]
+})
+export class AppModule {
+
 ```
