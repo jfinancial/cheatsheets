@@ -1,6 +1,6 @@
-# RxJS: Reactive Javascript Extensions
+# RxJS: REACTIVE JAVASCRIPT EXTENSIONS
 
-### RxJS Overview
+## RxJS OVERVIEW
 
 - RxJs is designed to handle complex interactions of asynchronous activity using "obervable streams" and building on the Observer and Iterator pattern. 
 - Streams are expressed as Observables with callbacks and it uses a push-based approach. You can listen to or "observe" these streams supplying callbacks to be invoked when new values arrive. 
@@ -31,6 +31,10 @@ Summary:
  - Observables can *emit zero or more values*
  - Observables can deliver values *synchronously* but more commonly *asynchronously* 
  - Observables can be *cancelled* (by unsubscribing)
+
+----
+
+## RxJS BASICS
 
 #### Creating Observables
 - You can create an Observable using `Observable.create()` or calling `new Observable()`. 
@@ -327,6 +331,14 @@ const name$ = state$.pipe(
 name$.subscribe(console.log);
 ```
 
+### Throttling vs Debouncing vs Audting vs Sampling
+- **debounceTime** will emit a value from the source stream only if a given time has passed without source producing more values
+- **throttleTime** will start a timer when the source emits. It can be set to emit the first and/or the last value in the given time window. Then it repeats this procedure
+- **auditTime** behaves in a similar way to the trailing throttleTime, but note that it won't emit a value from the last time window if the source has completed
+- **sampleTime** simply emits a value from the source in a given time window if the source actually emitted
+- In the case of a lookahead search, debounce will give us the *latest* value whereas throttling will not guarantee that but give us the value at every interval (even if the user has continued typing)
+- See [RxJS debounce vs throttle vs audit vs sample — Difference You Should Know](https://dev.to/rxjs/debounce-vs-throttle-vs-audit-vs-sample-difference-you-should-know-1f21)
+
 ### Introduction to Rate Limiting Operators (`debounceTime`, `throttleTime`, `sampleTime` and `auditTime`)
 - Rate limiting operators represent a subset of filtering operators which ignore values based on certain time windows. You can use time-based criteria to either do sampling or emitting after a pause
 - `debounceTime(n)` allows you to emit a value after a certain time n (in ms) has passed (prime examples are saving from user input or making a request for data after a certain time like a search ahead) 
@@ -381,6 +393,7 @@ click$
   )
   .subscribe(console.log);
 ```
+
 
 ### Transformaton Operators (`mergeMap`, `switchMap`, `concatMap` and  `exhaustMap`)
 - Among the most popular transformation operators are **flattening operators** which take an Observable that itself emits an Observable subscribing internally and emitting the results to the outer stream
@@ -453,7 +466,7 @@ click$
 
 - `exhaustMap()` (like concatMap and switchMap) only maintains one inner subscription but the difference is how it manages new values being emitted when an inner subscription is already active. While switchMap switches to it and concatMap queues it, exhaustMap just ignores it (or throws it away). Use `exhaustMap` where yo want to ignore subsequent value (e.g. making a post for authentication - we wouldn't want to queue these or switch to a second post as we just want to wait until the first post returns)
 
-### Error Handling With `catchError()`
+### Error Handling With `catchError()`,  `throwError()`, `finalize()` and `retryWhen()`
 
 - `catchErro()` receives the error and the observable on which the error was caught (in case you wish to retry). In this example, we are catching the error on the ajax observable returned by our switchMap function, as we don't want the entire `input$` stream to be completed in the case of an error.
 - **Warning:** Be careful when you please the catch as it if you place in the outer stream is will cause that stream to complete on an error!
@@ -479,7 +492,37 @@ click$
         typeaheadContainer.innerHTML = response.map(b => b.name).join('<br>');
       });
 ```
-- We can also catch and rethrow using `throwError(err)` which is Obserable which will just error
+- We can also catch/rethrow using `throwError(err)` which is Obserable which will just error
+- If we need to perform clean up then we can do this in a `finalize()` method which will get executed either when the observable completes or it errors
+
+```typescript
+    const http$ = createHttpObservable('/api/courses');
+    const courses$: Observable<Course[]> = http$.pipe(
+                map(res => Object.values(res["payload"]) ),
+                shareReplay(),
+                catchError(err => {
+                  console.log('Error occurred', err);
+                    return throwError(e)}),
+                finalize( () => {
+                    console.log('Finalize executed');
+                })
+                ); 
+            );
+```
+- We can also retry using `retryWhen` and `delayWhen` which will create a brand new stream and subscribe to that and attempt to do this until that stream doesn't error: 
+```typescript
+    const http$ = createHttpObservable('/api/courses');
+const courses$: Observable<Course[]> = http$.pipe(
+                tap(() => console.log("HTTP request executed")),
+                map(res => Object.values(res["payload"]) ),
+                shareReplay(),
+                retryWhen(errors =>
+                    errors.pipe(
+                    delayWhen(() => timer(2000)
+                    )
+                ) )
+            );
+```
 
 ### Combination Operators (`startWith()`, `endWith()`, `merge()`, `combineLatest()` and `forkJoin()`)
 - `startWith()` appends a specified value (or values) to the start of a stream (and `endWith()` appends values to the end of a stream):
@@ -582,6 +625,35 @@ click$
       repo: ajax.getJSON(`${GITHUB_API_BASE}/users/reactivex/repos`)
     }).subscribe(console.log);
 ```
+
+----
+
+### Writing Our Own Debug Operator
+- Our debug operator here is a higher order function. Note we set the default level to INFOis 
+```typescript
+import {Observable} from 'rxjs';
+import {tap} from 'rxjs/operators';
+
+export enum RxJsLoggingLevel {TRACE, DEBUG, INFO, ERROR}
+
+let rxjsLoggingLevel = RxJsLoggingLevel.INFO;
+
+export function setRxJsLoggingLevel(level: RxJsLoggingLevel) {
+    rxjsLoggingLevel = level;
+}
+
+export const debug = (level: number, message:string) => (source: Observable<any>) => source.pipe(
+            tap(val => {
+                if (level >= rxjsLoggingLevel) {
+                    console.log(message + ': ', val);
+                }
+            })
+        );
+```
+
+----
+
+## ADVANCED RxJS 
 
 ### RxJS's `Subject`
 - An `Observable` is by default unicast. (*Unicasting* means that each subscribed observer owns an independent, individual execution path of the Observable.) RxJs's `Subject` is still an Observable (and it also an Observer so it has next, error and complete method) allows for sharing an execution of **multicasting** so it can broadcast changes to other observables which are subscribed to the Subject. We use `Subject` to share state amongst multiple components. Subjects comes in various flavours:
