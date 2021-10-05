@@ -701,3 +701,7 @@ import '@webcomponents/custom-elements/custom-elements.min';
 ng add ngx-build-plus
 ng g ngx-build-plus:wc-polyfill
 ```
+- Alternative approach is 'differential loading':
+  - In `browserlist` file add ES5 browers -> IE9-11
+  - In `tsconfig.json` -> `"target": "ES2015"`
+  - Create a production build using `ng build --prod`

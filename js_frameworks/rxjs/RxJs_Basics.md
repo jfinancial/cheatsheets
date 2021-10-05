@@ -459,7 +459,6 @@ click$
 - **Warning:** Be careful when you please the catch as it if you place in the outer stream is will cause that stream to complete on an error!
 - RxJS has special operator for *retrying*
 
-
 ```typescript
     const input$ = fromEvent(inputBox, 'keyup');
     input$.pipe(
@@ -480,6 +479,7 @@ click$
         typeaheadContainer.innerHTML = response.map(b => b.name).join('<br>');
       });
 ```
+- We can also catch and rethrow using `throwError(err)` which is Obserable which will just error
 
 ### Combination Operators (`startWith()`, `endWith()`, `merge()`, `combineLatest()` and `forkJoin()`)
 - `startWith()` appends a specified value (or values) to the start of a stream (and `endWith()` appends values to the end of a stream):
