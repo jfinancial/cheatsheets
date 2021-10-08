@@ -656,10 +656,14 @@ export const debug = (level: number, message:string) => (source: Observable<any>
 ## ADVANCED RxJS 
 
 ### RxJS's `Subject`
-- An `Observable` is by default unicast. (*Unicasting* means that each subscribed observer owns an independent, individual execution path of the Observable.) RxJs's `Subject` is still an Observable (and it also an Observer so it has next, error and complete method) allows for sharing an execution of **multicasting** so it can broadcast changes to other observables which are subscribed to the Subject. We use `Subject` to share state amongst multiple components. Subjects comes in various flavours:
+- An `Observable` is by default unicast. (*Unicasting* means that each subscribed observer owns an independent, individual execution path of the Observable.)  RxJs's `Subject` is like an `Observer`and an `Observable` wrapped into one so a `Subject`  has `next`, `error` and `complete` methods but also has a `pipe` method. (We can use the `asObservable()` method to transform the `Subject `to an `Observable`.) A `Subject` allows for sharing an execution of **multicasting** so it can broadcast changes to other observables which are subscribed to the Subject.  We use `Subject` to share state amongst multiple components. Subjects come in various flavours:
+  
   - `BehaviourSubject` is used to share execution and deliver an initial value and the most common use case is late subscribers
+  
   - `ReplaySubject` is used to replay values to late subscribers
+  
   - `AsyncSubject` is ued to emitting the last values to subscribers before completion
+
 - **Warning:** Generally we do not want to expose a Subject directly as anything which has the subject can then send values. (In Angular we might want to hide the subject behind a service.) But we may want to expose the subject as an observable to the other consumers/subscribers and `Subject` has a `toObservable()` method    
 ```typescript
     const observer = {
