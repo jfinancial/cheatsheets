@@ -739,7 +739,8 @@ This process of calling multicast with a refcount is so common RxJs provides `sh
       subOne.unsubscribe();
       subTwo.unsubscribe();
     }, 3000);
-    ```
+ ```
+    
 ### `BehaviourSubject`
 - If you late subscribers want to receive the last submitted value (or a seed value) then you want `BehaviourSubject` so use this when the delivery of current state to late subscribers is important
 
@@ -829,3 +830,7 @@ This process of calling multicast with a refcount is so common RxJs provides `sh
     subject.next('World!');
     const thirdSubscription = subject.subscribe(observer);
 ```
+
+--- 
+
+### Implementing a Custom Store

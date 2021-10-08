@@ -343,7 +343,7 @@ encapulation: ViewEncapulation.ShadowDom
         <course-card *ngFor="let course of courses" [course]="course" (courseChanged)="save($event)">
     </div>
 ```
-- It is preferred to encapsulate making HTTP calls using a custom service in a `services` folder. We use the `@Injectable({providedIn: 'root'})` annotation to perform dependency injection which injects the service as a singleton:
+- It is preferred to encapsulate making HTTP calls using a custom service in a `services` folder. We use the `@Injectable({providedIn: 'root'})` annotation to perform dependency injection which **injects the service as a singleton across the entire application**:
 ```typescript
 import { Injectable } from '@angular/core';
 import { Observable} from 'rxjs';

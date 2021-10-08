@@ -740,6 +740,7 @@ The `passengerClasses()` method on the component:
 #### Using Promises (As Replacement For RxJs Subscriptions)
 - Instead of using RxJs subscriptions we can use promises by importing `rxjs/add/operator/toPromise` and calling `toPromise()` on the respone
 ```typescript
+
     import { Injectable } from '@angular/core';
     import { Http, Response, Headers, RequestOptions } from '@angular/http';   
     import { Observable } from 'rxjs/Observable';
