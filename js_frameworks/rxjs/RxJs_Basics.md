@@ -468,7 +468,7 @@ click$
 
 ### Error Handling With `catchError()`,  `throwError()`, `finalize()` and `retryWhen()`
 
-- `catchErro()` receives the error and the observable on which the error was caught (in case you wish to retry). In this example, we are catching the error on the ajax observable returned by our switchMap function, as we don't want the entire `input$` stream to be completed in the case of an error.
+- `catchError()` receives the error and the observable on which the error was caught (in case you wish to retry). In this example, we are catching the error on the ajax observable returned by our switchMap function, as we don't want the entire `input$` stream to be completed in the case of an error.
 - **Warning:** Be careful when you please the catch as it if you place in the outer stream is will cause that stream to complete on an error!
 - RxJS has special operator for *retrying*
 
@@ -524,7 +524,7 @@ const courses$: Observable<Course[]> = http$.pipe(
             );
 ```
 
-### Combination Operators (`startWith()`, `endWith()`, `merge()`, `combineLatest()` and `forkJoin()`)
+### Combination Operators (`startWith()`, `endWith()`, `merge()`, `combineLatest()`, `withLatestFrom()` and `forkJoin()`)
 - `startWith()` appends a specified value (or values) to the start of a stream (and `endWith()` appends values to the end of a stream):
 ```typescript
     const counter$ = interval(1000);
@@ -616,7 +616,26 @@ const courses$: Observable<Course[]> = http$.pipe(
       map(([first, second]) => first + second)
     ).subscribe(console.log);
 ```
+- There is also the `withLatestFrom()` which is similar - see [here](https://nishugoel.medium.com/forkjoin-combinelatest-withlatestfrom-50574d1c21ad#:~:text=But%20the%20point%20of%20differences,the%20input%20streams%20including%20itself.) for difference - and it allows combination of observables (long-running or not). It takes the latest value from each observable and submits them to the next operator in the chain as a tuple value. We generally use this operator when using the store pattern:
+```typescript
+  ngOnInit() {
 
+        const courseId = parseInt(this.route.snapshot.paramMap.get("courseId"));
+        const course$ = this.coursesService.loadCourseById(courseId).pipe(
+                startWith(null)
+            );
+        this.loadLessons().pipe(
+            withLatestFrom(this.courses$)
+        ).subscribe( ([lessons, courses]) => {
+            console.log("lessons", lessons);
+            console.log("courses", courses);
+        })
+  }
+  
+  loadLessons(): Observable<Lessons[]>{
+    ...
+  }
+```
 - `forkJoin()` will combine a number of observables and on subscription will subscribe to all inner observables but only after **all inner observables have completed** will the **last emitted values from each** inner observable be emitted as an array. So The use cases for forkJoin are generally similar to Promise.all
 ```typescript
     const GITHUB_API_BASE = 'https://api.github.com';
