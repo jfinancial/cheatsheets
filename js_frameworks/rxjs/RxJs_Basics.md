@@ -259,7 +259,7 @@ You can also add a subscription to another subscription and then unsubscribe is 
 ```
 
 ### Introduction to Filtering Operators (`take`, `first`, `takeWhile`, `takeUntil`, `distinctUntilChanged` and `distinctUntilKeyChanged`)
-- `take(x)` emits the first x values from the source and then completes
+- `take(n)` emits the first n values from the source and then completes
 ```typescript
     // Take the first value that matches provided criteria before completing
     // We could use a combination of filter(condition) and take(1),here  use the first operator to do the same
@@ -658,7 +658,7 @@ export const debug = (level: number, message:string) => (source: Observable<any>
 ### RxJS's `Subject`
 - An `Observable` is by default unicast. (*Unicasting* means that each subscribed observer owns an independent, individual execution path of the Observable.)  RxJs's `Subject` is like an `Observer`and an `Observable` wrapped into one so a `Subject`  has `next`, `error` and `complete` methods but also has a `pipe` method. (We can use the `asObservable()` method to transform the `Subject `to an `Observable`.) A `Subject` allows for sharing an execution of **multicasting** so it can broadcast changes to other observables which are subscribed to the Subject.  We use `Subject` to share state amongst multiple components. Subjects come in various flavours:
   
-  - `BehaviourSubject` is used to share execution and deliver an initial value (to early subscriber) and but will emit values to late subscribers. If completion takes place before a late subscriber subscribes then that subscriber receives no value
+  - `BehaviourSubject` is used to share execution and deliver an initial value (to early subscriber) and but will emit values to late subscribers. If completion takes place before a late subscriber subscribes then that subscriber receives no value. BehaviourSubject is the type we would use for implementing our own custom store/cache (like NgRx)
   
   - `ReplaySubject` is used to replay all values to late subscribers.
   
@@ -834,3 +834,72 @@ This process of calling multicast with a refcount is so common RxJs provides `sh
 --- 
 
 ### Implementing a Custom Store
+
+- Using `BehaviourSubject` we can implement an `ngRx`-style store where we can cache content:
+
+````typescript
+import {Injectable} from '@angular/core';
+import {BehaviorSubject, Observable, throwError} from 'rxjs';
+import {Course, sortCoursesBySeqNo} from '../model/course';
+import {catchError, map, shareReplay, tap} from 'rxjs/operators';
+import {HttpClient} from '@angular/common/http';
+import {LoadingService} from '../loading/loading.service';
+import {MessagesService} from '../messages/messages.service';
+
+@Injectable({
+    providedIn: 'root'
+})
+export class CoursesStore {
+
+    private subject = new BehaviorSubject<Course[]>([]);
+    courses$ : Observable<Course[]> = this.subject.asObservable();
+
+    constructor(
+        private http:HttpClient,
+        private loading: LoadingService,
+        private messages: MessagesService) {
+        this.loadAllCourses();
+    }
+
+    private loadAllCourses() {
+        const loadCourses$ = this.http.get<Course[]>('/api/courses').pipe(
+                map(response => response["payload"]),
+                catchError(err => {
+                    const message = "Could not load courses";
+                    this.messages.showErrors(message);
+                    console.log(message, err);
+                    return throwError(err);
+                }),
+                tap(courses => this.subject.next(courses))
+            );
+        this.loading.showLoaderUntilCompleted(loadCourses$).subscribe();
+    }
+
+    saveCourse(courseId:string, changes: Partial<Course>): Observable<any> {
+        const courses = this.subject.getValue();
+        const index = courses.findIndex(course => course.id == courseId);
+        const newCourse: Course = {...courses[index], ...changes};
+        const newCourses: Course[] = courses.slice(0);
+        newCourses[index] = newCourse;
+        this.subject.next(newCourses);
+        return this.http.put(`/api/courses/${courseId}`, changes).pipe(
+                catchError(err => {
+                    const message = "Could not save course";
+                    console.log(message, err);
+                    this.messages.showErrors(message);
+                    return throwError(err);
+                }),
+                shareReplay()
+            );
+    }
+
+    filterByCategory(category: string): Observable<Course[]> {
+        return this.courses$.pipe(
+                map(courses =>
+                    courses.filter(course => course.category == category)
+                        .sort(sortCoursesBySeqNo)
+                )
+            )
+    }
+}
+````
