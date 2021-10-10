@@ -339,7 +339,7 @@ encapulation: ViewEncapulation.ShadowDom
 - We can use Angular's `httpClient` along with `HttpParams` to make an HTTP get call `http.get<T>('/api/courses', {params})` and this will return an `Observable` which we must subscribe to. 
 - In the view we use the `async` pipe to implicitly subscribe to an Observable and Angular will also handle unsubscribing. We can put in an `*ngIf`
 ```angular2html
-    <div class="courses>"*ngIf="courses$ | async as courses">
+    <div class="courses" *ngIf="courses$ | async as courses">
         <course-card *ngFor="let course of courses" [course]="course" (courseChanged)="save($event)">
     </div>
 ```
