@@ -79,3 +79,7 @@ export class CoursesService {
 ### Pattern #2: Smart vs Presentational Components
 - **Presentational components** only handle encapsualates pure presentation logic display concerns
 - **Smart components** generally delegate to services and then feed the data for presentational component
+
+
+### Pattern #3: Decoupled Communication Via A Shared Service
+- Often we may have components at different levels in the component hierarchy that need interact and cannot use `@Input` because there is no parent-child relationship between these components. An example of this situation is where we might want to use a spinner which might live at the application root level above the `<route-outlet>`
