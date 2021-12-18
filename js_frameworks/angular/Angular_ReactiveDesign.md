@@ -9,77 +9,377 @@ The source for these notes are the [Angular University's Reactive Angular (with 
 - When we have services that have mutable state then when this state changes there is no way for the rest of the application to know this state was modified. Also we can't use optiimized change detection such as `onPush` which only looks at a component's inputs
 - The solution is to refactor into stateless services and note how we use `shareReplay()`
 ```typescript
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Course} from '../model/course';
-import {Observable} from 'rxjs';
-import {map, shareReplay} from 'rxjs/operators';
-import {Lesson} from '../model/lesson';
-    
-@Injectable({providedIn:'root'})
-export class CoursesService {
-
-    constructor(private http:HttpClient) {}
-
-    loadCourseById(courseId:number) {
-       return this.http.get<Course>(`/api/courses/${courseId}`).pipe(
-              shareReplay()
-            );
-    }
-
-    loadAllCourseLessons(courseId:number): Observable<Lesson[]> {
-        return this.http.get<Lesson[]>('/api/lessons', {
-            params: {
-                pageSize: "10000",
-                courseId: courseId.toString()
-            }
-        }).pipe(
-                map(res => res["payload"]),
+  import {Injectable} from '@angular/core';
+  import {HttpClient} from '@angular/common/http';
+  import {Course} from '../model/course';
+  import {Observable} from 'rxjs';
+  import {map, shareReplay} from 'rxjs/operators';
+  import {Lesson} from '../model/lesson';
+      
+  @Injectable({providedIn:'root'})
+  export class CoursesService {
+  
+      constructor(private http:HttpClient) {}
+  
+      loadCourseById(courseId:number) {
+         return this.http.get<Course>(`/api/courses/${courseId}`).pipe(
                 shareReplay()
-            );
-    }
-
-    loadAllCourses(): Observable<Course[]> {
-        return this.http.get<Course[]>("/api/courses").pipe(
-                map(res => res["payload"]),
-                shareReplay()
-            );
-    }
-
-
-    saveCourse(courseId:string, changes: Partial<Course>):Observable<any> {
-        return this.http.put(`/api/courses/${courseId}`, changes).pipe(
-                shareReplay()
-            );
-    }
-
-
-    searchLessons(search:string): Observable<Lesson[]> {
-        return this.http.get<Lesson[]>('/api/lessons', {
-            params: {
-                filter: search,
-                pageSize: "100"
-            }
-        }).pipe(
-                map(res => res["payload"]),
-                shareReplay()
-            );
-    }
-    
-}
+              );
+      }
+  
+      loadAllCourseLessons(courseId:number): Observable<Lesson[]> {
+          return this.http.get<Lesson[]>('/api/lessons', {
+              params: {
+                  pageSize: "10000",
+                  courseId: courseId.toString()
+              }
+          }).pipe(
+                  map(res => res["payload"]),
+                  shareReplay()
+              );
+      }
+  
+      loadAllCourses(): Observable<Course[]> {
+          return this.http.get<Course[]>("/api/courses").pipe(
+                  map(res => res["payload"]),
+                  shareReplay()
+              );
+      }
+  
+  
+      saveCourse(courseId:string, changes: Partial<Course>):Observable<any> {
+          return this.http.put(`/api/courses/${courseId}`, changes).pipe(
+                  shareReplay()
+              );
+      }
+  
+  
+      searchLessons(search:string): Observable<Lesson[]> {
+          return this.http.get<Lesson[]>('/api/lessons', {
+              params: {
+                  filter: search,
+                  pageSize: "100"
+              }
+          }).pipe(
+                  map(res => res["payload"]),
+                  shareReplay()
+              );
+      }
+      
+  }
 ```
 - We use Angular's `async` pipe to subscribe to the observables (and which will automatically handle unsubscribing):
 ```angular2html
-    <div class="courses" *ngIf="courses$ | async as courses">
-        <course-card *ngFor="let course of courses" [course]="course" (courseChanged)="save($event)">
-    </div>
+   <div class="courses" *ngIf="courses$ | async as courses">
+       <course-card *ngFor="let course of courses" [course]="course" (courseChanged)="save($event)">
+   </div>
 ```
 
 
 ### Pattern #2: Smart vs Presentational Components
 - **Presentational components** only handle encapsualates pure presentation logic display concerns
 - **Smart components** generally delegate to services and then feed the data for presentational component
+- Above we declared
+- 
+```typescript
+  @Component({
+      selector: 'course-dialog',
+      templateUrl: './course-dialog.component.html',
+      styleUrls: ['./course-dialog.component.css'],
+      providers: [ LoadingService, MessagesService ]
+  })
+  export class CourseDialogComponent {
+  
+      form: FormGroup;
+      course:Course;
+  
+      constructor(
+          private fb: FormBuilder,
+          private dialogRef: MatDialogRef<CourseDialogComponent>,
+          @Inject(MAT_DIALOG_DATA) course:Course,
+          private coursesService: CoursesService
+          ) 
+      {
+          this.course = course;
+          this.form = fb.group({
+              description: [course.description, Validators.required],
+              category: [course.category, Validators.required],
+              releasedAt: [moment(), Validators.required],
+              longDescription: [course.longDescription,Validators.required]
+          });
+      }
+  
+      save() {
+        const changes = this.form.value;
+        this.coursesService.saveChanges(this.course.id, changes).subscribe(
+           val => { dialogRef.close(val); }
+        );   
+      }
+  
+      close() { this.dialogRef.close();}
+  } 
+```
 
 
-### Pattern #3: Decoupled Communication Via A Shared Service
-- Often we may have components at different levels in the component hierarchy that need interact and cannot use `@Input` because there is no parent-child relationship between these components. An example of this situation is where we might want to use a spinner which might live at the application root level above the `<route-outlet>`
+### Pattern #3: Decoupled Communication Via A Shared Service (e.g Spinners & Loading Service, Error Messages Panel & Message Service)
+- Often we may have components at different levels in the component hierarchy tree that need interact and cannot use `@Input` because there is no parent-child relationship between these components. 
+- An example of this situation is where we might want to use a **spinner** which might live at the application root level above the `<route-outlet>`
+- We can use Materialize spinner as `loading-component.html`. The template checks the `loading$` Observable of the `LoadingService`
+
+```angular2html
+  <div class="spinner-container" *ngIf="loadingService.loading$ | async">
+      <mat-spinner></mat-spinner>
+  </div>
+```
+
+- We will put our `<loading>` spinner component in the `app.component.html`
+
+```angular2html
+  <mat-sidenav-container fullscreen>
+  
+    <mat-sidenav #start (click)="start.close()">
+      <mat-nav-list>
+        <a mat-list-item routerLink="about">
+          <mat-icon>question_answer</mat-icon>
+          <span>About</span>
+        </a>
+        <a mat-list-item>
+          <mat-icon>person_add</mat-icon>
+          <span>Register</span>
+        </a>
+      </mat-nav-list>
+    </mat-sidenav>
+  
+    <mat-toolbar color="primary">
+      <div class="toolbar-tools">
+        <button mat-icon-button (click)="start.open('mouse')">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <div class="filler"></div>
+      </div>
+  
+    </mat-toolbar>
+    <messages></messages>
+    <loading></loading>
+    <router-outlet></router-outlet>
+  </mat-sidenav-container>
+```
+
+- We will define our `LoadingComponent` which takes the `LoadingService`:
+
+```typescript
+  import { Component, OnInit } from '@angular/core';
+  import {Observable} from 'rxjs';
+  
+  @Component({
+    selector: 'loading',
+    templateUrl: './loading.component.html',
+    styleUrls: ['./loading.component.css']
+  })
+  export class LoadingComponent implements OnInit {
+  
+    constructor(public loadingService: LoadingService) {}  //make public to expose
+  
+    ngOnInit() {  }
+  
+  } 
+```
+
+- We also define our shared `LoadingService`. We will use a `BehaviorSubject` to define our custom `Observable` (i.e. `loading$`). We can them subscribe to the `Subject` and it can also emit values so we use the subject to define to when our `Observable` emits the values `true` or `false`. (We use `BehaviourSubject` as this typ e of subject remembers the last value emitted by the subject and it takes an initial value.) We don't expose our subject as this is private to the service.
+- In our implementation of `showLoaderUntilCompleted()` we create another initial/default observable using `of(null)` to create an *observable chain* which we will use to trigger our side-effect (i.e. the loading indicator) and this side-effect is called by `tap()`, we then use `concatMap()` to take the values from the source observable (`obs$`) and when this new observable either completes or errors then we calling our `loadingOff()` side-effect
+
+```typescript
+  import {Injectable} from '@angular/core';
+  import {BehaviorSubject, Observable, Subject,of} from 'rxjs';
+  import {concatMap, finalize, tap} from 'rxjs/operators';
+  
+  @Injectable()
+  export class LoadingService {
+  
+      private loadingSubject = new BehaviorSubject<boolean>(false);
+      
+      //exposed as public but takes the values from our subject
+      loading$: Observable<boolean> = this.loadingSubject.asObservable(); 
+      
+      showLoaderUntilCompleted<T>(obs$: Observable<T>): Observable<T> {
+          return of(null)
+              .pipe(
+                  tap(() => this.loadingOn()),
+                  concatMap(() => obs$), //concatenate with our source observable
+                  finalize(() => this.loadingOff())  // gets called when completes or errors
+              );
+      }
+  
+      loadingOn() {
+          this.loadingSubject.next(true);
+      }
+  
+      loadingOff() {
+          this.loadingSubject.next(false);
+      }
+  }
+```
+- Finally, in our `HomeComponent` we can use our `showLoaderUntilCompleted`
+```typescript
+  @Component({
+    selector: 'home',
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.css'],
+  })
+  export class HomeComponent implements OnInit {
+  
+    beginnerCourses$: Observable<Course[]>;
+    advancedCourses$: Observable<Course[]>;
+  
+    constructor(private coursesService: CoursesService, 
+                private loadingService: LoadingService,
+                private messagesService: NessagesService) {}
+  
+    ngOnInit() {
+        this.reloadCourses();
+    }
+  
+    reloadCourses() {
+        const courses$ = this.coursesService.loadAllCourses().pipe(
+            map(courses => courses.sort(sortCoursesBySeqNo)
+            catch( error => {
+                const msg = "Could not load courses";
+                this.messagesService.showErrors(msg);
+                console.log(message, error);
+                return throwError(error);
+            })
+        );
+        const loadCourses$ = this.loadingService.showLoaderUntilCompleted(courses$);
+        this.beginnerCourses$ = loadCourses$.pipe(
+           map( courses => courses.filter(course => course.category == 'BEGINNER')) 
+        )
+        this.advancedCourses$ = loadCourses$.pipe(
+           map( courses => courses.filter(course => course.category == 'ADVANCED')) 
+        )
+    } 
+  }
+```
+- Note that our `LoaingService` is available any child component because it is specified in the `providers` of our `AppComponent`:
+```typescript
+  @Component({
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css'],
+    providers: [ LoadingService ]
+  })
+  export class AppComponent implements  OnInit {
+  
+      constructor() { }
+  }
+```
+- ...but our `CourseDialogComponent` (which is a Materialize component) is not a child component of the application root component so we need to add to `providers` and note we can use our `showLoaderUntilCompleted` method in our `save()` method:
+
+```typescript
+  @Component({
+    selector: 'course-dialog',
+    templateUrl: './course-dialog.component.html',
+    styleUrls: ['./course-dialog.component.css'],
+    providers: [
+        LoadingService,
+        MessagesService
+      ]
+  })
+  export class CourseDialogComponent {
+  
+      form: FormGroup;  
+      course:Course;
+  
+      constructor(
+          private fb: FormBuilder,
+          private dialogRef: MatDialogRef<CourseDialogComponent>,
+          @Inject(MAT_DIALOG_DATA) course:Course,
+          private coursesService: CoursesService,
+          private loadingService: LoadingService,
+          private messagesService: MessagesService
+      ) {
+          this.course = course; 
+          this.form = fb.group({
+              description: [course.description, Validators.required],
+              category: [course.category, Validators.required],
+              releasedAt: [moment(), Validators.required],
+              longDescription: [course.longDescription,Validators.required]
+          });
+      }
+  
+      save() {
+        const changes = this.form.value;
+        const saveCourses$ = this.coursesService.saveCourse(this.course.id, changes).pipe(
+         catch( error => {
+                 const msg = "Could not save course";
+                 this.messagesService.showErrors(msg);
+                 console.log(message, error);
+                 return throwError(error);
+             })
+        );
+        this.loadingService.showLoaderUntilCompleted(saveCourses$).subscribe(
+          val => this.dialogRef.close(val);
+        );    
+      }
+  
+      close() {
+          this.dialogRef.close();
+      }
+  }
+```
+### Displaying Errors via a `MessagesComponent`
+- We want a `MessagesComponent` to display errors. This will work with a `MessagesService` which gets called in a `catch` block.  We don't want a global singleton here. There might be a message service instance associated with different components. We can use our injectable `MessagesService` which is a `BehaviorSubject` wrapping a list of messages but when we transform this into our observable we also need to check for the initial value of empty array and filter this out:
+```typescript
+  import {Injectable} from '@angular/core';
+  import {BehaviorSubject, Observable} from 'rxjs';
+  import {filter} from 'rxjs/operators';
+  
+  @Injectable()
+  export class MessagesService {
+  
+      private subject = new BehaviorSubject<string[]>([]);
+  
+      errors$: Observable<string[]> = this.subject.asObservable().pipe(
+              filter(messages => messages && messages.length > 0)  //make sure it's not empty
+          );
+  
+      showErrors(...errors: string[]) {   //public method we call to show error
+          this.subject.next(errors);
+      }
+  } 
+```
+- We define our `MessagesComponent` which contains the errors
+```typescript
+  @Component({
+   selector: 'messages',
+   templateUrl: './messages.component.html',
+   styleUrls: ['./messages.component.css']
+  })
+  export class MessagesComponent implements OnInit {
+  
+   showMessages = false; //boolean flag to determine if messages are shown
+   errors$: Observable<string[]>;
+  
+   constructor(public messagesService: MessagesService) {}
+  
+   ngOnInit() {
+       this.errors$ = this.messagesService.errors$.pipe(
+           tap(() => this.showMessages = true)
+       );
+   }
+  
+   onClose() {
+       this.showMessages = false;
+   }
+  }
+```
+- ..and the accompanying template:
+```angular2html
+  <ng-container *ngIf="(errors$ | async) as errors">
+      <div class="messages-container" *ngIf="showMessages">
+          <div class="message" *ngFor="let error of errors">
+              {{error}}
+          </div>
+          <mat-icon class="close" (click)="onClose()">close</mat-icon>
+      </div>
+  </ng-container>
+```
