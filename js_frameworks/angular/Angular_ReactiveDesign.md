@@ -457,7 +457,6 @@ export class CoursesStore {
 - This pattern will keep the user profile in memory and therefore uses the store as a global singleton and hence `@Injectable`'s `providedIn` property is set to `root`
 ```typescript
 const AUTH_DATA = "auth_data";
-
 @Injectable({
     providedIn: 'root'
 })
@@ -473,7 +472,7 @@ export class AuthStore {
         this.isLoggedOut$ = this.isLoggedIn$.pipe(map(loggedIn => !loggedIn));
         const user = localStorage.getItem(AUTH_DATA);
         if (user) {
-            this.subject.next(JSON.parse(user));
+            this.subject.next(JSON.parse(user));  //if user exists in local storage then rehydrate
         }
     }
 
@@ -492,6 +491,93 @@ export class AuthStore {
         this.subject.next(null);
         localStorage.removeItem(AUTH_DATA);
     }
+}
+```
+- We can now use the `AuthStore` in our `LoginComponent`
+```typescript
+@Component({
+  selector: 'login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss']
+})
+export class LoginComponent implements OnInit {
+
+  form: FormGroup;
+
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private auth: AuthStore) {
+    this.form = fb.group({
+      email: ['test@angular-university.io', [Validators.required]],
+      password: ['test', [Validators.required]]
+    });
+  }
+
+  ngOnInit() {}
+
+  login() {
+    const val = this.form.value;
+    this.auth.login(val.email, val.password)
+        .subscribe(
+            () =>  {  this.router.navigateByUrl("/courses")},
+            err => { alert("Login failed!"); }
+        );
+  }
+}
+```
+- In our `AppComponent` we now inject our `AuthStore` as a public variable
+```typescript
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent implements  OnInit {
+
+  constructor(public auth: AuthStore) {}
+
+  ngOnInit() {}
+
+  logout() { this.auth.logout(); }
 
 }
+```
+- ...and in our template we can now use `auth.isLoggedOut$` in our `ngIf` to display the Login and Logout buttons:
+
+```angular2html
+<mat-sidenav-container fullscreen>
+
+  <mat-sidenav #start (click)="start.close()">
+    <mat-nav-list>
+      <a mat-list-item routerLink="/">
+        <mat-icon>library_books</mat-icon>
+        <span>Courses</span>
+      </a>
+      <a mat-list-item routerLink="login" *ngIf="auth.isLoggedOut$ | async">
+        <mat-icon>account_circle</mat-icon>
+        <span>Login</span>
+      </a>
+      <a mat-list-item (click)="logout()" *ngIf="auth.isLoggedIn$ | async">
+        <mat-icon>exit_to_app</mat-icon>
+        <span>Logout</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-toolbar color="primary">
+    <div class="toolbar-tools">
+      <button mat-icon-button (click)="start.open('mouse')">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <div class="filler"></div>
+    </div>  
+  </mat-toolbar>
+  
+  <messages></messages>
+  <loading></loading>
+  <router-outlet></router-outlet>
+
+</mat-sidenav-container>
 ```
