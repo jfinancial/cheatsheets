@@ -581,3 +581,98 @@ export class AppComponent implements  OnInit {
 
 </mat-sidenav-container>
 ```
+
+### Pattern #6: Master-Detail Pattern
+```typescript
+@Component({
+  selector: 'course',
+  templateUrl: './search-lessons.component.html',
+  styleUrls: ['./search-lessons.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class SearchLessonsComponent implements OnInit {
+
+  searchResults$ : Observable<Lesson[]>;
+
+  activeLesson:Lesson;
+
+  constructor(private coursesService: CoursesService) { }
+
+  ngOnInit() { }
+
+  onSearch(search:string) {
+      this.searchResults$  = this.coursesService.searchLessons(search);
+  }
+
+  openLesson(lesson:Lesson) {
+    this.activeLesson = lesson;
+  }
+
+  onBackToSearch() {
+    this.activeLesson = null;
+  }
+```
+- ..and the accompanying template
+```angular2html
+<div class="course">
+  <h2>Search All Lessons</h2>
+  <mat-form-field class="search-bar">
+    <input matInput placeholder="Type your search" #searchInput autocomplete="off">
+  </mat-form-field>
+
+  <button class="search" mat-raised-button color="primary"
+          (click)="onSearch(searchInput.value)" >
+    <mat-icon>search</mat-icon>
+    Search
+  </button>
+
+    <ng-container  *ngIf="!activeLesson;else detail">
+        <ng-container *ngIf="(searchResults$ | async) as lessons">
+            <table class="lessons-table mat-elevation-z7">
+                <thead>
+                <th>#</th>
+                <th>Description</th>
+                <th>Duration</th>
+                </thead>
+                <tr class="lesson-row" *ngFor="let lesson of lessons"
+                    (click)="openLesson(lesson)">
+                    <td class="seqno-cell">{{lesson.seqNo}}</td>
+                    <td class="description-cell">{{lesson.description}}</td>
+                    <td class="duration-cell">{{lesson.duration}}</td>
+                </tr>
+            </table>
+        </ng-container>
+    </ng-container>
+
+    <ng-template #detail>
+        <button mat-raised-button class="back-btn" (click)="onBackToSearch()">
+            <mat-icon>arrow_back_ios</mat-icon>
+            Back to Search
+        </button>
+        <lesson [lesson]="activeLesson"></lesson>
+    </ng-template>
+</div>
+```
+- Finally we have our `CoursesService` implementation:
+
+```typescript
+@Injectable({
+    providedIn: 'root'
+})
+export class CoursesService {
+
+    constructor(private http:HttpClient) { }
+
+    searchLessons(search:string): Observable<Lesson[]> {
+        return this.http.get<Lesson[]>('/api/lessons', {
+            params: {
+                filter: search,
+                pageSize: "100"
+            }
+        }).pipe(
+                map(res => res["payload"]),
+                shareReplay()
+            );
+    }
+}
+```
