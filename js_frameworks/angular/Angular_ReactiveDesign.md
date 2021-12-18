@@ -121,7 +121,7 @@ The source for these notes are the [Angular University's Reactive Angular (with 
 ```
 
 
-### Pattern #3: Decoupled Communication Via A Shared Service (e.g Spinners & Loading Service, Error Messages Panel & Message Service)
+### Pattern #3: Decoupled Communication Via A Shared Service (e.g Spinners & Loading Service, Error Messages Panel & Message Service) And Custom Observables
 - Often we may have components at different levels in the component hierarchy tree that need interact and cannot use `@Input` because there is no parent-child relationship between these components. 
 - An example of this situation is where we might want to use a **spinner** which might live at the application root level above the `<route-outlet>`
 - We can use Materialize spinner as `loading-component.html`. The template checks the `loading$` Observable of the `LoadingService`
@@ -185,9 +185,8 @@ The source for these notes are the [Angular University's Reactive Angular (with 
   } 
 ```
 
-- We also define our shared `LoadingService`. We will use a `BehaviorSubject` to define our custom `Observable` (i.e. `loading$`). We can them subscribe to the `Subject` and it can also emit values so we use the subject to define to when our `Observable` emits the values `true` or `false`. (We use `BehaviourSubject` as this typ e of subject remembers the last value emitted by the subject and it takes an initial value.) We don't expose our subject as this is private to the service.
+- We also define our shared `LoadingService`. We will use a `BehaviorSubject` to define our custom `Observable` (i.e. `loading$`). We can them subscribe to the `Subject` and it can also emit values so we use the subject to define to when our `Observable` emits the values `true` or `false`. (We use `BehaviourSubject` as this typ e of subject remembers the last value emitted by the subject and it takes an initial value.) We don't expose our subject as this is private to the service. *The best way to expose custom observables is to use a private `BehaviourSubject`*
 - In our implementation of `showLoaderUntilCompleted()` we create another initial/default observable using `of(null)` to create an *observable chain* which we will use to trigger our side-effect (i.e. the loading indicator) and this side-effect is called by `tap()`, we then use `concatMap()` to take the values from the source observable (`obs$`) and when this new observable either completes or errors then we calling our `loadingOff()` side-effect
-
 ```typescript
   import {Injectable} from '@angular/core';
   import {BehaviorSubject, Observable, Subject,of} from 'rxjs';
@@ -382,4 +381,117 @@ The source for these notes are the [Angular University's Reactive Angular (with 
           <mat-icon class="close" (click)="onClose()">close</mat-icon>
       </div>
   </ng-container>
+```
+
+### Pattern #4: Stateful Components and State Management via a Basic Store
+- One the problems with an entirely stateless approach is that we will constantly be reloading the same data even if the data is not modified which creates a lot of network overhead.
+- Note how we use the `tap()` method to send the courses to the subject
+- Note how the `save()` method is `optimistic` (i.e. it will update in memory before doing the Http put). It uses a `Partial` since not all the properties of the course may have changed when we save. Save returns `Observable<any>` because it can return an error.
+```typescript
+@Injectable({
+    providedIn: 'root'
+})
+export class CoursesStore {
+
+    private subject = new BehaviorSubject<Course[]>([]);
+    courses$ : Observable<Course[]> = this.subject.asObservable();
+
+    constructor(
+        private http:HttpClient,
+        private loading: LoadingService,
+        private messages: MessagesService) {
+        this.loadAllCourses();
+    }
+
+    private loadAllCourses() {
+        const loadCourses$ = this.http.get<Course[]>('/api/courses')
+            .pipe(
+                map(response => response["payload"]),
+                catchError(err => {
+                    const message = "Could not load courses";
+                    this.messages.showErrors(message);
+                    console.log(message, err);
+                    return throwError(err);
+                }),
+                tap(courses => this.subject.next(courses))
+            );
+        this.loading.showLoaderUntilCompleted(loadCourses$)
+            .subscribe();
+
+    }
+
+    saveCourse(courseId:string, changes: Partial<Course>): Observable<any> {
+        const courses = this.subject.getValue();
+        const index = courses.findIndex(course => course.id == courseId);
+        const newCourse: Course = {
+          ...courses[index],
+          ...changes
+        };
+        const newCourses: Course[] = courses.slice(0);  //take a complete copy of the current array
+        newCourses[index] = newCourse;                  //replace in memory with updates course
+        this.subject.next(newCourses);                  //send update courses to subject before persisting
+        return this.http.put(`/api/courses/${courseId}`, changes)
+            .pipe(
+                catchError(err => {
+                    const message = "Could not save course";
+                    console.log(message, err);
+                    this.messages.showErrors(message);
+                    return throwError(err);
+                }),
+                shareReplay()
+            );
+    }
+
+    filterByCategory(category: string): Observable<Course[]> {
+        return this.courses$
+            .pipe(
+                map(courses =>
+                    courses.filter(course => course.category == category)
+                        .sort(sortCoursesBySeqNo)
+                )
+            )
+    }
+} 
+```
+### Pattern #5: Authentication Store
+- This pattern will keep the user profile in memory and therefore uses the store as a global singleton and hence `@Injectable`'s `providedIn` property is set to `root`
+```typescript
+const AUTH_DATA = "auth_data";
+
+@Injectable({
+    providedIn: 'root'
+})
+export class AuthStore {
+
+    private subject = new BehaviorSubject<User>(null);
+    user$ : Observable<User> = this.subject.asObservable();
+    isLoggedIn$ : Observable<boolean>;
+    isLoggedOut$ : Observable<boolean>;
+
+    constructor(private http: HttpClient) {
+        this.isLoggedIn$ = this.user$.pipe(map(user => !!user)); //double-negate
+        this.isLoggedOut$ = this.isLoggedIn$.pipe(map(loggedIn => !loggedIn));
+        const user = localStorage.getItem(AUTH_DATA);
+        if (user) {
+            this.subject.next(JSON.parse(user));
+        }
+    }
+
+    login(email:string, password:string): Observable<User> {
+        return this.http.post<User>("/api/login", {email, password})
+            .pipe(
+                tap(user => {
+                    this.subject.next(user);
+                    localStorage.setItem(AUTH_DATA, JSON.stringify(user));
+                }),
+                shareReplay()
+            );
+    }
+
+    logout() {
+        this.subject.next(null);
+        localStorage.removeItem(AUTH_DATA);
+    }
+
+}
 ```
