@@ -609,10 +609,10 @@ export class SearchLessonsComponent implements OnInit {
   }
 
   onBackToSearch() {
-    this.activeLesson = null;
+    this.activeLesson = null; //hide the detail and go back to the list
   }
 ```
-- ..and the accompanying template
+- ..and the accompanying template in which we have two `click` events to call `onSearch` or `onBackToSearch` and use an `*ngIf` to render either the master or the details (which is in an `ngTemplate` called `details`)
 ```angular2html
 <div class="course">
   <h2>Search All Lessons</h2>
@@ -626,7 +626,7 @@ export class SearchLessonsComponent implements OnInit {
     Search
   </button>
 
-    <ng-container  *ngIf="!activeLesson;else detail">
+    <ng-container  *ngIf="!activeLesson; else detail">
         <ng-container *ngIf="(searchResults$ | async) as lessons">
             <table class="lessons-table mat-elevation-z7">
                 <thead>
@@ -676,3 +676,6 @@ export class CoursesService {
     }
 }
 ```
+
+
+### Pattern #7: The Single Data Observable Pattern
