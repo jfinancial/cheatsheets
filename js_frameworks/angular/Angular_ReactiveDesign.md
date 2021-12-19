@@ -681,7 +681,7 @@ export class CoursesService {
 ### Pattern #7: The Single Data Observable Pattern (using `combineLatest` and `OnPush` for ChangeDetection)
 - In this example, we define an interface (`CourseData`) to combine two related observables using `combineLatest` operator. The `combineLatest` operator means whenever any combined observable emits a value then that value will be included in the **combined observable**. By default `combineLatest` will wait for both values before emitting its first value therefore we must use `startWith` to set an initial value
 - In our `CourseComponent`, we first get the `courseId` from the the URL via `ActivatedRoute`', using the route's `route.snapshot` to get the `paramMap` from which we get the `courseId`:
-- We also use `OnPush` ChangeDetectionStrategy to tell Angular to rerender if data gets changed
+- We also use `OnPush` ChangeDetectionStrategy to tell Angular to rerender if data gets changed and this turns our application into a **Reactive* app since changes get automatically pushed to the front-end
 ```typescript
 interface CourseData {
     course: Course;
