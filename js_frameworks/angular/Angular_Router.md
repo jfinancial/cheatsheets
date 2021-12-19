@@ -4,7 +4,9 @@ The source for these notes are the [Angular University's Angular Router](https:/
 The source code is contained [here](https://github.com/angular-university/angular-router-course
 
 - Angular router is used so SPA and has performance benefits because it can lazily load
-### 1: Login Component
+
+### Defining a Login using Routes
+ 
 - We define a component which provides login functionality:
 
 ```typescript
@@ -164,6 +166,9 @@ export class AppRoutingModule { }
 
 - We can define a **module specific routing** which contain child routes and note how we now use `RouterModule.forChild()` to define child routes (e.g. mapping `courseUrl` to a `CourseComponent`)
 - We map `resolve` to an implementation of `Resolver<T>` to resolve a dependency for the route and we must add this to `providers` 
+- In the path to lessons we also include a parameter `lessonSeqNo` and in the template we could refer to this using `[routerLink]="['lessons', lesson.seqNo]`
+
+
 ```typescript
 const routes: Routes = [
     {
@@ -215,6 +220,9 @@ export class CoursesRoutingModule {
 
 }
 ```
+
+### Using RouterResolver<T> to resolve data for a Route
+
 - We use a `RouterResolver` - in this case `CourseResolver` -  to resolve an `Observable<Course>` from a **route parameter**. Note that a resolver should resolve a single observable so if we are receiving a stream containing multiple values then we might want to pipe this call and `first()`:
 ```typescript
 @Injectable()
@@ -228,7 +236,19 @@ export class CourseResolver implements Resolve<Course> {
     }
 } 
 ```
+- In another example resolving the detail in the **Master-Detail** pattern we refer :
+```typescript
+@Injectable()
+export class LessonsResolver implements Resolve<LessonSummary[]> {
 
+    constructor(private courses: CoursesService) { }
+
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<LessonSummary[]> {
+        const courseUrl = route.paramMap.get("courseUrl");
+        return this.courses.loadAllCourseLessonsSummary(courseUrl);
+    }
+}
+```
 - In our `CourseComponent` we use `ActivatedRoute` to get the course which has been resolved by our resolver:
 ```typescript
 @Component({
@@ -338,7 +358,57 @@ export class LoadingComponent implements OnInit {
               );
       }
   }
-
-
 }
+```
+
+### Route observables vs Route snapshots 
+- In our detail component, note the difference `route.data` and `route.snapshot.data` between (further explained [here](https://www.udemy.com/course/angular-router-course/learn/lecture/20397525#overview)). What is the difference? The `data` observable is going to emit all the **latest data** produced by the resolvers associated with the current route whereas `snapshot.data` is the state when the component was firs instantiated: 
+
+```typescript
+@Component({
+  selector: 'lesson',
+  templateUrl: './lesson-detail.component.html',
+  styleUrls: ['./lesson-detail.component.css']
+})
+export class LessonDetailComponent implements OnInit {
+
+  lesson$: Observable<LessonDetail>;
+  constructor(private route: ActivatedRoute, private router: Router) {}
+
+  ngOnInit() {
+      //this.lesson$ = this.route.snapshot.data.pipe(map(data => data["lesson"])); - don't use the snapshot!
+      this.lesson$ = this.route.data.pipe(map(data => data["lesson"]));
+  }
+
+  previous(lesson: LessonDetail) {
+      this.router.navigate(['lessons', lesson.seqNo - 1], {relativeTo: this.route.parent});
+  }
+  
+  next(lesson: LessonDetail) {
+        this.router.navigate(['lessons', lesson.seqNo + 1], {relativeTo: this.route.parent});
+  }
+}
+```
+- ... and here is the associated detail template:
+
+```angular2html
+<a class="back" href="javascript:void(0)" [routerLink]="['../..']">Back To Course</a>
+
+<div class="lesson-detail" *ngIf="(lesson$ | async) as lesson">
+
+    <h3>{{lesson.description}}</h3>
+    <h5>Duration: {{lesson.duration}}</h5>
+
+  <div class="video-container">
+    <mat-icon class="nav-button" *ngIf="!lesson.first" (click)="previous(lesson)">
+      navigate_before
+    </mat-icon>
+    <iframe width="400" height="220"  frameborder="0" allowfullscreen
+            [src]="('https://www.youtube.com/embed/' + lesson?.videoId) | safeUrl">
+    </iframe>
+    <mat-icon class="nav-button" *ngIf="!lesson.last" (click)="next(lesson)">
+      navigate_next
+    </mat-icon>
+  </div>
+</div>
 ```
