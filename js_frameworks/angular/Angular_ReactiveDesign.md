@@ -678,4 +678,101 @@ export class CoursesService {
 ```
 
 
-### Pattern #7: The Single Data Observable Pattern
+### Pattern #7: The Single Data Observable Pattern (using `combineLatest` and `OnPush` for ChangeDetection)
+- In this example, we define an interface (`CourseData`) to combine two related observables using `combineLatest` operator. The `combineLatest` operator means whenever any combined observable emits a value then that value will be included in the **combined observable**. By default `combineLatest` will wait for both values before emitting its first value therefore we must use `startWith` to set an initial value
+- In our `CourseComponent`, we first get the `courseId` from the the URL via `ActivatedRoute`', using the route's `route.snapshot` to get the `paramMap` from which we get the `courseId`:
+- We also use `OnPush` ChangeDetectionStrategy to tell Angular to rerender if data gets changed
+```typescript
+interface CourseData {
+    course: Course;
+    lessons: Lesson[];
+}
+
+@Component({
+  selector: 'course',
+  templateUrl: './course.component.html',
+  styleUrls: ['./course.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class CourseComponent implements OnInit {
+
+  data$: Observable<CourseData>;
+
+  constructor(private route: ActivatedRoute, private coursesService: CoursesService) {}
+
+  ngOnInit() {
+        const courseId = parseInt(this.route.snapshot.paramMap.get("courseId"));
+        const course$ = this.coursesService.loadCourseById(courseId).pipe(
+                startWith(null)
+            );
+
+        const lessons$ = this.coursesService.loadAllCourseLessons(courseId).pipe(
+                startWith([])
+            );
+
+        this.data$ = combineLatest([course$, lessons$])
+            .pipe(
+                map(([course, lessons]) => {
+                    return {
+                        course,
+                        lessons
+                    }
+                }),
+                tap(console.log)
+            );
+  }
+}
+```
+- In our template we now have **two related observables**: `data` and `lessons`. To render our template, we want a **Single Data Observable** so we defined our interface `CourseData` which combined both values.
+- We use the template our `data` Observable - using an `*ngIf` to make sure it is not null - but to avoid nesting `ng-container` we use another `*ngIf` to check `data.lessons.length` to decide whether to render
+```angular2html
+<ng-container *ngIf="(data$ | async) as data">
+    <div class="course">
+        <h2>{{data.course?.description}}</h2>
+        <img class="course-thumbnail" [src]="data.course?.iconUrl" *ngIf="data.course">
+        <table class="lessons-table mat-elevation-z7" *ngIf="data.lessons.length">
+            <thead>
+            <th>#</th>
+            <th>Description</th>
+            <th>Duration</th>
+            </thead>
+            <tr class="lesson-row" *ngFor="let lesson of data.lessons">
+                <td class="seqno-cell">{{lesson.seqNo}}</td>
+                <td class="description-cell">{{lesson.description}}</td>
+                <td class="duration-cell">{{lesson.duration}}</td>
+            </tr>
+        </table>
+    </div>
+</ng-container>
+```
+
+- Our service uses the `HttpClient` to return the observable and uses `shareReplay()` to avoid duplicate requests
+```typescript
+@Injectable({
+    providedIn:'root'
+})
+export class CoursesService {
+
+    constructor(private http:HttpClient) { }
+
+    loadCourseById(courseId:number) {
+       return this.http.get<Course>(`/api/courses/${courseId}`).pipe(
+              shareReplay()
+            );
+    }
+    
+    loadAllCourseLessons(courseId:number): Observable<Lesson[]> {
+        return this.http.get<Lesson[]>('/api/lessons', {
+            params: {
+                pageSize: "10000",
+                courseId: courseId.toString()
+            }
+        }).pipe(
+                map(res => res["payload"]),
+                shareReplay()
+            );
+    }
+}
+```
+
+
