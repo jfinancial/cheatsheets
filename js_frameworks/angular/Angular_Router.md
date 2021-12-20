@@ -330,11 +330,7 @@ export class LoadingComponent implements OnInit {
   @Input()
   detectRoutingOngoing = false;
 
-  constructor(
-      public loadingService: LoadingService,
-      private router: Router) {
-
-  }
+  constructor(public loadingService: LoadingService, private router: Router) { }
 
   ngOnInit() {
       if (this.detectRoutingOngoing) {
@@ -353,7 +349,6 @@ export class LoadingComponent implements OnInit {
                           this.loadingService.loadingOff();
 
                       }
-
                   }
               );
       }
@@ -412,3 +407,105 @@ export class LessonDetailComponent implements OnInit {
   </div>
 </div>
 ```
+### A Simple Implementation of AuthStore
+- We use the pattern of private `BehaviourSubject` for the `User` and exposed it as a public `Observable<User>`
+```typescript
+const AUTH_DATA = "auth_data";
+@Injectable({
+    providedIn: 'root'
+})
+export class AuthStore {
+
+    private subject = new BehaviorSubject<User>(null);
+    user$ : Observable<User> = this.subject.asObservable();
+
+    isLoggedIn$ : Observable<boolean>;
+    isLoggedOut$ : Observable<boolean>;
+
+    constructor(private http: HttpClient) {
+        this.isLoggedIn$ = this.user$.pipe(map(user => !!user));
+        this.isLoggedOut$ = this.isLoggedIn$.pipe(map(loggedIn => !loggedIn));
+        const user = localStorage.getItem(AUTH_DATA);
+        if (user) {
+            this.subject.next(JSON.parse(user));
+        }
+    }
+
+    login(email:string, password:string): Observable<User> {
+        return this.http.post<User>("/api/login", {email, password}).pipe(
+                tap(user => {
+                    this.subject.next(user);
+                    localStorage.setItem(AUTH_DATA, JSON.stringify(user));
+                }),
+                shareReplay()
+            );
+    }
+
+    logout() {
+        this.subject.next(null);
+        localStorage.removeItem(AUTH_DATA);
+    }
+}
+```
+
+### Angular Router Guards: `CanActivate` and `CanActivateChild`
+
+- Our  AuthGuard is an implementation of a **Router Guard** component implements `CanActivate` and `CanActivateChild.` These methods either return a boolean or a `UrlTree` for redirects:
+- `CanActivateChild` needs to be implemented otherwise child routes can still be accessed:
+- In our `Routes` configuration in our module we also need to add these guards
+
+```typescript
+import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+
+@Injectable()
+export class AuthGuard implements CanActivate, CanActivateChild {
+
+    constructor(private auth:AuthStore, private router:Router) { }
+
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree>  {
+        return this.checkIfAuthenticated();
+    }
+
+    canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot) : Observable<boolean | UrlTree>   {
+        return this.checkIfAuthenticated();
+    }
+
+    private checkIfAuthenticated() {
+        return this.auth.isLoggedIn$.pipe(
+                map(loggedIn =>
+                    loggedIn? true: this.router.parseUrl('/login') )
+            );
+    }
+}
+```
+### Angular Router Guards: `CanLoad` and `CanDeactivate`
+- `CanDeactive` is used to prevent navigation away from page (e.g. might have unsaved data) - this example simply calls the `confirmExit()` on our component which opens a javascript pop up. We must implement `canDeactivate` returning `boolean`: 
+```typescript
+@Injectable()
+export class ConfirmExitGuard implements CanDeactivate<CourseComponent> {
+
+    canDeactivate(component: CourseComponent, currentRoute: ActivatedRouteSnapshot,
+                  currentState: RouterStateSnapshot, nextState?: RouterStateSnapshot): boolean  {
+        return component.confirmExit();
+    }
+ }
+```
+- `CanLoad` is used to prevent a module being loaded altogether - we must implement `canLoad` returning `Observable<boolean>`
+
+```typescript
+@Injectable()
+export class CanLoadAuthGuard implements CanLoad {
+
+    constructor(private auth: AuthStore, private router: Router) { }
+
+    canLoad(route: Route, segments: UrlSegment[]): Observable<boolean>  {
+        return this.auth.isLoggedIn$.pipe(
+                first(),
+                tap(loggedIn => {
+                    if (!loggedIn) {
+                        this.router.navigateByUrl('/login');
+                    }
+                })
+            );
+    }
+}
