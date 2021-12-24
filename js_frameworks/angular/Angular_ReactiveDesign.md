@@ -1,7 +1,7 @@
 # REACTIVE ANGULAR DESIGN
 
 The source for these notes are the [Angular University's Reactive Angular (with RxJs)](https://www.udemy.com/course/rxjs-reactive-angular-course) course 
- The source code is contained [here](https://github.com/angular-university/reactive-angular-course)
+The source code is contained [here](https://github.com/angular-university/reactive-angular-course)
 
 ### Pattern #1: Stateless Observable-based Services (avoiding duplicate http requests using `shareReplay()`)
 

@@ -100,6 +100,7 @@ export class LoginComponent implements OnInit {
 ```
 
 - In `AppRoutingModule` we define our `Routes` where we map a `path` to a component (e.g. `"login"` -> `LoginComponent`). Note how in the import we use `RouterModule.forRoot` and we use this method, passing our `routes`, to set up the routing information at the root level of our application and also to define guards etc. 
+- The `forRoot` static method is the method that configures the root routing module for your app. When calling `RouterModule.forRoot(routes)` , Angular instantiates an instance of the `Router` class globally. (The `forChild` tells Angular there already a `Router` instance available in the app so just register all of these routes with that instance. Use `forChild` method to register routes throughout your app.)
 - The `loadChildren` will asynchronously lazily load all modules for particular (using JS syntax import). In this examples, whenever any path containg `courses` then the modules gets loaded
 - Some best practices:
   - Define an empty path `""` with an exact match (`pathMatch: "full"`) for the application root router with a `redirectTo` 
