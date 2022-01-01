@@ -55,6 +55,6 @@ req: This subcommand specifies that we want to use X.509 certificate signing req
 
 While we are using OpenSSL, we should also create a strong [Diffie-Hellman](https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange) group, which is used in negotiating Perfect Forward Secrecy with clients.
 
-We can do this by typing:
+We can do this (creating a [.pem](https://www.cloudsavvyit.com/1727/what-is-a-pem-file-and-how-do-you-use-it/) file)  by typing :
 
 `sudo openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048`
