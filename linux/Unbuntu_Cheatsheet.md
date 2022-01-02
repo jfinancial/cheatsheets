@@ -103,15 +103,15 @@ Updating certificates in /etc/ssl/certs...
 
 Create a test key:
 
-`openssl genrsa -out hellfish.test.key 2048`
+`openssl genrsa -out jfinancial.test.key 2048`
 
 ..then create a CSR (Certicate Signing Request):
 
-`openssl req -new -key hellfish.test.key -out hellfish.test.csr`
+`openssl req -new -key jfinancial.test.key -out jfinancial.test.csr`
 
 Finally, we’ll create an [X509](https://en.wikipedia.org/wiki/X.509) V3 certificate extension config file, which is used to define the [Subject Alternative Name (SAN)](https://www.entrust.com/blog/2019/03/what-is-a-san-and-how-is-it-used/) for the certificate. 
 
-In our case, we’ll create a configuration file called `hellfish.test.ext` containing the following text:
+In our case, we’ll create a configuration file called `jfinancial.test.ext` containing the following text:
 
 ```shell
 authorityKeyIdentifier=keyid,issuer
@@ -120,12 +120,12 @@ keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
 subjectAltName = @alt_names
 
 [alt_names]
-DNS.1 = hellfish.test
+DNS.1 = jfinancial.test
 ```
 
 Now we run the command to create our certificate using our key:
 
-`sudo openssl x509 -req -in hellfish.test.csr -CA myCA.pem -CAkey myCA.key -CAcreateserial -out hellfish.test.crt -days 825 -sha256 -extfile hellfish.test.ext`
+`sudo openssl x509 -req -in jfinancial.test.csr -CA myCA.pem -CAkey myCA.key -CAcreateserial -out jfinancial.test.crt -days 825 -sha256 -extfile jfinancial.test.ext`
 
 We can do this as a shell script;
 
@@ -162,21 +162,22 @@ If you’re using Apache, you’ll need to enable the Apache SSL mod, and config
 
 ```xml
 <VirtualHost *:443>
-   ServerName hellfish.test
-   DocumentRoot /var/www/hellfish-test
+   ServerName jfinancial.test
+   DocumentRoot /var/www/jfinancial-test
 
    SSLEngine on
-   SSLCertificateFile /path/to/certs/hellfish.test.crt
-   SSLCertificateKeyFile /path/to/certs/hellfish.test.key
+   SSLCertificateFile /path/to/certs/jfinancial.test.crt
+   SSLCertificateKeyFile /path/to/certs/jfinancial.test.key
 </VirtualHost>
 ```
 
 
 ### Creating a Self-signed Certificate For Apache
 
-See [how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-16-04](https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-16-04)
+- See [how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-16-04](https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-16-04)
+- See [java-keytool-keystore-certificates](https://alvinalexander.com/java/java-keytool-keystore-certificates/)
 
-We can create a self-signed key and certificate pair with OpenSSL in a single command:
+- We can create a self-signed key and certificate pair with OpenSSL in a single command:
 
 `sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/apache-selfsigned.key -out /etc/ssl/certs/apache-selfsigned.crt`
 
