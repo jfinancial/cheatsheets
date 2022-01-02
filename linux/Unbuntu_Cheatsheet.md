@@ -41,6 +41,8 @@ Host *
 
     `sudo usermod -aG sudo newuser`
 
+
+
 ### Stop Chrome redirecting to HTTPS
 
 - See [stop-chrome-from-automatically-redirecting-https](https://howchoo.com/chrome/stop-chrome-from-automatically-redirecting-https)
@@ -59,7 +61,47 @@ sudo firewall-cmd --add-service=cockpit
 sudo firewall-cmd --add-service=cockpit --permanent
 ```
 
-### Creating a self-signed certfiiate
+
+### Creating a self-signed certificate
+
+- See [ssl-certificate-authority-for-local-https-development](https://deliciousbrains.com/ssl-certificate-authority-for-local-https-development)
+
+Create the keys for your own certificate authority:
+
+`openssl genrsa -des3 -out myCA.key 204`
+
+Create a **root certificate** using:
+
+`openssl req -x509 -new -nodes -key myCA.key -sha256 -days 1825 -out myCA.pem`
+
+Convert the `.pem` file to `.crt` using:
+
+`openssl x509 -in myCA.pem -inform PEM -out myCA.crt`
+
+Now we have to install the root/CA Certificate. But first create a directory for extra CA certificates in `/usr/local/share/ca-certificates` and copy it into there:
+
+```shell
+sudo mkdir /usr/local/share/ca-certificates/extra`
+sudo cp myCA.crt /usr/local/share/ca-certificates/myCA.crt
+````
+Let Ubuntu add the `.crt` file's path relative to `/usr/local/share/ca-certificates` to `/etc/ca-certificates.conf`:
+
+`sudo dpkg-reconfigure ca-certificates`
+
+Or to do this non-interactively, run:
+
+`sudo update-ca-certificates`
+
+You should see the following output:
+
+```
+Updating certificates in /etc/ssl/certs...
+1 added, 0 removed; done.
+```
+
+
+
+### Creating a Self-signed Certificate For Apache
 
 See [how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-16-04](https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-16-04)
 
