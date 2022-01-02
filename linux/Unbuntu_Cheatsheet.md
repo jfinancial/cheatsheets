@@ -127,6 +127,50 @@ Now we run the command to create our certificate using our key:
 
 `sudo openssl x509 -req -in hellfish.test.csr -CA myCA.pem -CAkey myCA.key -CAcreateserial -out hellfish.test.crt -days 825 -sha256 -extfile hellfish.test.ext`
 
+We can do this as a shell script;
+
+```shell
+#!/bin/sh
+
+if [ "$#" -ne 1 ]
+then
+  echo "Usage: Must supply a domain"
+  exit 1
+fi
+
+DOMAIN=$1
+
+cd ~/certs
+
+openssl genrsa -out $DOMAIN.key 2048
+openssl req -new -key $DOMAIN.key -out $DOMAIN.csr
+
+cat > $DOMAIN.ext << EOF
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+subjectAltName = @alt_names
+[alt_names]
+DNS.1 = $DOMAIN
+EOF
+
+sudo openssl x509 -req -in $DOMAIN.csr -CA ../myCA.pem -CAkey ../myCA.key -CAcreateserial \
+-out $DOMAIN.crt -days 825 -sha256 -extfile $DOMAIN.ext
+```
+
+If you’re using Apache, you’ll need to enable the Apache SSL mod, and configure an Apache virtual host for port `443` for the local site. It will require you to add the SSLEngine, SSLCertificateFile, and SSLCertificateKeyFile directives, and point the last two to the certificate and key file you just created:
+
+```xml
+<VirtualHost *:443>
+   ServerName hellfish.test
+   DocumentRoot /var/www/hellfish-test
+
+   SSLEngine on
+   SSLCertificateFile /path/to/certs/hellfish.test.crt
+   SSLCertificateKeyFile /path/to/certs/hellfish.test.key
+</VirtualHost>
+```
+
 
 ### Creating a Self-signed Certificate For Apache
 
@@ -207,3 +251,19 @@ sudo snap install certbot-dns-namecheap #..or plugin for DNS provider of choice
 `--sever`: specify endpoint to generate wildcard certificate. Currently only `acme-v02` supports
 `agree-tos`: Agree to ACME server's Subscriber Agreement
 `-d`: domain name
+
+
+
+## Java `keytool -import` to Import a Certificate into a Public Keystore
+
+Assuming that you've been given a certificate file named `certfile.cer` which contains an alias named `foo`, you can import it into a public keystore named `publicKey.store` with the following keytool import command:
+```shell
+keytool -import -alias foo -file certfile.cer -keystore publicKey.store
+```
+This import command can be read as:
+
+- Read from the certfile file named `certfile.cer`
+- Look in that file for an alias named `foo`
+- If you find the alias `foo`, import the information into the keystore named `publicKey.store`.
+
+Note: The file `publicKey.store` may already exist, in which case the public key for `foo` will be added to that keystore file; otherwise, publicKey.store will be created.
