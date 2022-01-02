@@ -62,7 +62,7 @@ sudo firewall-cmd --add-service=cockpit --permanent
 ```
 
 
-### Creating a self-signed certificate
+### Creating a self-signed certificate: Create and register CA/Root cerificate
 
 - See [ssl-certificate-authority-for-local-https-development](https://deliciousbrains.com/ssl-certificate-authority-for-local-https-development)
 
@@ -92,13 +92,40 @@ Or to do this non-interactively, run:
 
 `sudo update-ca-certificates`
 
-You should see the following output:
+You should see the following output and we can now created our own self-signed certificates:
 
 ```
 Updating certificates in /etc/ssl/certs...
 1 added, 0 removed; done.
 ```
 
+### Creating a self-signed certificate: Creating CA-Signed Certificates for Your Dev Sites
+
+Create a test key:
+
+`openssl genrsa -out hellfish.test.key 2048`
+
+..then create a CSR (Certicate Signing Request):
+
+`openssl req -new -key hellfish.test.key -out hellfish.test.csr`
+
+Finally, we’ll create an [X509](https://en.wikipedia.org/wiki/X.509) V3 certificate extension config file, which is used to define the [Subject Alternative Name (SAN)](https://www.entrust.com/blog/2019/03/what-is-a-san-and-how-is-it-used/) for the certificate. 
+
+In our case, we’ll create a configuration file called `hellfish.test.ext` containing the following text:
+
+```shell
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = hellfish.test
+```
+
+Now we run the command to create our certificate using our key:
+
+`sudo openssl x509 -req -in hellfish.test.csr -CA myCA.pem -CAkey myCA.key -CAcreateserial -out hellfish.test.crt -days 825 -sha256 -extfile hellfish.test.ext`
 
 
 ### Creating a Self-signed Certificate For Apache
@@ -135,6 +162,7 @@ While we are using OpenSSL, we should also create a strong [Diffie-Hellman](http
 We can do this (creating a [.pem](https://www.cloudsavvyit.com/1727/what-is-a-pem-file-and-how-do-you-use-it/) file)  by typing :
 
 `sudo openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048`
+
 
 ##Enabling SSL at home
 
