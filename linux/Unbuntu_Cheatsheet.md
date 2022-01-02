@@ -1,5 +1,18 @@
 # Unbuntu Linux Cheatsheet
 
+### Installing Bind for DNS
+
+See Unbuntu documention for [DNS](https://ubuntu.com/server/docs/service-domain-name-service-dns)
+
+`sudo apt install bind9`
+`sudo apt install dnsutils`
+
+..then edit `/etc/bind/named.conf.option` and add nameservers. Namecheap's [name servers](https://www.namecheap.com/support/knowledgebase/article.aspx/9434/10/using-default-nameservers-vs-hosting-nameservers/) are:
+```shell
+dns1.registrar-servers.com
+dns2.registrar-servers.com
+````
+
 ### Creating an SSH key for GitHub
 
 - See [generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
@@ -28,6 +41,24 @@ Host *
 
     `sudo usermod -aG sudo newuser`
 
+### Stop Chrome redirecting to HTTPS
+
+- See [stop-chrome-from-automatically-redirecting-https](https://howchoo.com/chrome/stop-chrome-from-automatically-redirecting-https)
+- Go to "HSTS Settings" in Chrome Internals using `chrome://net-internals/#hsts`
+-  Delete domain security policies for the domain
+-  Visit the website to test
+
+### Installing Cockpit
+
+- See [Instrucions for Unbuntu](https://cockpit-project.org/running.html#ubuntu)
+- To install use `sudo apt install cockpit`
+- Enable cockpit `sudo systemctl enable --now cockpit.socket`
+- Open firewall if necessary:
+```shell
+sudo firewall-cmd --add-service=cockpit
+sudo firewall-cmd --add-service=cockpit --permanent
+```
+
 ### Creating a self-signed certfiiate
 
 See [how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-16-04](https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-16-04)
@@ -53,8 +84,56 @@ req: This subcommand specifies that we want to use X.509 certificate signing req
 
 `-out`: This tells OpenSSL where to place the certificate that we are creating.
 
+These options will create both a key file and a certificate. We will be asked a few questions about our server in order to embed the information correctly in the certificate.
+
+Fill out the prompts appropriately. **The most important line is the one that requests the Common Name (e.g. server FQDN or YOUR name). You need to enter the domain name associated with your server or, more likely, your server’s public IP address.**
+
 While we are using OpenSSL, we should also create a strong [Diffie-Hellman](https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange) group, which is used in negotiating Perfect Forward Secrecy with clients.
 
 We can do this (creating a [.pem](https://www.cloudsavvyit.com/1727/what-is-a-pem-file-and-how-do-you-use-it/) file)  by typing :
 
 `sudo openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048`
+
+##Enabling SSL at home
+
+Can use [Let's Encrypt](https://letsencrypt.org/) and...
+Either use [Certbot](https://eff-certbot.readthedocs.io/en/stable/index.html) for which there is a [docker image](https://hub.docker.com/r/certbot/certbot/) - se [running using docker](https://eff-certbot.readthedocs.io/en/stable/install.html#running-with-docker)
+
+- See [how-to-create-let-s-encrypt-wildcard-certificates-with-certbot](https://www.digitalocean.com/community/tutorials/)
+- See [how-to-secure-apache-with-let-s-encrypt-on-ubuntu-18-04](https://www.digitalocean.com/community/tutorials/how-to-secure-apache-with-let-s-encrypt-on-ubuntu-18-04)
+- See [generate-wildcard-ssl-certificate-using-lets-encrypt-certbot](https://medium.com/@saurabh6790/generate-wildcard-ssl-certificate-using-lets-encrypt-certbot-273e432794d7)
+- See [add-wildcard-lets-encrypt-certifications-with-namecheap](https://medium.com/@cubxi/add-wildcard-lets-encrypt-certifications-with-namecheap-6a466df0886f)
+
+Or use another approach 
+
+- See [enabling-ssl-in-your-local-network](https://anteru.net/blog/2020/enabling-ssl-in-your-local-network/)
+
+## Using Cerbot
+- See [Certbot instructions](https://certbot.eff.org/instructions?ws=nginx&os=ubuntufocal)
+- Certbot can be retrieved by api (`apt-get install letsencrypt`) or via the `certbert-auto` script but officially Snap is preferred so to use Snap and if so remove from apt (`sudo apt-get remove certbot`)
+
+```shell
+sudo snap install core
+sudo snap refresh core
+sudo snap install --classic certbot
+sudo ln -s /snap/bin/certbot /usr/bin/certbot ##check it exists
+sudo snap set certbot trust-plugin-with-root=ok
+sudo snap install certbot-dns-namecheap #..or plugin for DNS provider of choice
+```
+
+- ...then using the command:
+
+```shell
+./certbot certonly --manual \ 
+                        --preferred-challenges=dns \
+                        —-email saurabh@erpnext.com \
+                        —-server https://acme-v02.api.letsencrypt.org/directory \
+                        —-agree-tos -d *.erpnext.xyz
+```
+
+`certonly`: Obtain or renew a certificate, do not install it
+`--manual`: Obtain certificates interactively or using shell script hooks
+`--preferred-challenges`: "dns" to authenticate domain ownership
+`--sever`: specify endpoint to generate wildcard certificate. Currently only `acme-v02` supports
+`agree-tos`: Agree to ACME server's Subscriber Agreement
+`-d`: domain name
