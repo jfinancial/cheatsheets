@@ -44,7 +44,7 @@
 - **Relay State**: where the user is redirected to after authentication
 - **Protocol Bindings**: defines what forward mechanism to use (e.g. post or redirect)
 - **Claims**: user attributees of group attributes
-- **Assertion Consumer Service (ACS)**: this is the url which handles the SAML assertion 
+- **Assertion Consumer Service (ACS)**: this is the url which handles the SAML assertion  (sometimes called the 'Single SignOn URL')
 - **Entity**: both the SP and IP are entities and have an `EntityID` associated with them - they be any string but they are usually URLs
 - Two applications can be deployed in two different clouds but they have shared trust relationship with the same SAML IP so SSO is achieved
 
@@ -68,6 +68,6 @@
   - Redirect to home page of application
 
 ### Tools
-- Download SAML Devtools extension for Chome
+- Download SAML Devtools extension for Chrome and JWT debugger
 - Sign up to developer account with [Okta](https://developer.okta.com/signup/)
   - Create users and groups and then app integration and select SAML 2.0§
