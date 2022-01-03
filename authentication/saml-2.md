@@ -70,4 +70,4 @@
 ### Tools
 - Download SAML Devtools extension for Chome
 - Sign up to developer account with [Okta](https://developer.okta.com/signup/)
-
+  - Create users and groups and then app integration and select SAML 2.0§
