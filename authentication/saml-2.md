@@ -41,7 +41,7 @@
 - **User Agent**: this is usually the browser (acting on behalf of the user)
 - **Relay State**: where the user is redirected to after authentication
 - **Protocol Bindings**: defines what forward mechanism to use (e.g. post or redirect)
-- **Claims**: where the user is redirected to after authentication
+- **Claims**: user attributees of group attributes
 - **Assertion Consumer Service (ACS)**: this is the url which handles the SAML assertion 
 - **Entity**: both the SP and IP are entities and have an `EntityID` associated with them - they be any string but they are usually URLs
 - Two applications can be deployed in two different clouds but they have shared trust relationship with the same SAML IP so SSO is achieved
@@ -59,4 +59,9 @@
   - If everything is already within the enterprise and the user has already logged in then LDAP authentication has taken place so SSO is achieved and this is completely transparent (i.e. user is recognised by SAML without credentials)
 
 - **IP Initiated Flow**
-  - 
+  - Works if all applications integated with single SAML provider
+  - User logs into application dashboard and IMS provides url for dashboard
+  - Credentials get submitted to IDP 
+  - User clicks on application in dashboard, IP creates a response XML with correct assertion
+  - IDP forwards to Application via SP which verifies assertion
+  - Redirect to home page of application
