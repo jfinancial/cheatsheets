@@ -1,5 +1,7 @@
 ## SAML 2.0 (Security Assertion Markup Language)
 
+- See [documentation](https://developer.okta.com/docs/concepts/saml/)
+
 ### Downsides of Custom Authentication Architecture
 
 - User identity is duplicated (mulitple databases per application; **no common identity**)
@@ -46,7 +48,6 @@
 - **Entity**: both the SP and IP are entities and have an `EntityID` associated with them - they be any string but they are usually URLs
 - Two applications can be deployed in two different clouds but they have shared trust relationship with the same SAML IP so SSO is achieved
 
-
 ### SAML Flows
 - Flows rely on SAML metadata which describes the SAML entity (SP or IP) which is optionally signed
 
@@ -65,3 +66,8 @@
   - User clicks on application in dashboard, IP creates a response XML with correct assertion
   - IDP forwards to Application via SP which verifies assertion
   - Redirect to home page of application
+
+### Tools
+- Download SAML Devtools extension for Chome
+- Sign up to developer account with [Okta](https://developer.okta.com/signup/)
+
