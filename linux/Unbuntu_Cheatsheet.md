@@ -61,6 +61,76 @@ sudo firewall-cmd --add-service=cockpit
 sudo firewall-cmd --add-service=cockpit --permanent
 ```
 
+### Installing and Configuring OpenLDAP
+- See [install-and-configure-openldap-server-ubuntu/](https://computingforgeeks.com/install-and-configure-openldap-server-ubuntu/)
+- Make sure the hostname of the server is set using `sudo hostnamectl set-hostname ldap.example.com`
+- Add the IP and FQDN to file `/etc/hosts` replacing  `ldap.example.com` with your correct hostname/valid domain name:
+```shell
+192.168.18.50 ldap.example.com
+```
+-Install [OpenLDAP](https://www.openldap.org/) using
+```shell
+sudo apt update
+sudo apt -y install slapd ldap-utils
+```
+- During the installation, you’ll be prompted to set LDAP admin password
+- You can confirm that your installation was successful using the command `slapcat` to output SLAPD database contents
+- Add a base DN for users and groups by creating a file named `basedn.ldif` with below contents:
+```shell
+$ vim basedn.ldif
+dn: ou=people,dc=example,dc=com
+objectClass: organizationalUnit
+ou: people
+
+dn: ou=groups,dc=example,dc=com
+objectClass: organizationalUnit
+ou: groups
+```
+- Add the file by running the command: `ldapadd -x -D cn=admin,dc=example,dc=com -W -f basedn.ldif`
+- Add user accounts and groups by generating a password for the user account to add:
+
+```shell
+$ sudo slappasswd
+New password: 
+Re-enter new password: 
+{SSHA}Zn4/E5f+Ork7WZF/alrpMuHHGufC3x0k
+```
+- Create an ldif file for adding users (replacing `computingforgeeks` with the username to add, replacing `dc=example,dc=com` with your correct domain values, `cn` & `sn` with your Username Values and `{SSHA}Zn4/E5f+Ork7WZF/alrpMuHHGufC3x0k` with your hashed passwor)
+```shell
+ $ vim ldapusers.ldif
+  dn: uid=computingforgeeks,ou=people,dc=example,dc=com
+  objectClass: inetOrgPerson
+  objectClass: posixAccount
+  objectClass: shadowAccount
+  cn: computingforgeeks
+  sn: Wiz
+  userPassword: {SSHA}Zn4/E5f+Ork7WZF/alrpMuHHGufC3x0k
+  loginShell: /bin/bash
+  uidNumber: 2000
+  gidNumber: 2000
+  homeDirectory: /home/computingforgeeks
+```
+- When done with edit, add account by running.
+```shell
+$ ldapadd -x -D cn=admin,dc=example,dc=com -W -f ldapusers.ldif 
+Enter LDAP Password: 
+adding new entry "uid=computingforgeeks,ou=people,dc=example,dc=com"
+```
+- Do the same of group. Create ldif file:
+```shell
+$ vim ldapgroups.ldif
+dn: cn=computingforgeeks,ou=groups,dc=example,dc=com
+objectClass: posixGroup
+cn: computingforgeeks
+gidNumber: 2000
+memberUid: computingforgeeks
+```
+- Add the group using `ldapadd -x -D cn=admin,dc=example,dc=com -W -f ldapgroups.ldif`
+- Now [install-and-configure-ldap-account-manager-on-ubuntu](https://computingforgeeks.com/install-and-configure-ldap-account-manager-on-ubuntu/)
+- Now [configure-ubuntu-as-ldap-client](https://computingforgeeks.com/how-to-configure-ubuntu-as-ldap-client/)
+- Now [secure-ldap-server-with-ssl-tls-on-ubuntu/](https://computingforgeeks.com/secure-ldap-server-with-ssl-tls-on-ubuntu)
+
+
 
 ### Creating a self-signed certificate: Create and register CA/Root cerificate
 
