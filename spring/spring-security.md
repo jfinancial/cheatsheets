@@ -1,7 +1,6 @@
 ## Spring Security & JWT
 
 ### Maven dependency
-
 ```xml
 <dependency>
     <groupId>org.springframework.boot</groupId>
@@ -10,8 +9,16 @@
 </dependency>
 ```
 
-### Define Permissions as enum
 
+### Acecess vs Authentication
+- Analogy with magnetic work IDs: *authentication* (can you enter the building) vs *authorization* (can you access a specifc floor )
+- **Authentication** -> verifies who you are
+  - Methods: login form, HTTP authentication, custom 
+- **Authorization** -> decides if you have permission to access a resource
+    - Methods: access control URLSs, access control lists (ACL)
+
+
+### Define Permissions as enum
 ```java
 public enum ApplicationUserPermission {
     STUDENT_READ("student:read"),
@@ -29,14 +36,9 @@ public enum ApplicationUserPermission {
         return permission;
     }
 }
-© 2022 GitHub, Inc.
-Terms
-
 ```
 ### User and Roles (using `SimpleGrantedAuthority`)
-
-
-- Implement `org.springframework.security.core.userdetails.UserDetails`
+- Implement `org.springframework.security.core.userdetails.UserDetails` which takes username, password and a collected of `GrantedAuthority`
 - Implement `org.springframework.security.core.userdetails.UserDetailsService`
 
 ```java
@@ -66,12 +68,10 @@ public enum ApplicationUserRole {
 ```
 
 ### Set Up Configuration by extending `WebSecurityConfigurerAdapter` and Provide Implement of `UserDetailsService`
-
 - Our UserDetailsService should implement `org.springframework.security.core.userdetails` which has one method:
 ```java
    UserDetails loadUserByUsername(String var1) throws UsernameNotFoundException;
 ```
-
 - ..so our configiuration looks like:
 
 ```java
@@ -160,12 +160,12 @@ public class PasswordConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(10);
-   
+    }
 ```
 
 ### Add Permissioning to Controller with `@PreAuthorize`
 ```java
-mport org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -213,9 +213,7 @@ public class StudentManagementController {
 }
 ```
 
-
 ### JSON Web Token (JWT)
-
 ```java
 import com.google.common.net.HttpHeaders;
 import io.jsonwebtoken.security.Keys;
