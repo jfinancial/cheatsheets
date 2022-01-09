@@ -67,56 +67,12 @@ public enum ApplicationUserRole {
 }
 ```
 
-### Set Up Configuration by extending `WebSecurityConfigurerAdapter` and Provide Implement of `UserDetailsService`
+### Implementing a UserDetailsService
 - Our UserDetailsService should implement `org.springframework.security.core.userdetails` which has one method:
 ```java
    UserDetails loadUserByUsername(String var1) throws UsernameNotFoundException;
 ```
-- ..so our configiuration looks like:
-
 ```java
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-
-import static com.example.demo.security.ApplicationUserRole.*;
-
-
-@Configuration
-@EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
-
-    private final PasswordEncoder passwordEncoder;
-
-    @Autowired
-    public ApplicationSecurityConfig(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .and()
-                .authorizeRequests()
-                .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
-                .antMatchers("/api/**").hasRole(STUDENT.name())
-                .anyRequest()
-                .authenticated()
-                .and()
-                .httpBasic();
-    }
 
     @Override
     @Bean
@@ -149,6 +105,56 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
         );
 
     }
+```
+
+
+### Set Up Configuration by extending `WebSecurityConfigurerAdapter` 
+```java
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+
+@Configuration
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
+
+  private final PasswordEncoder passwordEncoder;
+
+  @Autowired
+  public ApplicationSecurityConfig(PasswordEncoder passwordEncoder) {
+    this.passwordEncoder = passwordEncoder;
+  }
+
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+            .and()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .authorizeRequests()
+            .antMatchers(HttpMethod.GET,"/", "index", "/css/*", "/js/*").permitAll()
+            .antMatchers(HttpMethod.GET,"/api/**").hasAnyAuthority("ROLE_USER")
+            .antMatchers(HttpMethod.POST,"/api/user/save/**").hasAnyAuthority("ROLE_ADMIN")
+            .and()
+            .addFilter(new CustomAuthenticationFilter(authenticationManagerBean()))
+  }
+
+  @Bean
+  @Override
+  public AuthenticationManager authenticationManagerBean() throws Exception {
+    return super.authenticationManagerBean();
+  }
 }
 ```
 
@@ -162,6 +168,73 @@ public class PasswordConfig {
         return new BCryptPasswordEncoder(10);
     }
 ```
+```java
+
+```
+
+### Implementing A Custom AuthenticationFiler Using Json Web Tokens (JWT)
+- We extend Spring's `UsernamePasswordAuthenticationFilter` override two methods: `attemptAuthentication` and `successfulAuthentication`
+- We create two tokens, the **access token** and **refresh token** 
+```java
+package com.jfinancial;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
+public class CustomAuthenticationFilter(AuthenticationManager authManager) extends UsernamePasswordAuthenticationFilter {
+
+
+  @Override
+  public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+    String username = request.getParameter("username");
+    String password = request.getParameter("password");
+    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username,password)
+    return authManager.authenticate(authToken);
+  }
+
+  @Override
+  protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+    User user = (User) authResult.getPrincipal();
+    Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+    String access_token = JWT.create().withSubject(user.getUsername()).withExpiresAt( new Date(System.currentTimeMillis() + 10 * 60 + 1000))
+            .withIssuer(request.getRequestURL().toString())
+            .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining()))
+            .sign(algorithm);
+    String refresh_token = JWT.create().withSubject(user.getUsername()).withExpiresAt( new Date(System.currentTimeMillis() + 30 * 60 + 1000))
+            .withIssuer(request.getRequestURL().toString())
+            .sign(algorithm);
+    //response.setHeader("access_token", access_token);
+    //response.setHeader("refresh_token", refresh_token);
+    Map<String, String> tokens = new HashMap();
+    tokens.put("access_token", access_token);
+    tokens.put("refresh_token", refresh_token);
+    response.setContentType(APPLICATION_JSON_VALUE);
+    new ObjectMapper().writeValue(response.getOutputStream(),tokens);
+
+  }
+}
+
+```
+
 
 ### Add Permissioning to Controller with `@PreAuthorize`
 ```java
@@ -214,6 +287,18 @@ public class StudentManagementController {
 ```
 
 ### JSON Web Token (JWT)
+
+We use the following maven dependency:
+```xml
+<dependency>
+    <groupId>com.auth0</groupId>
+    <artifactId>java-jwt</artifactId>
+    <version>3.18.2</version>
+</dependency>
+
+```
+
+
 ```java
 import com.google.common.net.HttpHeaders;
 import io.jsonwebtoken.security.Keys;
