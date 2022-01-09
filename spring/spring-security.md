@@ -110,7 +110,6 @@ public enum ApplicationUserRole {
 
 ### Set Up Configuration by extending `WebSecurityConfigurerAdapter` 
 ```java
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -138,6 +137,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
+    CustomAuthenticationFilter filter = new CustomAuthenticationFilter(authenticationManagerBean())
+    filter.setFilterProcessesUrl("/api/login");
     http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
             .and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -147,7 +148,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.GET,"/api/**").hasAnyAuthority("ROLE_USER")
             .antMatchers(HttpMethod.POST,"/api/user/save/**").hasAnyAuthority("ROLE_ADMIN")
             .and()
-            .addFilter(new CustomAuthenticationFilter(authenticationManagerBean()))
+            .addFilter(filter);
   }
 
   @Bean
