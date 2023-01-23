@@ -2,6 +2,8 @@
 
 The source for these notes are the [Angular University's NgRx (with NgRx Data)](https://www.udemy.com/course/ngrx-course) course. The source code is contained [here](https://github.com/angular-university/ngrx-course)
 
+See also https://duncanhunter.gitbook.io/angular-and-ngrx/
+
 ### What is NgRx?
 - NgRx provides a store for front-end state management which can be accessed and mutated via selectors, effects and reducers
 
