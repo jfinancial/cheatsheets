@@ -129,3 +129,35 @@ For consistency we must
 
 15. What is the role of `lateinit`?
 - `lateinit` is an abbreviation for late initiation. If you don't want to initialize a variable in the constructor and instead want to do it later, and you can guarantee the initialization before using it, use the lateinit keyword to declare that variable. It won't start allocating memory until it's been initialized. Lateinit cannot be used for primitive type attributes like Int, Long, and so on. Because the lateinit variable will be initialized later, you cannot use val. When a lateinit property is accessed before it has been initialized, a special exception is thrown that explicitly identifies the property and the fact that it hasn't been initialized.
+
+16. How do you write a singleton in Kotlin?
+- A singleton is globally acessible and only ever has one instane. Use the `object` keyword for creating singletons. See ['How To Write A Singleton In Kotlin'](./KotlinSingleton.pdf) 
+
+```kotlin
+open class A {
+
+    open fun printVarName() {
+        print("I am in class printVarName")
+    }
+
+    init {
+        println("I am in init of A")
+    }
+}
+
+object Singleton : A() {
+
+    init {
+        println("Singleton class invoked.")
+    }
+
+    var variableName = "I am Var"
+    override fun printVarName() {
+        println(variableName)
+    }
+}
+```
+
+17. Scope functions: `let`, `run`, `with`, `apply`, and `also`
+- The Kotlin standard library contains several functions whose sole purpose is to execute a block of code within the context of an object. When you call such a function on an object with a lambda expression provided, it forms a temporary scope. In this scope, you can access the object without its name. Such functions are called [scope functions](https://kotlinlang.org/docs/scope-functions.html).
+- 

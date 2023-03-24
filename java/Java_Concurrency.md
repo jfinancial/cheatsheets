@@ -13,6 +13,10 @@
 - `CopyOnWriteArrayList`: makes a new copy of its elements for every write operation and its iterator holds a different copy (snapshot) so it enables sequential writes and concurrent reads: only one thread can execute write operation and multiple threads can execute read operations at the same time.
 - ` BlockingQueue`:  Queue that additionally supports operations that wait for the queue to become non-empty when retrieving an element, and wait for space to become available in the queue when storing an element.
 
+## Atomic Variables
+- `AtomincInteger`
+- `AtomincReference`
+
 ### ExecutorService and Executor API
 - `ExecutorService` - the ES's `execute()` method returns a `Future` will block when you call get 
 
