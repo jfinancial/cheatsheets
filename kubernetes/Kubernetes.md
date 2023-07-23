@@ -1,6 +1,6 @@
 # Kubernetes
 
-### Fundamental K8 Components
+## Fundamental K8 Components
 
 | Component       | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 |-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -17,9 +17,11 @@
 | **StatefulSet** | A StatefulSet is another type of pod blueprint but is a stateful alternative to a stateless Deployment. A pod which contains a database cannot be replicated - each of the replica pods must talk to the same db - so pods which contain a stateful element (such as a DB) are called StatefulSet. Because deploying StatefulSet can be more challenging it is not uncommon to have stateful services such as DBs, ELK etc to live outside the Kubernetes cluster                                                                                                                                                                                              | 
 
 
-### Node Processes
+
+## Node Processes
 Kubernetes is built on the idea of master and worker nodes. There are 3 processes which need to run on every worker node:
 
+### Container Runtime 
 - **Container runtime** (could be Docker) plays a crucial role in managing and executing containers. It is responsible for interacting with the underlying operating system's kernel and providing the necessary functionality to start, stop, and manage containers within a Kubernetes cluster. The container runtime acts as an intermediary between Kubernetes and the actual containers, abstracting away the complexities of containerization and enabling Kubernetes to handle containerized applications efficiently. Its main responsibilities are:
   - **Container Management**: The runtime is responsible for creating/managing containers. It pulls container images from container registries (like Docker Hub or a private registry), creates containers based on those images, and starts or stops them as needed.
   - **Namespace and Isolation**: Kubernetes uses Linux namespaces to provide process-level isolation for containers. The container runtime sets up and manages these namespaces, ensuring that each container in the cluster is isolated from others, including networking, process space, filesystem, and user IDs.
@@ -28,7 +30,7 @@ Kubernetes is built on the idea of master and worker nodes. There are 3 processe
   - **Container Health Monitoring**: The container runtime provides an interface for Kubernetes to monitor the health of containers. Kubernetes periodically checks the status of containers through the container runtime to ensure they are running correctly and can take appropriate actions in case of failures.
   - **Image Management**: The container runtime handles the storage and caching of container images. When Kubernetes schedules a pod, the container runtime ensures that the required container images are available locally on the node. If not present, it pulls the images from the container registry.
 
-
+### Kubelet
 - **Kubelet** schedules the pod an it interfaces with the node itself and the container runtime. Kubelet starts the pod and assigns resources (e.g. CPU, memory and storage) to it. Its main responsibilities are:
   - **Pod Management**: The kubelet is primarily responsible for managing pods on its node. It receives pod definitions from the API server, and then it takes care of instantiating the containers specified in those pods. It ensures that the desired state of the pods matches the actual state by starting, stopping, and restarting containers as necessary.
   - **Container Management**: The kubelet interacts with the container runtime (e.g., Docker, containerd, or CRI-O) to manage the lifecycle of containers. It starts and stops containers, monitors their health, and restarts them if they fail. It also handles container image pulling from container registries if needed.
@@ -38,19 +40,20 @@ Kubernetes is built on the idea of master and worker nodes. There are 3 processe
   - **Node Eviction**: In case of resource pressure or failures, the kubelet can initiate node eviction processes, which gracefully terminate running pods on a node to free up resources or ensure proper rescheduling.
   - **Handling Node-Level Configurations**: The kubelet can be configured with various node-level parameters, such as setting maximum pod density, managing system-level containers, and applying node-specific configurations.
 
-
+### Kubeproxy
 - **Kubeproxy** responsible for enabling communication between different services and pods within the cluster. Its primary role is to facilitate networking operations (e.g. forwarding requests), allowing seamless connectivity and load balancing for services running on Kubernetes. Its main responsibilities are:
   - **Service Discovery**: When you create a Kubernetes Service, it is assigned a virtual IP address. This virtual IP is used to expose the service internally within the cluster. The kube-proxy watches for changes in the service and endpoint configurations and updates the internal network rules (iptables or IPVS rules, depending on the mode) to ensure that incoming requests to the virtual IP are correctly forwarded to the appropriate backend pods. 
   - **Load Balancing**: In cases where multiple pods are running for a given service, kube-proxy ensures that incoming network traffic to the service's virtual IP is distributed evenly across these pods. This load balancing helps distribute the workload and prevent any single pod from being overwhelmed with traffic. 
   - **IP Masquerading**: In certain network setups, pods running on a node might not have direct external access. Kube-proxy handles the necessary IP masquerading (NAT - Network Address Translation) so that when a pod sends a request to an external IP, the response from the external network is routed back to the correct pod. 
   - **High Availability**: kube-proxy itself can be run in different modes to ensure high availability. For example, you can configure it to run in either userspace mode, iptables mode, or IPVS (IP Virtual Server) mode. IPVS mode is often preferred for better performance and scalability in large clusters.
 
+---
 
-### Master Processes
+## Master Processes
 
-- Master nodes are responsible for scheduling pods, monitoring pods and rescheduling/restarting pods. There are 4 master services which run on every master node to control the cluster state and the worker nodes:
+- Master nodes are responsible for scheduling pods, monitoring pods and rescheduling/restarting pods. In a typical cluster, we might see 2 master nodes and 2 worker nodes. The master node processes can be considered more important but they require less memory/cpu than worker node processes. There are 4 master services which run on every master node to control the cluster state and the worker nodes:
 
-
+### API Server
 - **API Server** is  primary control panel element responsible for serving the Kubernetes API and acts as a sort of cluster gateway. It acts as the front-end and provides a central point for managing and interacting with the cluster. All administrative operations, as well as user and automated interactions with the cluster, are mediated through the API server. Its main responsibilities are:
   - **Exposing the Kubernetes API**: The API server exposes a RESTful HTTP API that allows clients (such as kubectl, kubelet, controllers, and custom applications) to interact with the cluster. This API is the main interface for managing resources within the cluster, such as pods, services, deployments, and more.
   - **Authenticating and Authorizing Requests**: The API server handles authentication/authorization for incoming requests. It verifies the identity of clients (users or automated processes) and checks their permissions against the configured RBAC (Role-Based Access Control) policies to determine if the requested action is allowed.
@@ -60,5 +63,35 @@ Kubernetes is built on the idea of master and worker nodes. There are 3 processe
   - **Serving Admission Controllers**: Admission controllers are plugins that intercept and process requests before they are persisted to etcd or before a response is returned to the client. The API server invokes these admission controllers for various purposes, such as enforcing custom policies, validating requests, and modifying resource definitions.
   - **Providing API Extensions**: The API server supports custom resource definitions (CRDs) and custom controllers, enabling users to extend Kubernetes with their own custom resources and associated logic.
 
-- **Scheduler**
+### Scheduler
+- **Scheduler** optimizes resource utilization, ensures high availability, and maintains the desired pod distribution across the cluster and is responsible for placing pods onto nodes in the cluster. When you create a new pod or a deployment, it doesn't get assigned to a specific node immediately. Instead, the scheduler determines the best node for each pod based on resource requirements, node constraints, and other factors, ensuring efficient utilization of resources and high availability. It's essential to note that the scheduler's decisions are based on the current cluster state and the information available at the time of scheduling. If the cluster's state changes (e.g., new nodes are added or removed, resource availability changes, or affinity rules are modified), the scheduler may decide to reschedule pods to achieve the desired state. Its main responsibilities are:
+  - **Pod Scheduling**: When a new pod is created or when a pod needs to be rescheduled (due to node failure or resource changes), the scheduler is invoked. It takes into consideration various factors and constraints, such as resource requests and limits of the pod, node capacity and available resources, affinity and anti-affinity rules, taints, tolerations, and more.
+  - **Node Selection**: The scheduler selects the most suitable node for each pod based on the pod's resource requirements and other criteria specified in the pod's configuration or deployment definition. The scheduler aims to balance the workload across the nodes and avoid overloading any specific node.
+  - **Inter-Node Awareness**: The scheduler is aware of all the nodes in the cluster and their available resources. It considers the overall cluster state while making scheduling decisions to ensure that nodes do not become imbalanced and that there are enough resources to meet the demands of all pods.
+  - **Affinity and Anti-Affinity Rules**: The scheduler supports affinity and anti-affinity rules, which allow you to influence pod placement based on node labels. Affinity rules indicate a preference for specific nodes, while anti-affinity rules specify conditions where pods should not be co-located on the same node.
+  - **Taints and Tolerations**: Nodes can be tainted to repel pods unless the pods have corresponding tolerations. The scheduler can place pods with the appropriate tolerations on tainted nodes, allowing for special requirements or workload isolation.
+  - **Custom Scheduling Policies**: Kubernetes provides the flexibility to extend the scheduler with custom scheduling policies and plugins. This enables users to implement custom logic for pod placement based on their specific requirements.
+  - **Continuous Monitoring and Rescheduling**: The scheduler continuously monitors the cluster's state, and if a node fails or becomes unavailable, it identifies affected pods and attempts to reschedule them onto healthy nodes to maintain high availability.
+
+### Controller Manager
+- **Controller Manager** detects cluster state changes and is responsible for managing various control loops and maintaining the desired state of the cluster. It consists of several individual controllers, each focusing on a specific aspect of the Kubernetes cluster and its resources. These controllers continuously monitor the state of the cluster through the API server and take corrective actions to ensure that the actual state matches the desired state specified in the cluster's configuration. Its main responsibilities are:
+  - **Managing Replication Controllers and Deployments**: The Replication Controller and Deployment controllers ensure that the specified number of pod replicas are running and healthy. If a pod fails or a new replica is required, these controllers take corrective actions to achieve the desired replica count.
+  - **Node Controller**: The Node controller is responsible for monitoring the state of nodes in the cluster. It detects node failures and removes unhealthy nodes from the cluster, initiating the rescheduling of affected pods to other healthy nodes.
+  - **Namespace Controller**: The Namespace controller ensures that namespaces created by users are present and valid in the cluster. If a namespace is deleted, the Namespace controller performs clean-up actions, ensuring that resources associated with that namespace are also removed.
+  - **Service Controller**: The Service controller continuously monitors the Service resources in the cluster. If a new Service is created, the controller ensures that the corresponding load balancer is configured to route traffic to the correct pods.
+  - **Endpoint Controller**: The Endpoint controller populates the Endpoints resources for Services, keeping track of the IP addresses and ports of the pods associated with each Service.
+  - **Persistent Volume Controller**: The Persistent Volume (PV) controller is responsible for managing the lifecycle of Persistent Volumes. It dynamically provisions and binds PVs to Persistent Volume Claims (PVCs) based on storage class definitions and user requests.
+  - **Volume Attachment Controller**: The Volume Attachment controller manages the attachment and detachment of Persistent Volumes to nodes.
+  - **StatefulSet Controller**: The StatefulSet controller is responsible for managing stateful applications by ensuring stable and unique network identities for pods and maintaining the order of pod creation and deletion.
+  - **DaemonSet Controller**: The DaemonSet controller ensures that a specific pod is scheduled on all or selected nodes in the cluster. This is useful for running infrastructure-related tasks, like log collection or monitoring agents, on every node.
+  - **Custom Controllers**: The controller manager allows the addition of custom controllers, which can be implemented by users to manage and automate their specific workloads and applications.
+
+### Etcd
+- The [**etcd**](https://etcd.io/)  datastore can be thought of as the brain of the Kubernetes cluster ensuring consistency and high availability for the cluster's configuration and state information. It is a distributed key-value store that serves as the primary data store for Kubernetes. It plays a crucial role in maintaining the cluster's state and enabling coordination between different components of the control plane. Etcd is used to store the configuration data, metadata, and the current state of all resources in the cluster, ensuring consistency and high availability. Note that etcd is an external component to the Kubernetes control plane. It is not managed by Kubernetes itself, and administrators are responsible for deploying and maintaining etcd separately.
+  - **Cluster State Storage**: Etcd stores the entire state of the Kubernetes cluster. This includes information about all the resources managed by Kubernetes, such as pods, services, deployments, replica sets, nodes, namespaces, and more. The data stored in etcd represents the desired state of the cluster.
+  - **Distributed Data Store**: Etcd is designed to be highly available and fault-tolerant. It achieves this by distributing data across multiple nodes in the cluster and using a consensus algorithm (such as Raft) to ensure data consistency and integrity.
+  - **API Server Interaction**: The Kubernetes API server uses etcd as its primary backend storage. When users or automated processes interact with the cluster through the API server (e.g., creating, updating, or deleting resources), the API server reads from or writes to etcd to maintain the desired state.
+  - **Control Plane Coordination**: The various components of the Kubernetes control plane (such as the scheduler, controller manager, and other controllers) need to share information and coordinate their actions. Etcd acts as a centralized coordination point, allowing these components to read and update the cluster state, ensuring that they work in harmony to achieve the desired state.
+  - **Watch API**: Etcd supports a watch API, which allows components like the API server and controllers to set up watches on specific keys or resources. When changes occur in etcd related to the watched keys, the watch API triggers events, allowing components to react to these changes and take appropriate actions.
+  - **High Availability and Disaster Recovery**: Since etcd is distributed and replicates data across multiple nodes, it provides fault tolerance and high availability. If one etcd node fails, the cluster can continue to operate without significant disruption. Additionally, periodic snapshots of etcd data can be taken to facilitate disaster recovery in case of complete cluster failure.
 
