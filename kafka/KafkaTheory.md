@@ -1,13 +1,36 @@
 ## Kafka Theory
 
-- **Cluster** is a collection of brokers. For normal production use we'd have at least 3 brokers in the cluster.
+### Basic Concepts
 
+- A Kafka **Cluster** is made up of a collection of brokers. For normal production use, there are *at least* 3 brokers in the cluster.
 
-- **Broker** has a numeric id. As a client, when you are connected to an individual broker you are connected to the cluster.
-
+- Each **Broker** has a numeric id. As a client, when you are connected to an individual broker you are connected to the cluster.
 
 - Each broker is also **Bootstrap Broker** a bootstrap broker which allows you to connect to the cluster. The brokers hold metadata about all the other brokers topics, partitions etc. in the cluster in metadata.
- 
+
+- **Topics** are what messages (or 'records') are published to (so think of topic like a db table). Note if you're writing a topic that doesn't exist then Kafka will auto create  the topic if autocreate is set to true (`auto.create.topics.enable=true`)
+
+- **Records** cannot be deleted or modify once they are sent to Kafka by a producer (this is actually known as “*distributed commit log*”)
+
+- The **Offset** is an incrementing, immutable integer that is used by Kafka to maintain the current position of a consumer. Offsets only have meaning in a partition and ordering is only maintained per partition (not across partitions). Consumer offsets are held in a topic __consumer_offsets so if consumer dies then it knows where it left off. (Offsets used to be held in Zookeeper in early versions of Kafka but no longer)
+
+- **Partitions**: a topic is divided into numbered partitions which are distributed across brokers. You need to specify the number of partitions when you create the topic.-
+
+
+- **Partition Leader** Each partition has one leader and that is elected by Zookeeper. In the event of a broker failure then a new leader is elected but if that broker is restored it will become leader again
+
+
+- The **In-Sync Replica** (ISR) is a replicated partition (there are multiple ISRs for topic) – see `min.insyc.replicas` on producer config (this is usually set to 3 which allows for two replicating brokers to go down; if we set it to 1 and brokers goes down we'll get `NotEnoughReplicas` exception)
+
+
+- A **Key** is optionally send with a record. If a key is null then broker round robins across partitions but if they key is the same then records are written to the same partition (key hashing). ***So long as the number of partitions remains constant for a topic (no new partitions) then the same key will always go to the same partition.*** Example: for monitoring trucks we'd use the truckId for the key and then we'd get data in order (but ordering is only per partition). Keys are hashed using murmur2 (provides good distribution) to derive the partition to be written to (so same key always go to same partition and why we can't change number of partitions later) and you can (but not advised) override the hashing by overriding DefaultPartitioner. The default is: `targetPartition = Utils.abs(Utils2.murmur2(record.key())) % numPartitions`
+
+
+- **ConsumerGroup**: Each consumer within a group reads from exclusive partitions. (If more consumers than partitions then they'll be inactive – we might want this is backup but usually at least as many consumer). Consumers know how to coordinate reading from partitions. If we want a high number of consumers then we need a high number of partitions!
+
+
+- **ConsumerCoordinator**: Kafka functionality to rebalance consumer groups and partitions. Appears in logging,
+
 
 - **Producers**  write records into Kafka that can be read by one or more consumers and can be [configured](https://kafka.apache.org/documentation/#producerconfigs)
 
@@ -21,16 +44,13 @@
   -  `max.poll.records` (controls how many records per poll; increase if messages very small and lots of RAM – default is 500 [if you're always getting 500 you might want to increase this?]
   -  `max.partitions.fetch.bytes` – this is max data returned from broker per partition - default is 1MB so if you're reading from 100 partitions you'll need 100B
   -  `fetch.max.bytes` – maximum data for each request (covering multiple partitions)
-  -  `enable.auto.commi`t – this is the default and commits of offset is done automatically and this should be used for synchronous processing of batches; if you want process async offsets could be committed before processed so it should be off and you should call commitSync() on the consumer (explicit commit e.g if you are writing to db then after committing to db then you call this)
+  -  `enable.auto.commit` – this is the default and commits of offset is done automatically and this should be used for synchronous processing of batches; if you want process async offsets could be committed before processed so it should be off and you should call commitSync() on the consumer (explicit commit e.g if you are writing to db then after committing to db then you call this)
   -  `auto.commit.interval.ms` – this is the interval for autocommit
 
-
-- Use `BulkRequest` and `BulkResponsez` to improve performance. Add to records to the BulkRequest and commit offsets afterwards
-
+- Use `BulkRequest` and `BulkResponse` to improve performance. Add to records to the BulkRequest and commit offsets afterwards
 
 - Sometimes we want to **reset the offsets** for the consumer (e.g. (if consumer was down longer than retention period then offsets might be invalid or consumer hasn't read in a long time – might also want to look at broker `offset.retention.minutes` on the broker)
   -  `auto.offset.earliest=latest` / `auto.offset.earliest=earliest` (set on consumer)
-
 
 - **Producer Batch & Compression**: Producers batch messages to send over the wire to increase throughput. These can also be compressed to reduce producer request size (this is not switched on by default) – options are gzip (high compression but more CPU), snappy/lz4 (less compression but less CPU). As batch size gets bigger then compression becomes more effective.
   - `linger.ms` = 5ms (increase chance of messages being sent together in batch; increase throughput)
@@ -44,41 +64,13 @@
   - `acks=1` only leader acknowledges; no guarantee of replication so possible loss
   - `acks=all` no data loss; ISRs acknowledge but at cost of performance (the replicas acknowledge to the leader so this increases latency but increases safety)
 
-
-- **Records** that cannot be deleted or modify once they are sent to Kafka by a producer (this is known as “*distributed commit log*”)
-
-
-- **Topics** are what records are published to (so think of topic like a db table). Producers will auto create to the topic if autocreate is on (`auto.create.topics.enable=true`)
-
-
-- The **Offset** is an incrementing, immutable integer that is used by Kafka to maintain the current position of a consumer. Offsets only have meaning in a partition and ordering is only maintained per partition (not across partitions). Consumer offsets are held in a topic __consumer_offsets so if consumer dies then it knows where it left off. (Offsets used to be held in Zookeeper in early versions of Kafka but no longer)
-
-
 - **Delivery Semantics** (for offsets): 
   - ***at most once*** = committed as soon as message is received by consumer, if processing fails then message can be lost (usually not preferred because commit happens too early) = *It's acceptable to lose a message rather than delivering a message twice* in this semantic
   - ***at least once*** = committed only after message is processed (usually preferred option and is Kafka's default); messages could be read again so can lead to duplicates hence consumer processing must be **idempotent** => *It's acceptable to receive message more than once but no message should be lost* (Applications adopting at least once semantics may have moderate throughput and moderate latency. By setting `enable.auto.commit=false` you can manually commit after the messages are processed.)
   - ***exactly once*** = holy grail, can only be used use from Kafka to Kafka e.g workflows
 
 
-- A topic has a **Replication Factor** – 2 means there are 2 copies (risky) vs 3 which is gold standard
-
-
-- **Partitions**: a topic is divided into numbered partitions which are distributed across brokers. You need to specify the number of partitions when you create the topic.- 
-
-
-- **Parition Leader** Each partition has one leader and that is elected by Zookeeper. In the event of a broker failure then a new leader is elected but if that broker is restored it will become leader again
-
-
-- The **In-Sync Replica** (ISR) is a replicated partition (there are multiple ISRs for topic) – see `min.insyc.replicas` on producer config (this is usually set to 3 which allows for two replicating brokers to go down; if we set it to 1 and brokers goes down we'll get `NotEnoughReplicas` exception)
-
-
-- A **Key** is optionally send with a record. If a key is null then broker round robins across partitions but if they key is the same then records are written to the same partition (key hashing). ***So long as the number of partitions remains constant for a topic (no new partitions) then the same key will always go to the same partition.*** Example: for monitoring trucks we'd use the truckId for the key and then we'd get data in order (but ordering is only per partition). Keys are hashed using murmur2 (provides good distribution) to derive the partition to be written to (so same key always go to same partition and why we can't change number of partitions later) and you can (but not advised) override the hashing by overriding DefaultPartitioner. The default is: `targetPartition = Utils.abs(Utils2.murmur2(record.key())) % numPartitions`
-
-
-- **ConsumerGroup**: Each consumer within a group reads from exclusive partitions. (If more consumers than partitions then they'll be inactive – we might want this is backup but usually at least as many consumer). Consumers know how to coordinate reading from partitions. If we want a high number of consumers then we need a high number of partitions!
-
-
-- **ConsumerCoordinator**: Kafka functionality to rebalance consumer groups and partitions. Appears in logging,
+- A topic has a **Replication Factor** – 2 means there are 2 copies (risky) vs 3 which is gold standard. You can think of a kafka topic like a database table 
 
 
 - **Client bidirectionality compatability** - Older client 1.1 can talk to newer broker 2.0; newer client 2.0 can talk to older broker 1.1; so we can always use
