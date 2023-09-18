@@ -2,9 +2,11 @@
 
 ### What is Kafka?
 - Kafka is "an open-source distributed event streaming platform" originally developed by Jay Kreps, Neha Narkhede and Jun Rao at LinkedIn and open-sourced in 2011
-- When using existing traditional Message Oriented Middleware (MOM( Throughput was a major problem for LinkedIn so in designing Kafka the team set out to be build a technology which was high-throughput but also highly-scalable and fault-tolerant
-- Kafka differs from traditional Message Oriented Middleware (e.g. IBM MQ, ActiveMQ, RabbitMQ, Solace, TibcoRV etc) in that it does not implement the Java Message Service (JMS) API and does not provide point-to-point (P2P) messaging but rather a purely pub/sub model (i.e. topics). For more on JMS vs Kafka see https://www.kai-waehner.de/blog/2022/05/12/comparison-jms-api-message-broker-mq-vs-apache-kafka/
-- Out-of-the-box, Kafka is also non-transactional. (Transactions were introduced in Kafka 0.11.0 in 2017 to allow for *exactly-once* semantics but transactions gets very complicated!)
+- When using existing traditional Message Oriented Middleware (MOM) LinkedIn discovered throughput was a major problem  so in designing Kafka the team set out to be build a technology which was not only high-throughput but also highly-scalable and fault-tolerant
+- The original creators from Kafka went on to found [Confluent](https://confluent.io/) which provides a commercial distribution of Kafka called Confluent Platform. (This includes Kafka along with additional tools and features to make it more accessible and manageable for enterprises.)
+- Kafka differs from traditional Message Oriented Middleware (e.g. IBM MQ, ActiveMQ, RabbitMQ, Solace, TibcoRV etc) in that it does not implement the Java Message Service (JMS) API and does not provide point-to-point (P2P) messaging but rather purely a pub/sub model (i.e. topics). For more on JMS vs Kafka see https://www.kai-waehner.de/blog/2022/05/12/comparison-jms-api-message-broker-mq-vs-apache-kafka/
+- Out-of-the-box, Kafka is also non-transactional. (Transactions were introduced in Kafka 0.11.0 in 2017 to allow for *exactly-once* semantics but transactions gets very complicated so think carefully before proceeding down that road!)
+
 
 ### Event-Streaming & Event-Drivnn Architectures
 - An event-stream is typically a time-series representing the changing state of a particular business entity Examples of event streams: geo-location (e.g. Uber, UberEats or flight-tracking), price data (e.g. time-stamped or live stock prices or other real-time financial data/analytics) or retail inventory management (tracked using RFID)
@@ -12,11 +14,13 @@
 - In last 15 years there has been move towards asynchronous event-driven microservice architectures based on both data streams and business events being published via an event-bus leading to loosely-coupled consumers
 - The term 'Event-Driven Architectures' (EDA) is somewhat ambiguous. You could argue web apps are event-driven (e.g. DOM events) and so are traditional GUI apps (e.g. Java Swing) but usually the events here are identifiable business events (e.g. order-placed, order-fulfilled, payment-attempted, payment-confirmed) or system events (e.g. service-shutting-down). It's worth listening to Martin Fowler talk about the ambiguities of EDA as a term (see https://youtu.be/STKCRSUsyP0) and the various industry interpretations.
 
+
 ### Kafka As An Event Bus
 - At Discover, we treat Kafka as event bus. An event bus is an architectural patterns which allows publish/subscribe-style communication between microservices without requiring the components to explicitly be aware of each other
 - Think of the event-bus as the central nervous system of not just an microservice/application but an eco-system of related services. For more on the event bus pattern see https://learn.microsoft.com/en-us/dotnet/architecture/microservices/multi-container-microservice-net-applications/integration-event-based-microservice-communications
 - Leveraging Kafka's pub-sub model, it becomes really easy for other subsystems to listen to events and act upon them: you just need to write a consumer which is part of its own consumer group to consume from the topic
 - Because it's very easy for anyone to write/consume to Kafka topics, we need to prevent all-out anarchy and thereby we enforce permissioning to give visibility to which services are publishing/consuming to what topics
+
 
 ### Brokers, Partitions, Topics, Offsets, Consumers & Consumer Groups
 - A Kafka **Cluster** is made up of a collection of brokers. For normal production use, there are *at least* 3 brokers in the cluster.
@@ -34,6 +38,7 @@
 
 ![Consumer groups](./img/consumer-groups.png)
 
+
 ### Why Does Kafka Require Apache Zookeeper?
 - **Metadata**: Zookeeper maintains **metadata** about the Kafka cluster (e.g. information about topics, partitions, replicas, and the location of each replica)
 - **Leader Election**: Kafka brokers (servers) are organized into a cluster, and each partition of a topic has a leader broker and one or more follower brokers. Zookeeper chooses and the leader (using the Raft consensus algorithm) and if that leader broker for a partition fails then Zookeeper is responsible to electing a new leader
@@ -48,6 +53,7 @@
 - **Synchronization and Locking**: Zookeeper provides distributed locks and synchronization primitives that Kafka uses to ensure that operations are coordinated across the cluster.
 - **Handling Network Partitions**: Zookeeper helps Kafka in handling network partitions gracefully. It ensures that the system continues to operate even if some nodes are temporarily unreachable.
 
+
 ### How does Kafka achieve Scalability, Fault-tolerance and High Throughput?
 - Scalability is achieved in Kafka via partitioning. Records are written across multiple partitions of a topic and then multiple consumers are grouped (via a consumer group) to read concurrently from those partitions. (In your more familiar with databases then think of sharding where big data sets are broken up into two or more smaller chunks, called logical shards.)
 - Kafka achieves **fault-tolerance** by replication. In Kafka, partition data is copied to other brokers, which are known as *replicas*. If there's a point of failure in partition data in one node, then other nodes that will provide a backup and ensure that the data is still available. Replication provides fault tolerance by ensuring published messages are not permanently lost. Even if a node fails and they are lost on one node then there is a replica present on another node that can be recovered. A topic's **replication factor** is the number of copies of the topic that are present over multiple brokers. Replication factor should be >1 for fault tolerance. In such cases, there'll' be a replica of data in another broker from where the data can be retrieved.
@@ -59,6 +65,7 @@
   - Tuning ack modes (e.g `acks=0` is used to max throughput but can lead to data loss)
   - Using async producers and batching the messages a producer sends
 
+
 ### Autoscaling Using HPA and Kafka
 - Kubernetes has a feature called Horizontal Pod Autoscalng (HPA) which will automatically adjusts the number of pods in a deployment or replication controller based on observed CPU utilization (or other custom metrics)
 - For services which are REST-based Kubernetes is smart enough to figure out when a service is about to be maxed out and, therefore, to increase the number of replicas to spread that load (via round-robin load-balancing)
@@ -66,17 +73,20 @@
 - When consumer-group rebalancing occurs then consumers within the consumer group are potentially re-allocated to different partitions
 - Consumer-group rebalancing is a stop-the-world event in Kafka so whilst the re-balancing occurs records will not be consumed from the topic by any consumers assigned to that topic which in turn will lead to a spike in latency
 
+
 ### Things To Think About When Configuring And Turning Kafka
 - **Criticality of Messages**: If you event stream is geo-spatial data (e.g. an UberEats delivery driver) then dropping an event is not a big deal because you'll get another event very soon after. Sometimes the same can be true of fast-ticking financial price data. If your event, however, is a $100m interest rate swap being booked and you drop that message then you have a big problem! Design your robustness according to throughput *and* criticality. Are you getting lots of messages which individually are of relatively low-importance or are you consuming low volumes events of high importance?
-- **Predictability of Load**: is the amount of records written to your topic roughly predictable and constant or do you see big spikes? Is there a pattern to the spikes? How important is it to your business needs than spikes do not lead to longer latency times?
+- **Predictability of Load**: is the amount of records written to your topic roughly predictable and constant or do you see big spikes? Is there a pattern to the spikes? How important is it to your business needs that spikes do not lead to longer latency times? (To clarify this then think of an analogy with healthcare: do you want a healthcare system which always has extra capacity to cope with highly infrequent systemic events - e.g. a pandemic - or do you accept a lower-cost, more "efficient" system that may struggle to cope in the case of such events but in normal times will cope adequately because the cost of extra capacity is unacceptable?)
 - **Tuning batch size, linger and thread count**: You need to tune your batch size and timeouts accordingly. You don't want to be lingering too long waiting for records and you want to tune your batch size to get the best performance (batch size can very much depends on the size of your payload.) Also consider turning the the thread count in `Spring-Kafka` to optimize performance.
+
 
 ### Delivery Semantics
 - **at-most-once** - offsets are committed as soon as a message batch is received after calling poll(). If the subsequent processing fails, the message will not be tried and is lost.
 - **at-least-once** - every event from the source system will reach its destination, but sometimes retries will cause duplicates. In thie case, offsets are committed *after* the message is processed. If  processing goes wrong, the message will be read again (but this can result in duplicate processing)
 - **exactly-once** - each message is delivered exactly once. In order to achieve this, Kafka and the consumer application need to cooperate to make exactly-once semantics happen.
 
-### Two Big Problems: Exactly Once Delivery And Guaranteed Ordering
+
+### Two Big Problems: Exactly-Once Delivery And Guaranteed Ordering
 - Software consultant, Mathias Verraes, sent this rather witty tweet back in 2015 which summarizes two central problems to complex message-oriented systems. In a distributed environment with multiple instances of services consuming (in a multi-threaded environment) then it's often the case you'll have to design your code to handle possible duplicates and retrying on errors. You also need to be aware of whether it's a requirement for your system to process messages in strict sequence and if this is the case you will have to design accordingly.
 
 ![Verraes Tweet](./img/VerraesTweet.png)
@@ -91,10 +101,10 @@
     - **Idempotent Guarantee**: This restricts Exactly-Once Processing on a single Topic-Partition and within a single producer session. Exactly-Once Processing is not guaranteed when the producer is restarted.
     - **Transactional Guarantee**: This ensures Exactly-Once processing on multiple Topic-Partitions and also supports Exactly-Once Processing across multiple p
 - It's better to avoid transactions in Kafka if at all possible but see Confluent's page for more details on achieving exactly-once delivery semantics https://www.confluent.io/en-gb/blog/exactly-once-semantics-are-possible-heres-how-apache-kafka-does-it/ 
-- If you do decide you need exactly-once semantics then consult the Spring documentation on [how to implement](https://docs.spring.io/spring-kafka/docs/current/reference/html/#exactly-once) as you'll need to configure a `KafkaAwareTransactionManager`
+- If you do decide you need exactly-once semantics then consult the Spring documentation on [how to implement](https://docs.spring.io/spring-kafka/docs/current/reference/html/#exactly-once) as you'll need to configure a `KafkaAwareTransactionManager` or look at Baeldung's guide to [exactly-once](https://www.baeldung.com/kafka-exactly-once)
 
 ### Idempotency
-- **Idempotency** is a property of an operations such that no matter how many times you execute that operation, you achieve the same result (e.g multiplying by one, multiplying by zero). If you're familiar with Functional Programming (FP) then an idempotent function is different from pure function in so far as it permits side effects.
+- **Idempotency** is a property of an operation such that no matter how many times you execute that operation, you achieve the same result (e.g multiplying by one, multiplying by zero). If you're familiar with [Functional Programming (FP)](https://en.wikipedia.org/wiki/Functional_programming) then an idempotent function is different from pure function in so far as it permits side effects.
 - In order to deal with the problem of duplicates and to avoid the thorny issue of achieving  **exactly-once** semantics it is preferable to design consumers and producer to be idempotent
 - Producer idempotence can be enabled for Kafka versions >= 0.11 using the `enable.idempotence` flag (More details see https://www.conduktor.io/kafka/idempotent-kafka-producer/)
 - To implement an idempotent consumer you need some idea of whether the message has already been processed. In some cases this may not matter but in other cases it may lead to undesirable side-effects (e.g. a SQL update can, in most cases, be applied twice with no effect but a SQL insert applied twice would lead to a duplicate record so in the case of the latter it is best to use Postgres IF NOT EXISTS - see https://www.commandprompt.com/education/postgresql-insert-if-not-exists ) 
@@ -110,8 +120,41 @@
   - `org.springframework.kafka.annotation.KafkaListener` is an annotation used to annotate a listener method which will be invoked when a record on the configure topic is received:
   
 ### Consumer Retry Strategies
+- It's important to distinguish between blocking retries and non-blocking retries. Why choose one over the other? Non-blocking is obviously more performant but more complex. Blocking approach is less performant but gives us more control. As Baledung points out: "*Blocking retry can improve the reliability of the message processing pipeline by allowing the consumer to retry the consumption of a message if an error occurs. This can help to ensure that messages are processed successfully, even if transient errors occur. Blocking retry can simplify the implementation of the message processing logic by abstracting away the retry mechanism. The consumer can focus on processing the message and leave the retry mechanism to handle any errors that may occur. Finally, blocking retry may introduce delays in the message processing pipeline if the consumer is required to wait for the retry mechanism to complete its retries. This can impact the overall performance of the system. Blocking retry may also cause the consumer to consume more resources, such as CPU and memory, as it waits for the retry mechanism to complete its retries. This can impact the overall scalability of the system.*"
+- See Baeldung's article on [Implementing Retry in Kafka Consumer](https://www.baeldung.com/spring-retry-kafka-consumer) and Konduktor's article on [Producer retries](https://www.conduktor.io/kafka/kafka-producer-retries/)
+- In the case of producer retries, are two important Kafka producer properties for retrying (although these properties also equally apply to consumers): 
+  - `backoff.interval` -  (producer configuration) sets the time to wait before attempting to retry a failed request to a given topic partition. (This avoids repeatedly sending requests in a tight loop under some failure scenarios.) 
+  - `backoff.max_failure` - (producer configuration) sets the maximum number of consecutive failures the producer will tolerate before it enters an "exponential backoff" state. In this state, the producer will slow down its retry attempts in order to reduce the load on the Kafka cluster and give it time to recover.
+- When implement non-blocking consumer we can use spring-kafka's [`@RetryableTopic`](https://docs.spring.io/spring-kafka/api/org/springframework/kafka/annotation/RetryableTopic.html) annotation:
 
-https://www.baeldung.com/spring-retry-kafka-consumer
+```java
+@Component
+@KafkaListener(id = "multiGroup", topics = "greeting")
+public class MultiTypeKafkaListener {
+
+    @KafkaHandler
+    @RetryableTopic(
+      backoff = @Backoff(value = 3000L), 
+      attempts = "5", 
+      autoCreateTopics = "false",
+      include = SocketTimeoutException.class, exclude = NullPointerException.class)
+    public void handleGreeting(Greeting greeting) {
+        System.out.println("Greeting received: " + greeting);
+    }
+}
+```
+
+### How BackOff Works
+- **Normal Operation**: In normal operation, the producer will try to send records to Kafka brokers. If a failure occurs (e.g., due to network issues, broker unavailability, etc.), the producer will attempt to retry sending the records.
+- **Consecutive Failures**: If the number of consecutive failures reaches the value specified by `backoff.max.failure`, the producer will enter the exponential backoff state.
+- **Exponential Backoff**: In the exponential backoff state, the producer will progressively increase the amount of time it waits between retries. This means that with each consecutive failure, the time delay before the next retry attempt will get longer. For example, if the initial delay is set to 100 milliseconds, and backoff.max.failure is set to 5, the delays might look something like this:
+  - Attempt 1: 100 milliseconds
+  - Attempt 2: 200 milliseconds
+  - Attempt 3: 400 milliseconds
+  - Attempt 4: 800 milliseconds
+  - Attempt 5: 1600 milliseconds
+  After reaching `backoff.max.failure`, subsequent retries will continue at the maximum delay specified. This behavior is useful for preventing a producer from overwhelming a struggling Kafka cluster with a high number of retries in the case of temporary network issues or broker unavailability. It's important to note that `backoff.max.failure` is just one of many producer configuration parameters that allow you to fine-tune the behavior of the producer to suit your specific use case and environment.
+
 
 ### Handling Acknowledgements
 - An **acknowledgment** (often referred to as an "ack") is a signal sent by a consumer to indicate that it has successfully received and processed a message or by the producer. Acknowledgements are, therefore, part of the reliability mechanism in Kafka. In "raw" Kafka there are three levels of ack:
