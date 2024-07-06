@@ -64,9 +64,9 @@ Streams & Java Embraces (Some) Functional Programming
 - Are Java lambdas closures? - https://www.bruceeckel.com/2015/10/17/are-java-8-lambdas-closures/#:~:text=It%20turns%20out%20that%2C%20in,them%20that%20way%20or%20not.
 
 Algorithms, Space/Time complexity & Big-O Notation
-- Quicksort
-- Binary Search
-- Recursion
+- Quicksort vs Mergesort - https://www.baeldung.com/java-quicksort
+- Binary Search - https://www.baeldung.com/java-binary-search
+- Recursion - https://www.baeldung.com/java-recursion
 - Searching trees/graphs: Depth First Search (DFS) vs Breadth First Search (BFS) - https://medium.com/basecs/demystifying-depth-first-search-a7c14cccf056
 - https://www.freecodecamp.org/news/big-o-notation-why-it-matters-and-why-it-doesnt-1674cfa8a23c/
 - Big O Notation - https://www.baeldung.com/cs/big-oh-asymptotic-complexity
