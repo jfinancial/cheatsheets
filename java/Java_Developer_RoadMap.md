@@ -1,6 +1,7 @@
 
 ### Books
 - Effective Java by Joshua Bloch (really good principles for coding in Java in Koan-style)
+- [Thinking in Java](https://github.com/media-lib/prog_lib/blob/master/java/Bruce%20Eckel%20-%20Thinking%20in%20Java%204th%20Edition.pdf) by Bruce Eckel
 - Clean Code by Robert C Martin aka Uncle Bob
 - The Pragmatic Programmer by Andy Hunt and Dave Thomas
 - Java Concurrency in Practice by Brian Goetz (everything you need to know about multithreading)
@@ -36,6 +37,10 @@
 - Exception Handling Basics: try, catch, finally - https://www.baeldung.com/java-exceptions
 - Java exception propagation and the call stack - https://medium.com/@satyendra.jaiswal/demystifying-java-exception-propagation-a-journey-up-the-call-stack-0abfb628682a 
 - Exceptions and try/catch vs try-with-resources - https://medium.com/geekculture/how-does-exception-handling-work-in-java-c71c45103e7d
+- IO Basics: How To Read A File In Java - https://www.baeldung.com/reading-file-in-java
+- Read and Write Operations - NIO vs IO hhttps://www.baeldung.com/java-io-vs-nio
+- LocalDate and LocalDateTime in Java 8: - https://www.baeldung.com/java-date-to-localdate-and-localdatetime
+- Clocks in Java - https://www.baeldung.com/java-clock
 
 ### JVM Basics
 - How the JVM works - https://hasithas.medium.com/understanding-how-java-virtual-machine-jvm-works-a1b07c0c399a
@@ -155,8 +160,8 @@
 - Concurrent collections: ConcurrentHashMap, CopyOnWriteArraySet, CopyOnWriteArrayList. ConcurrentSkipListSet, CopyOnWriteArraySet
 - Collections.synchronizedMap vs. ConcurrentHashMap: https://www.baeldung.com/java-synchronizedmap-vs-concurrenthashmap
 - ConcurrentHashMap Under The Hood - Region Locking: https://anmolsehgal.medium.com/concurrenthashmap-internal-working-in-java-b2a1a48c7289
-- Java 5's improved locking abstractions: ReentrantLock and Semaphore - https://www.baeldung.com/java-binary-semaphore-vs-reentrant-lock
-- Out-of-the-box abstractions for multithreading/parallel processing: ExecutorService - https://www.baeldung.com/java-executor-service-tutorial
+- Java 5's improved locking abstractions: ReentrantLock and Semaphore - https://www.baeldung.com/java-binary-semaphore-vs-reentrant-lock and Cyclic Barrier https://www.baeldung.com/java-cyclic-barrier and Countdown Latch https://www.baeldung.com/java-countdown-latch
+- Out-of-the-box abstractions for multithreading/parallel processing: ExecutorService - https://www.baeldung.com/java-executor-service-tutorial 
 - Future and CompletableFuture - https://www.baeldung.com/java-future-completablefuture-rxjavas-observable
 - Interview question: "What is the danger of calling get() to get the value of a Future?"
 - Thread pool models - https://www.baeldung.com/thread-pool-java-and-guava
