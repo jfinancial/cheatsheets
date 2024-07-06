@@ -99,7 +99,7 @@
 - Sorting a list: comparable vs comparator
 - Maps: HashMap vs LinkedHashMap vs TreeMap
 - Is a HashMap threadsafe? What are the consequences?
-- What's a WeakHashMap? What's the typical use case for it?
+- What's a WeakHashMap? What's the typical use case for it? - https://www.baeldung.com/java-weakhashmap
 - Sets: HashSet, TreeSet, LinkedHashSet
 - The SortedSet interface (ConcurrentSkipListSet, TreeSet)
 - LIFO vs FIFO: Stacks and Queues - https://www.educative.io/blog/data-structures-stack-queue-java-tutorial
