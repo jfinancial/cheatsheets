@@ -82,6 +82,7 @@ Java OO Basics: Objects & java.lang.Object
 
 Data Structures
 - Arrays & memory structure - https://medium.com/@f2015939p/array-memory-allocation-in-java-49b292122d18
+- Google's introduction to data structures and algorithms - https://techdevguide.withgoogle.com/paths/data-structures-and-algorithms/
 - More on arrays in Java: Arrays.sort(), System.arraycopy(), Arrays.copyOf() and Arrays.copyOfRange()
 - Multidimensional arrays - https://www.geeksforgeeks.org/multidimensional-arrays-in-java/
 - Collections & Iterators
