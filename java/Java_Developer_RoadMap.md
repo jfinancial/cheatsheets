@@ -118,6 +118,7 @@ Concurrency
 - Moore's Law and Processors Went Multicore - https://medium.com/@arnabkar2003/why-multi-core-processing-is-the-future-ae7cba792f0b
 - Multithreading, Java 5 (2004) and the rise of multicore processors - https://medium.com/@med.ali.bennour/enhancing-java-concurrency-processor-core-threads-fibers-0cac6000e5fb#:~:text=Efficient%20Resource%20Utilization%3A%20By%20leveraging,scientific%20computations%2C%20and%20server%20applications.
 - Java 1/1.1 & Basic Concurrency Concepts: threads, wait/notify - https://www.baeldung.com/java-wait-notify
+- Introdution to multithreading in Java - https://www.digitalocean.com/community/tutorials/multithreading-in-java
 - The role of keyword volatile and the happens-before guarantee - https://www.baeldung.com/java-volatile
 - The synchronized keyword  - https://www.baeldung.com/java-synchronized and https://jenkov.com/tutorials/java-concurrency/synchronized.html
 - Why is static synchronized so dangerous? - https://www.baeldung.com/java-synchronization-bad-practices
