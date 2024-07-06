@@ -123,7 +123,7 @@ Concurrency
 - Why is static synchronized so dangerous? - https://www.baeldung.com/java-synchronization-bad-practices
 - Deadlocks, livelock and starvation - https://www.baeldung.com/cs/deadlock-livelock-starvation
 - ThreadLocal API: Storing data accessible only by a specific thread - https://www.baeldung.com/java-threadlocal
-- Defining a thread-based task: Difference between callable vs Runnable
+- Defining a thread-based task: Difference between callable vs Runnable - https://www.baeldung.com/java-runnable-callable
 - Concurrent collections: ConcurrentHashMap, CopyOnWriteArraySet, CopyOnWriteArrayList. ConcurrentSkipListSet, CopyOnWriteArraySet
 - Collections.synchronizedMap vs. ConcurrentHashMap: https://www.baeldung.com/java-synchronizedmap-vs-concurrenthashmap
 - ConcurrentHashMap Under The Hood - Region Locking: https://anmolsehgal.medium.com/concurrenthashmap-internal-working-in-java-b2a1a48c7289
