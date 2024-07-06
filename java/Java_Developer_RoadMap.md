@@ -158,7 +158,7 @@
 - Java 5's improved locking abstractions: ReentrantLock and Semaphore - https://www.baeldung.com/java-binary-semaphore-vs-reentrant-lock
 - Out-of-the-box abstractions for multithreading/parallel processing: ExecutorService - https://www.baeldung.com/java-executor-service-tutorial
 - Future and CompletableFuture - https://www.baeldung.com/java-future-completablefuture-rxjavas-observable
-- What is the danger of calling get() to get the value of a Future?
+- Interview question: "What is the danger of calling get() to get the value of a Future?"
 - Thread pool models - https://www.baeldung.com/thread-pool-java-and-guava
 - Virtual threads in java: https://www.infoworld.com/article/3678148/intro-to-virtual-threads-a-new-approach-to-java-concurrency.html
 - Introduction to Atomic Variables - the solution to check-and-set problem https://www.baeldung.com/java-atomic-variables
