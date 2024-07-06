@@ -53,12 +53,15 @@ Data Structures
 
 Streams & Java Embraces (Some) Functional Programming
 - Functional vs imperative styles
+- What is FP? https://www.infoworld.com/article/3613715/what-is-functional-programming-a-practical-guide.html
 - How is a stream different a collection?
 - Parallel streams - https://www.baeldung.com/java-when-to-use-parallel-stream
 - Lambda expressions - https://www.baeldung.com/java-8-lambda-expressions-tips 
 - Functional interfaces - SAM (Single Abstract Method)  - https://dzone.com/articles/java-8-functional-interfaces-sam
 - Stream terminal operations - https://www.codejava.net/java-core/collections/java-8-stream-terminal-operations-examples
 - Functional programming (Consumer, Predicate, Supplier, and Function) - https://medium.com/javarevisited/java-8s-consumer-predicate-supplier-and-function-bbc609a29ff9
+- Lambda limitations - https://dzone.com/articles/java-8-lambas-limitations-closures
+- Are Java lambdas closures? - https://www.bruceeckel.com/2015/10/17/are-java-8-lambdas-closures/#:~:text=It%20turns%20out%20that%2C%20in,them%20that%20way%20or%20not.
 
 Algorithms, Space/Time complexity & Big-O Notation
 - Quicksort
