@@ -148,6 +148,7 @@
 - The role of keyword volatile and the happens-before guarantee - https://www.baeldung.com/java-volatile
 - The synchronized keyword  - https://www.baeldung.com/java-synchronized and https://jenkov.com/tutorials/java-concurrency/synchronized.html
 - Why is static synchronized so dangerous? - https://www.baeldung.com/java-synchronization-bad-practices
+- The fork-join framework - https://www.baeldung.com/java-fork-join
 - Deadlocks, livelock and starvation - https://www.baeldung.com/cs/deadlock-livelock-starvation
 - ThreadLocal API: Storing data accessible only by a specific thread - https://www.baeldung.com/java-threadlocal
 - Defining a thread-based task: Difference between callable vs Runnable - https://www.baeldung.com/java-runnable-callable
