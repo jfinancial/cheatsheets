@@ -96,7 +96,7 @@
 - Collections & Iterators
 - Implementations: what to use when?
 - Lists: ArrayList vs LinkedList - ordering, insertion and performance considerations
-- Sorting a list: comparable vs comparator
+- Sorting a list: comparable vs comparator - https://www.digitalocean.com/community/tutorials/comparable-and-comparator-in-java-example
 - Maps: HashMap vs LinkedHashMap vs TreeMap
 - Is a HashMap threadsafe? What are the consequences?
 - What's a WeakHashMap? What's the typical use case for it? - https://www.baeldung.com/java-weakhashmap
