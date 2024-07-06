@@ -14,6 +14,7 @@
 ### Videos
 - [Coding With John](https://www.youtube.com/@CodingWithJohn)
 - [Core Java Course](https://www.youtube.com/watch?v=bm0OyhwFDuY&list=PLsyeobzWxl7pe_IiTfNyr55kwJPWbgxB5)
+- [Google's Introduction to Data Structures  Algorithms](https://techdevguide.withgoogle.com/paths/data-structures-and-algorithms/)
 
 ### Core Java
 - Primitive datatypes: byte, short, int, long, float, double, boolean, char
@@ -85,7 +86,6 @@
 
 ### Data Structures
 - Arrays & memory structure - https://medium.com/@f2015939p/array-memory-allocation-in-java-49b292122d18
-- Google's introduction to data structures and algorithms - https://techdevguide.withgoogle.com/paths/data-structures-and-algorithms/
 - More on arrays in Java: Arrays.sort(), System.arraycopy(), Arrays.copyOf() and Arrays.copyOfRange()
 - Multidimensional arrays - https://www.geeksforgeeks.org/multidimensional-arrays-in-java/
 - Collections & Iterators
