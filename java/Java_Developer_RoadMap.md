@@ -1,5 +1,5 @@
 
-Books
+### Books
 - Effective Java by Joshua Bloch (really good principles for coding in Java in Koan-style)
 - Clean Code by Robert C Martin aka Uncle Bob
 - The Pragmatic Programmer by Andy Hunt and Dave Thomas
@@ -11,11 +11,11 @@ Books
 - Patterns of Enterprise Application Architecture by Martin Fowler
 - The Mythical Man-Month: Essays on Software Engineering (use this to explain to your boss why two women cannot have a baby in four-and-a-half months; if he/she still doesn't get it then probably best to look for another job)
 
-Videos
-https://www.youtube.com/@CodingWithJohn - Coding With John
+### Videos
+- [Coding With John](https://www.youtube.com/@CodingWithJohn)
+- [Core Java Course](https://www.youtube.com/watch?v=bm0OyhwFDuY&list=PLsyeobzWxl7pe_IiTfNyr55kwJPWbgxB5)
 
-
-[Core Java Course](https://www.youtube.com/watch?v=bm0OyhwFDuY&list=PLsyeobzWxl7pe_IiTfNyr55kwJPWbgxB5)
+### Core Java
 - Primitive datatypes: byte, short, int, long, float, double, boolean, char
 - Reference datatypes - https://www.javatpoint.com/reference-data-types-in-java
 - Interview question: what's happens if you do System.out.println(Integer.MAX_VALUE + 1 ) ?
@@ -36,17 +36,18 @@ https://www.youtube.com/@CodingWithJohn - Coding With John
 - Java exception propagation and the call stack - https://medium.com/@satyendra.jaiswal/demystifying-java-exception-propagation-a-journey-up-the-call-stack-0abfb628682a 
 - Exceptions and try/catch vs try-with-resources - https://medium.com/geekculture/how-does-exception-handling-work-in-java-c71c45103e7d
 
-JVM Basics
+### JVM Basics
 - How the JVM works - https://hasithas.medium.com/understanding-how-java-virtual-machine-jvm-works-a1b07c0c399a
 - Structure of the JVM - https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-2.html
 - JVM vs JRE - https://www.educative.io/answers/what-is-the-difference-between-jvm-and-jre
 - Classloading - https://www.baeldung.com/java-classloaders
 - The heap vs the stack - https://www.baeldung.com/cs/memory-stack-vs-heap
+- Interview question: "Memory leaks: how they occur and how to detect?"
 - Garbage collection - algorithms (eg. CMS vs G1 vs Z) - https://www.baeldung.com/jvm-garbage-collectors
 - Java Memory Model - https://jenkov.com/tutorials/java-concurrency/java-memory-model.html
-- 
 
-Java OO Basics: Objects & java.lang.Object
+
+### Java OO Basics
 - OO Buzzwords:  Inheritance, Encapsulation, Abstraction and Polymorphism - https://www.nerd.vision/post/polymorphism-encapsulation-data-abstraction-and-inheritance-in-object-oriented-programming
 - Interview question: what are benefits of encapsulation?
 - Packages and visibility: public, package, protected vs private? (Why not make everything public??)
@@ -77,14 +78,12 @@ Java OO Basics: Objects & java.lang.Object
 - The finalise method
 - The clone method and Java.lang.Cloneable
 - Thread basics: wait/notify/notifyAll
-- Heap vs stack, java memory model, Eden vs survivor space, garbage collection - https://dzone.com/articles/understanding-the-java-memory-model-and-the-garbag
-- Interview question: "Memory leaks: how they occur and how to detect?"
 - Java's floating point rounding problem https://arshadsuraj.medium.com/java-floating-point-numbers-rounding-problem-solution-a07e019b9dd5
 - Double precision issue - https://www.baeldung.com/java-double-precision-issue
-- Financial calculations - Big decimal vs double - https://www.baeldung.com/java-double-vs-bigdecimal 
+- Financial/scientific calculations - Big decimal vs double - https://www.baeldung.com/java-double-vs-bigdecimal 
 
 
-Data Structures
+### Data Structures
 - Arrays & memory structure - https://medium.com/@f2015939p/array-memory-allocation-in-java-49b292122d18
 - Google's introduction to data structures and algorithms - https://techdevguide.withgoogle.com/paths/data-structures-and-algorithms/
 - More on arrays in Java: Arrays.sort(), System.arraycopy(), Arrays.copyOf() and Arrays.copyOfRange()
@@ -105,7 +104,7 @@ Data Structures
 - Collections.synchronizedMap vs. ConcurrentHashMap: https://www.baeldung.com/java-synchronizedmap-vs-concurrenthashmap
 - ConcurrentHashMap Under The Hood - Region Locking: https://anmolsehgal.medium.com/concurrenthashmap-internal-working-in-java-b2a1a48c7289
 
-Generics
+### Generics
 - What is type safety? https://www.baeldung.com/cs/type-safety-programming
 - Type safety vs strong typing - https://dev.to/ayodejii/type-safety-and-strong-typing-what-are-these-terms-3io5
 - Basics - https://www.baeldung.com/java-generics
@@ -113,7 +112,7 @@ Generics
 - Reified functions (Kotlin has them but Java doesn't which is a bummer) https://www.baeldung.com/kotlin/reified-functions
 - Syntactic sugar (J1.7): The Diamond Operator - https://www.baeldung.com/java-diamond-operator
 
-Streams & Java Embraces (Some) Functional Programming
+### Streams & Java Embraces (Some) Functional Programming
 - Functional vs imperative styles
 - What is FP? https://www.infoworld.com/article/3613715/what-is-functional-programming-a-practical-guide.html
 - How is a stream different a collection?
@@ -125,7 +124,7 @@ Streams & Java Embraces (Some) Functional Programming
 - Lambda limitations - https://dzone.com/articles/java-8-lambas-limitations-closures
 - Are Java lambdas closures? - https://www.bruceeckel.com/2015/10/17/are-java-8-lambdas-closures/#:~:text=It%20turns%20out%20that%2C%20in,them%20that%20way%20or%20not.
 
-Algorithms, Space/Time complexity & Big-O Notation
+### Algorithms, Space/Time complexity & Big-O Notation
 - Quicksort vs Mergesort - https://www.baeldung.com/java-quicksort
 - Binary Search - https://www.baeldung.com/java-binary-search
 - Recursion - https://www.baeldung.com/java-recursion
@@ -140,8 +139,8 @@ Algorithms, Space/Time complexity & Big-O Notation
   - Exponential Time Algorithms – O(k^n)
   - Factorial Time Algorithms – O(n!)
   - Asymptotic Functions
-  
-Concurrency
+
+### Concurrency
 - Moore's Law and How Processors Went Multicore - https://medium.com/@arnabkar2003/why-multi-core-processing-is-the-future-ae7cba792f0b
 - Multithreading, Java 5 (2004) and the rise of multicore processors - https://medium.com/@med.ali.bennour/enhancing-java-concurrency-processor-core-threads-fibers-0cac6000e5fb#:~:text=Efficient%20Resource%20Utilization%3A%20By%20leveraging,scientific%20computations%2C%20and%20server%20applications.
 - Java 1/1.1 & Basic Concurrency Concepts: threads, wait/notify - https://www.baeldung.com/java-wait-notify
