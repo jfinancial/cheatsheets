@@ -51,6 +51,15 @@ Data Structures
 - How does a HashMap work? Hashing and collisions - what makes a good hashing algorithm? Bucketing... implementing a histogram via a HashMap?
 - ConcurrentHashMap Under The Hood - Region Locking: https://anmolsehgal.medium.com/concurrenthashmap-internal-working-in-java-b2a1a48c7289
 
+Streams & Java Embraces (Some) Functional Programming
+- Functional vs imperative styles
+- How is a stream different a collection?
+- Parallel streams - https://www.baeldung.com/java-when-to-use-parallel-stream
+- Lambda expressions - https://www.baeldung.com/java-8-lambda-expressions-tips 
+- Functional interfaces - SAM (Single Abstract Method)  - https://dzone.com/articles/java-8-functional-interfaces-sam
+- Stream terminal operations - https://www.codejava.net/java-core/collections/java-8-stream-terminal-operations-examples
+- Functional programming (Consumer, Predicate, Supplier, and Function) - https://medium.com/javarevisited/java-8s-consumer-predicate-supplier-and-function-bbc609a29ff9
+
 Algorithms, Space/Time complexity & Big-O Notation
 - Quicksort
 - Binary Search
@@ -80,5 +89,5 @@ Concurrency
 - Out-of-the-box multithreading abstractions: ExecutorService - https://www.baeldung.com/java-executor-service-tutorial
 - Future and CompletableFuture - https://www.baeldung.com/java-future-completablefuture-rxjavas-observable
 - What is the danger of calling get() to get the value of a Future?
-- Threadpooling
+- Thread pool models - https://www.baeldung.com/thread-pool-java-and-guava
 - Virtual threads in java: https://www.infoworld.com/article/3678148/intro-to-virtual-threads-a-new-approach-to-java-concurrency.html
