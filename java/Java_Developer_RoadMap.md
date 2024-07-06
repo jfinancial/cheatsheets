@@ -5,7 +5,7 @@
 - The Pragmatic Programmer by Andy Hunt and Dave Thomas
 - Java Concurrency in Practice by Brian Goetz (everything you need to know about multithreading)
 - Java Performance: The Definitive Guide (JVM internals and how to tweak for performance)
-- Design patterns : elements of reusable object-oriented software by Gamma, Helm, Johnson and John Vlissides aka the Gang Of Four (GoF) (You will never actually read this impenetrable tome so just keep it on your desk to impress your colleagues and signal to your boss that you know what Design Patterns are all about )
+- Design patterns : Elements of Reusable Object-Sriented Software by Gamma, Helm, Johnson and John Vlissides aka the Gang Of Four (GoF) (The book that smarted a small revolution in how to think about software in the early 1990s. You will never actually read this impenetrable tome so just keep it on your desk to impress your colleagues and signal to your boss that you know what Design Patterns are all about )
 - Java: Design Patterns: A Tutorial (old now but still the clearest, practical code examples of the GoF patterns)
 - Refactoring: Improving the Design of Existing Code by Martin Fowler
 - Patterns of Enterprise Application Architecture by Martin Fowler
