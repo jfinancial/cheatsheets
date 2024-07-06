@@ -67,7 +67,7 @@
 - Lombok's @NonNull
 - Objects.nonNull() vs != null
 - Interfaces and the concept of "Duck typing" - https://www.geeksforgeeks.org/interfaces-and-polymorphism-in-java/
-- What's a marker interface? (Examples: Serializable, Cloneable etc)
+- What's a marker interface? (Examples: Serializable, Cloneable etc) - https://www.baeldung.com/java-marker-interfaces
 - Does Java have multiple inheritance? If not then why not? Can we get around this?
 - Method overriding vs method overloading: what's the difference? @Overloaded annotation - https://www.baeldung.com/java-method-overload-override
 - Type Safety vs Casting. Why is casting evil? What's type safety?
