@@ -17,7 +17,7 @@ https://www.youtube.com/@CodingWithJohn - Coding With John
 
 [Core Java Course](https://www.youtube.com/watch?v=bm0OyhwFDuY&list=PLsyeobzWxl7pe_IiTfNyr55kwJPWbgxB5)
 - Primitive datatypes: byte, short, int, long, float, double, boolean, char
-- Reference datatypes 
+- Reference datatypes - https://www.javatpoint.com/reference-data-types-in-java
 - Static vs non-static methods and variables - https://www.youtube.com/watch?v=-Y67pdWHr9Y
 - Casting: Upcasting vs Downcasting - https://medium.com/@salvipriya97/rules-for-casting-an-object-in-java-dc61580008cb 
 - Arithmetic operators (e.g +, -. %)
@@ -30,7 +30,11 @@ https://www.youtube.com/@CodingWithJohn - Coding With John
 - Java 17: [Sealed classes and switch statements](https://medium.com/@oskarv/java-17-features-pattern-matching-for-switch-and-sealed-classes-f631bdd56f12)
 - Constants vs enums - https://www.baeldung.com/cs/enums-vs-constants
 - Java enums - https://www.baeldung.com/java-enum-values
- 
+- Exceptions: Unchecked/Runtime vs Checked Exceptions - https://rollbar.com/blog/how-to-handle-checked-unchecked-exceptions-in-java
+- Exception Handling Basics: try, catch, finally - https://www.baeldung.com/java-exceptions
+- Java exception propagation and the call stack - https://medium.com/@satyendra.jaiswal/demystifying-java-exception-propagation-a-journey-up-the-call-stack-0abfb628682a 
+- Exceptions and try/catch vs try-with-resources - https://medium.com/geekculture/how-does-exception-handling-work-in-java-c71c45103e7d
+
 JVM Basics
 - How the JVM works - https://hasithas.medium.com/understanding-how-java-virtual-machine-jvm-works-a1b07c0c399a
 - Structure of the JVM - https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-2.html
@@ -75,8 +79,7 @@ Java OO Basics: Objects & java.lang.Object
 - Thread basics: wait/notify/notifyAll
 - Heap vs stack, java memory model, Eden vs survivor space, garbage collection - https://dzone.com/articles/understanding-the-java-memory-model-and-the-garbag
 - Interview question: "Memory leaks: how they occur and how to detect?"
-- Exceptions and try/catch vs try-with-resources - https://medium.com/geekculture/how-does-exception-handling-work-in-java-c71c45103e7d
- 
+
 Data Structures
 - Arrays & memory structure - https://medium.com/@f2015939p/array-memory-allocation-in-java-49b292122d18
 - More on arrays in Java: Arrays.sort(), System.arraycopy(), Arrays.copyOf() and Arrays.copyOfRange()
