@@ -74,9 +74,9 @@
 - Strings in java: string pooling - why are strings immutable?" - https://www.youtube.com/watch?v=Bj9Mx_Lx3q4
 - String concatentation: + vs StringBuilder vs StringBuffer?
 - Interview question: "What's longest string you can hava in Java? https://www.baeldung.com/java-strings-maximum-length
-- Unicode and charsets (ASCII vs UTF-8 vs UTF-16) - https://w3developers.medium.com/unicode-is-javas-native-character-set-249fdc1c39c3#:~:text=Unicode%20is%20Java's%20native%20character,scripts%20of%20Chinese%20and%20Japanese.
-- Equals & Hashcode => shallow vs deep equality
-- The finalise method
+- Unicode and charsets (ASCII vs UTF-8 vs UTF-16) - https://w3developers.medium.com/unicode-is-javas-native-character-set-249fdc1c39c3#:~:text=Unicode%20is%20Java's%20native%20character,scripts%20of%20Chinese%20and%20Japanese
+- Equals & Hashcode => shallow vs deep equality - https://jthread.com/2017/09/09/shallow-vs-deep-comparison-of-objects/
+- The finalise method - https://www.baeldung.com/java-finalize
 - The clone method and Java.lang.Cloneable
 - Thread basics: wait/notify/notifyAll
 - Java's floating point rounding problem https://arshadsuraj.medium.com/java-floating-point-numbers-rounding-problem-solution-a07e019b9dd5
