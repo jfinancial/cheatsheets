@@ -43,8 +43,14 @@ JVM Basics
 
 Java OO Basics: Objects & java.lang.Object
 - OO Buzzwords:  Inheritance, Encapsulation, Abstraction and Polymorphism - https://www.nerd.vision/post/polymorphism-encapsulation-data-abstraction-and-inheritance-in-object-oriented-programming
+- Interview question: what are benefits of encapsulation?
+- Packages and visibility: public, package, protected vs private? (Why not make everything public??)
 - What is the role of java.lang.Object?
+- Constructors; multiple constructors, private constructors, no args/implicit constructors vs required args constructors
 - Instances, keyword new and object references - https://java-programming.mooc.fi/part-5/4-objects-and-references
+- Keyword final - consequences of immutability, record keyword in Java 17 - read Pat Helland's "Immutability Changes Everything" https://queue.acm.org/detail.cfm?id=2884038
+- Interview question: why should you use final instance fields?
+- Static initialisation blocks - https://blogs.oracle.com/javamagazine/post/java-instance-initializer-bloc
 - Keyword null, nullability and Tony Hoare's Billion Dollar Mistake - https://www.infoq.com/presentations/Null-References-The-Billion-Dollar-Mistake-Tony-Hoare/
 - Lombok's @NonNull
 - Objects.nonNull() vs != null
@@ -58,7 +64,7 @@ Java OO Basics: Objects & java.lang.Object
 - Interview question: what would be the consequence of just returning a constant (say 11) as the implementation of your hashcode() method?
 - Mutators (setter methods) and accessors (getter methods)
 - Objects vs the java bean spec - https://medium.com/@mgm06bm/understanding-java-beans-a-comprehensive-guide-for-beginners-684163011c82
-- Immutability: keyword final - consequences of immutability, record keyword in Java 17 - read Pat Helland's "Immutability Changes Everything" https://queue.acm.org/detail.cfm?id=2884038
+-
 - Strings in java: string pooling - why are strings immutable?" - https://www.youtube.com/watch?v=Bj9Mx_Lx3q4
 - String concatentation: + vs StringBuilder vs StringBuffer?
 - Interview question: "What's longest string you can hava in Java? https://www.baeldung.com/java-strings-maximum-length
