@@ -1,8 +1,25 @@
 
+Books
+- Effective Java by Joshua Bloch (really good principles for coding in Java in Koan-style)
+- Clean Code by Robert C Martin aka Uncle Bob
+- The Pragmatic Programmer by Andy Hunt and Dave Thomas
+- Java Concurrency in Practice by Brian Goetz (everything you need to know about multithreading)
+- Java Performance: The Definitive Guide (JVM internals and how to tweak for performance)
+- Design patterns : elements of reusable object-oriented software by Gamma, Helm, Johnson and John Vlissides aka the Gang Of Four (GoF) (You will never actually read this so just keep it on your desk to show your boss you know what Design Patterns are all about )
+- Java: Design Patterns: A Tutorial (old now but still the clearest, practical code examples of the GoF patterns)
+- Refactoring: Improving the Design of Existing Code by Martin Fowler
+- Patterns of Enterprise Application Architecture by Martin Fowler
+- The Mythical Man-Month: Essays on Software Engineering (use this to explain to your boss why two women cannot have a baby in four-and-a-half months; if he/she still doesn't get it then probably best to look for another job)
+
+Videos
+https://www.youtube.com/@CodingWithJohn - Coding With John
+
+
 [Core Java Course](https://www.youtube.com/watch?v=bm0OyhwFDuY&list=PLsyeobzWxl7pe_IiTfNyr55kwJPWbgxB5)
 - Primitive datatypes: byte, short, int, long, float, double, boolean, char
-- Reference datatypes:
-- Casting and autoboxing
+- Reference datatypes and autoboxing
+- Static vs non-static methods and variables - https://www.youtube.com/watch?v=-Y67pdWHr9Y
+- Casting: Upcasting vs Downcasting - https://medium.com/@salvipriya97/rules-for-casting-an-object-in-java-dc61580008cb 
 - Arithmetic operators (e.g +, -. %)
 - The modulo operator (%) = https://www.baeldung.com/modulo-java
 - Logical operators, short-circuiting - https://www.tutorialsfreak.com/java-tutorial/java-logical-operators
@@ -10,6 +27,16 @@
 - Addition assignment operator = https://www.digitalocean.com/community/tutorials/addition-assignment-operator-in-java
 - Flow control: while and for loops; switch statements; if/else vs ternary operator => can't return from an if
 - Java 17: [Sealed classes and switch statements](https://medium.com/@oskarv/java-17-features-pattern-matching-for-switch-and-sealed-classes-f631bdd56f12)
+ 
+JVM Basics
+- How the JVM works - https://hasithas.medium.com/understanding-how-java-virtual-machine-jvm-works-a1b07c0c399a
+- Structure of the JVM - https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-2.html
+- JVM vs JRE - https://www.educative.io/answers/what-is-the-difference-between-jvm-and-jre
+- Classloading - https://www.baeldung.com/java-classloaders
+- The heap vs the stack - https://www.baeldung.com/cs/memory-stack-vs-heap
+- Garbage collection - algorithms (eg. CMS vs G1 vs Z) - https://www.baeldung.com/jvm-garbage-collectors
+- Java Memory Model - https://jenkov.com/tutorials/java-concurrency/java-memory-model.html
+- 
 
 Java OO Basics: Objects & java.lang.Object
 - OO Buzzwords:  Inheritance, Encapsulation, Abstraction and Polymorphism - https://www.nerd.vision/post/polymorphism-encapsulation-data-abstraction-and-inheritance-in-object-oriented-programming
@@ -25,16 +52,17 @@ Java OO Basics: Objects & java.lang.Object
 - Type Safety vs Casting. Why is casting evil? What's type safety?
 - Structural equality (equals()) vs reference equality (==)
 - Immutability: keyword final - consequences of immutability, record keyword in Java 17 - read Pat Helland's "Immutability Changes Everything" https://queue.acm.org/detail.cfm?id=2884038
-- Strings in java: string pooling - why are strings 
+- Strings in java: string pooling - why are strings immutable? - https://www.youtube.com/watch?v=Bj9Mx_Lx3q4
 - Equals & Hashcode => shallow vs deep equality
 - The finalise method
 - The clone method and Java.lang.Cloneable
 - Thread basics: wait/notify/notifyAll
 - Heap vs stack, java memory model, Eden vs survivor space, garbage collection - https://dzone.com/articles/understanding-the-java-memory-model-and-the-garbag
 - Memory leaks: how they occur and how to detect?
+- Exceptions and try/catch vs try-with-resources - https://medium.com/geekculture/how-does-exception-handling-work-in-java-c71c45103e7d
  
 Data Structures
-- Arrays & memory structure
+- Arrays & memory structure - https://medium.com/@f2015939p/array-memory-allocation-in-java-49b292122d18
 - Collections & Iterators
 - Implementations: what to use when?
 - Lists: ArrayList vs LinkedList - ordering, insertion and performance considerations
@@ -46,17 +74,24 @@ Data Structures
 - The SortedSet interface (ConcurrentSkipListSet, TreeSet)
 - LIFO vs FIFO: Stacks and Queues - https://www.educative.io/blog/data-structures-stack-queue-java-tutorial
 - Legacy implementations (jdk1.1): Hashtable, Vector
+- How does a HashMap work? Hashing and collisions - what makes a good hashing algorithm? Bucketing... implementing a histogram via a HashMap?
 - Concurrent collections: ConcurrentHashMap, CopyOnWriteArraySet, CopyOnWriteArrayList. ConcurrentSkipListSet, CopyOnWriteArraySet
 - Collections.synchronizedMap vs. ConcurrentHashMap: https://www.baeldung.com/java-synchronizedmap-vs-concurrenthashmap
-- How does a HashMap work? Hashing and collisions - what makes a good hashing algorithm? Bucketing... implementing a histogram via a HashMap?
 - ConcurrentHashMap Under The Hood - Region Locking: https://anmolsehgal.medium.com/concurrenthashmap-internal-working-in-java-b2a1a48c7289
+
+Generics
+- What is type safety? https://www.baeldung.com/cs/type-safety-programming
+- Type safety vs strong typing - https://dev.to/ayodejii/type-safety-and-strong-typing-what-are-these-terms-3io5
+- Basics - https://www.baeldung.com/java-generics
+- Type erasure: why you can't get type information at runtime - https://docs.oracle.com/javase/tutorial/java/generics/erasure.html
+- Reified functions (Kotlin has them but Java doesn't which is a bummer) https://www.baeldung.com/kotlin/reified-functions
 
 Streams & Java Embraces (Some) Functional Programming
 - Functional vs imperative styles
 - What is FP? https://www.infoworld.com/article/3613715/what-is-functional-programming-a-practical-guide.html
 - How is a stream different a collection?
 - Parallel streams - https://www.baeldung.com/java-when-to-use-parallel-stream
-- Lambda expressions - https://www.baeldung.com/java-8-lambda-expressions-tips 
+- Lambda expressions - https://www.baeldung.com/java-8-lambda-expressions-tips and https://www.youtube.com/watch?v=tj5sLSFjVj4
 - Functional interfaces - SAM (Single Abstract Method)  - https://dzone.com/articles/java-8-functional-interfaces-sam
 - Stream terminal operations - https://www.codejava.net/java-core/collections/java-8-stream-terminal-operations-examples
 - Functional programming (Consumer, Predicate, Supplier, and Function) - https://medium.com/javarevisited/java-8s-consumer-predicate-supplier-and-function-bbc609a29ff9
@@ -78,16 +113,20 @@ Algorithms, Space/Time complexity & Big-O Notation
   - Exponential Time Algorithms – O(k^n)
   - Factorial Time Algorithms – O(n!)
   - Asymptotic Functions
-
+  
 Concurrency
-- Java 1/1.1 & Basic Concurrency: threads, wait/notify - https://www.baeldung.com/java-wait-notify
 - Moore's Law and Processors Went Multicore - https://medium.com/@arnabkar2003/why-multi-core-processing-is-the-future-ae7cba792f0b
 - Multithreading, Java 5 (2004) and the rise of multicore processors - https://medium.com/@med.ali.bennour/enhancing-java-concurrency-processor-core-threads-fibers-0cac6000e5fb#:~:text=Efficient%20Resource%20Utilization%3A%20By%20leveraging,scientific%20computations%2C%20and%20server%20applications.
+- Java 1/1.1 & Basic Concurrency Concepts: threads, wait/notify - https://www.baeldung.com/java-wait-notify
 - The role of keyword volatile and the happens-before guarantee - https://www.baeldung.com/java-volatile
 - The synchronized keyword  - https://www.baeldung.com/java-synchronized and https://jenkov.com/tutorials/java-concurrency/synchronized.html
-- Why is static synchronized so dangerous?
+- Why is static synchronized so dangerous? - https://www.baeldung.com/java-synchronization-bad-practices
+- Deadlocks, livelock and starvation - https://www.baeldung.com/cs/deadlock-livelock-starvation
 - ThreadLocal API: Storing data accessible only by a specific thread - https://www.baeldung.com/java-threadlocal
 - Defining a thread-based task: Difference between callable vs Runnable
+- Concurrent collections: ConcurrentHashMap, CopyOnWriteArraySet, CopyOnWriteArrayList. ConcurrentSkipListSet, CopyOnWriteArraySet
+- Collections.synchronizedMap vs. ConcurrentHashMap: https://www.baeldung.com/java-synchronizedmap-vs-concurrenthashmap
+- ConcurrentHashMap Under The Hood - Region Locking: https://anmolsehgal.medium.com/concurrenthashmap-internal-working-in-java-b2a1a48c7289
 - Java 5's improved locking abstractions: ReentrantLock and Semaphore - https://www.baeldung.com/java-binary-semaphore-vs-reentrant-lock
 - Out-of-the-box multithreading abstractions: ExecutorService - https://www.baeldung.com/java-executor-service-tutorial
 - Future and CompletableFuture - https://www.baeldung.com/java-future-completablefuture-rxjavas-observable
