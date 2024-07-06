@@ -17,16 +17,19 @@ https://www.youtube.com/@CodingWithJohn - Coding With John
 
 [Core Java Course](https://www.youtube.com/watch?v=bm0OyhwFDuY&list=PLsyeobzWxl7pe_IiTfNyr55kwJPWbgxB5)
 - Primitive datatypes: byte, short, int, long, float, double, boolean, char
-- Reference datatypes and autoboxing
+- Reference datatypes 
 - Static vs non-static methods and variables - https://www.youtube.com/watch?v=-Y67pdWHr9Y
 - Casting: Upcasting vs Downcasting - https://medium.com/@salvipriya97/rules-for-casting-an-object-in-java-dc61580008cb 
 - Arithmetic operators (e.g +, -. %)
 - The modulo operator (%) = https://www.baeldung.com/modulo-java
+- Conversions and promotions and autoboxing - https://docs.oracle.com/javase/specs/jls/se7/html/jls-5.html 
 - Logical operators, short-circuiting - https://www.tutorialsfreak.com/java-tutorial/java-logical-operators
 - Incrementing and decrementing: i++ vs ++i; https://www.dummies.com/article/technology/programming-web-design/java/increment-and-decrement-operators-in-java-172144/
 - Addition assignment operator = https://www.digitalocean.com/community/tutorials/addition-assignment-operator-in-java
 - Flow control: while and for loops; switch statements; if/else vs ternary operator => can't return from an if
 - Java 17: [Sealed classes and switch statements](https://medium.com/@oskarv/java-17-features-pattern-matching-for-switch-and-sealed-classes-f631bdd56f12)
+- Constants vs enums - https://www.baeldung.com/cs/enums-vs-constants
+- Java enums - https://www.baeldung.com/java-enum-values
  
 JVM Basics
 - How the JVM works - https://hasithas.medium.com/understanding-how-java-virtual-machine-jvm-works-a1b07c0c399a
@@ -51,18 +54,27 @@ Java OO Basics: Objects & java.lang.Object
 - Method overriding vs method overloading: what's the difference? @Overloaded annotation - https://www.baeldung.com/java-method-overload-override
 - Type Safety vs Casting. Why is casting evil? What's type safety?
 - Structural equality (equals()) vs reference equality (==)
+- Interview question: what's the relationship between equals and hashcode()? - https://www.baeldung.com/java-equals-hashcode-contracts
+- Interview question: what would be the consequence of just returning a constant (say 11) as the implementation of your hashcode() method?
+- Mutators (setter methods) and accessors (getter methods)
+- Objects vs the java bean spec - https://medium.com/@mgm06bm/understanding-java-beans-a-comprehensive-guide-for-beginners-684163011c82
 - Immutability: keyword final - consequences of immutability, record keyword in Java 17 - read Pat Helland's "Immutability Changes Everything" https://queue.acm.org/detail.cfm?id=2884038
-- Strings in java: string pooling - why are strings immutable? - https://www.youtube.com/watch?v=Bj9Mx_Lx3q4
+- Strings in java: string pooling - why are strings immutable?" - https://www.youtube.com/watch?v=Bj9Mx_Lx3q4
+- String concatentation: + vs StringBuilder vs StringBuffer?
+- Interview question: "What's longest string you can hava in Java? https://www.baeldung.com/java-strings-maximum-length
+- Unicode and charsets (ASCII vs UTF-8 vs UTF-16) - https://w3developers.medium.com/unicode-is-javas-native-character-set-249fdc1c39c3#:~:text=Unicode%20is%20Java's%20native%20character,scripts%20of%20Chinese%20and%20Japanese.
 - Equals & Hashcode => shallow vs deep equality
 - The finalise method
 - The clone method and Java.lang.Cloneable
 - Thread basics: wait/notify/notifyAll
 - Heap vs stack, java memory model, Eden vs survivor space, garbage collection - https://dzone.com/articles/understanding-the-java-memory-model-and-the-garbag
-- Memory leaks: how they occur and how to detect?
+- Interview question: "Memory leaks: how they occur and how to detect?"
 - Exceptions and try/catch vs try-with-resources - https://medium.com/geekculture/how-does-exception-handling-work-in-java-c71c45103e7d
  
 Data Structures
 - Arrays & memory structure - https://medium.com/@f2015939p/array-memory-allocation-in-java-49b292122d18
+- More on arrays in Java: Arrays.sort(), System.arraycopy(), Arrays.copyOf() and Arrays.copyOfRange()
+- Multidimensional arrays - https://www.geeksforgeeks.org/multidimensional-arrays-in-java/
 - Collections & Iterators
 - Implementations: what to use when?
 - Lists: ArrayList vs LinkedList - ordering, insertion and performance considerations
@@ -85,6 +97,7 @@ Generics
 - Basics - https://www.baeldung.com/java-generics
 - Type erasure: why you can't get type information at runtime - https://docs.oracle.com/javase/tutorial/java/generics/erasure.html
 - Reified functions (Kotlin has them but Java doesn't which is a bummer) https://www.baeldung.com/kotlin/reified-functions
+- Syntactic sugar (J1.7): The Diamond Operator - https://www.baeldung.com/java-diamond-operator
 
 Streams & Java Embraces (Some) Functional Programming
 - Functional vs imperative styles
