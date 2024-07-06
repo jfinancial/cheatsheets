@@ -138,7 +138,7 @@ Algorithms, Space/Time complexity & Big-O Notation
   - Asymptotic Functions
   
 Concurrency
-- Moore's Law and Processors Went Multicore - https://medium.com/@arnabkar2003/why-multi-core-processing-is-the-future-ae7cba792f0b
+- Moore's Law and How Processors Went Multicore - https://medium.com/@arnabkar2003/why-multi-core-processing-is-the-future-ae7cba792f0b
 - Multithreading, Java 5 (2004) and the rise of multicore processors - https://medium.com/@med.ali.bennour/enhancing-java-concurrency-processor-core-threads-fibers-0cac6000e5fb#:~:text=Efficient%20Resource%20Utilization%3A%20By%20leveraging,scientific%20computations%2C%20and%20server%20applications.
 - Java 1/1.1 & Basic Concurrency Concepts: threads, wait/notify - https://www.baeldung.com/java-wait-notify
 - Introdution to multithreading in Java - https://www.digitalocean.com/community/tutorials/multithreading-in-java
