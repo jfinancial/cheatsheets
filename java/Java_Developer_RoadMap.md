@@ -128,7 +128,7 @@ Concurrency
 - Collections.synchronizedMap vs. ConcurrentHashMap: https://www.baeldung.com/java-synchronizedmap-vs-concurrenthashmap
 - ConcurrentHashMap Under The Hood - Region Locking: https://anmolsehgal.medium.com/concurrenthashmap-internal-working-in-java-b2a1a48c7289
 - Java 5's improved locking abstractions: ReentrantLock and Semaphore - https://www.baeldung.com/java-binary-semaphore-vs-reentrant-lock
-- Out-of-the-box multithreading abstractions: ExecutorService - https://www.baeldung.com/java-executor-service-tutorial
+- Out-of-the-box abstractions for multithreading/parallel processing: ExecutorService - https://www.baeldung.com/java-executor-service-tutorial
 - Future and CompletableFuture - https://www.baeldung.com/java-future-completablefuture-rxjavas-observable
 - What is the danger of calling get() to get the value of a Future?
 - Thread pool models - https://www.baeldung.com/thread-pool-java-and-guava
