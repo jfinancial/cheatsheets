@@ -18,6 +18,7 @@ https://www.youtube.com/@CodingWithJohn - Coding With John
 [Core Java Course](https://www.youtube.com/watch?v=bm0OyhwFDuY&list=PLsyeobzWxl7pe_IiTfNyr55kwJPWbgxB5)
 - Primitive datatypes: byte, short, int, long, float, double, boolean, char
 - Reference datatypes - https://www.javatpoint.com/reference-data-types-in-java
+- Interview question: what's happens if you do System.out.println(Integer.MAX_VALUE + 1 ) ?
 - Static vs non-static methods and variables - https://www.youtube.com/watch?v=-Y67pdWHr9Y
 - Casting: Upcasting vs Downcasting - https://medium.com/@salvipriya97/rules-for-casting-an-object-in-java-dc61580008cb 
 - Arithmetic operators (e.g +, -. %)
@@ -68,7 +69,6 @@ Java OO Basics: Objects & java.lang.Object
 - Interview question: what would be the consequence of just returning a constant (say 11) as the implementation of your hashcode() method?
 - Mutators (setter methods) and accessors (getter methods)
 - Objects vs the java bean spec - https://medium.com/@mgm06bm/understanding-java-beans-a-comprehensive-guide-for-beginners-684163011c82
--
 - Strings in java: string pooling - why are strings immutable?" - https://www.youtube.com/watch?v=Bj9Mx_Lx3q4
 - String concatentation: + vs StringBuilder vs StringBuffer?
 - Interview question: "What's longest string you can hava in Java? https://www.baeldung.com/java-strings-maximum-length
@@ -79,6 +79,10 @@ Java OO Basics: Objects & java.lang.Object
 - Thread basics: wait/notify/notifyAll
 - Heap vs stack, java memory model, Eden vs survivor space, garbage collection - https://dzone.com/articles/understanding-the-java-memory-model-and-the-garbag
 - Interview question: "Memory leaks: how they occur and how to detect?"
+- Java's floating point rounding problem https://arshadsuraj.medium.com/java-floating-point-numbers-rounding-problem-solution-a07e019b9dd5
+- Double precision issue - https://www.baeldung.com/java-double-precision-issue
+- Financial calculations - Big decimal vs double - https://www.baeldung.com/java-double-vs-bigdecimal 
+
 
 Data Structures
 - Arrays & memory structure - https://medium.com/@f2015939p/array-memory-allocation-in-java-49b292122d18
@@ -157,3 +161,5 @@ Concurrency
 - What is the danger of calling get() to get the value of a Future?
 - Thread pool models - https://www.baeldung.com/thread-pool-java-and-guava
 - Virtual threads in java: https://www.infoworld.com/article/3678148/intro-to-virtual-threads-a-new-approach-to-java-concurrency.html
+- Introduction to Atomic Variables - the solution to check-and-set problem https://www.baeldung.com/java-atomic-variables
+- Keyword volatile vs atomic variables - https://www.baeldung.com/java-volatile-vs-atomic
